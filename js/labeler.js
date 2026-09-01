@@ -1,0 +1,171 @@
+/* labeler.js — วางป้ายชื่อสถานที่อัตโนมัติ
+ *
+ * แก้ปัญหา "ชื่อซ้อนทับกัน" ด้วยอัลกอริทึม ไม่ใช่ด้วยการขยับพิกัดทีละอัน
+ * (point-feature label placement — วิธีมาตรฐานทางแผนที่)
+ *
+ * สามชั้น:
+ *   1. จัดลำดับความสำคัญ  นครหลวง=1 · เมืองใหญ่=2 · เมือง=3 · ด่าน/ภูเขา=4
+ *   2. LOD ตามระดับซูม     ซูมออกโชว์เฉพาะอันดับต้น ซูมเข้าค่อยปล่อยอันดับรอง
+ *   3. ตรวจชนแล้วหลบ       ลอง 8 ตำแหน่งรอบหมุด เอาอันแรกที่ไม่ทับใคร ไม่มีที่ว่าง = ซ่อน
+ *
+ * ผลลัพธ์: ไม่ต้องแก้พิกัดป้ายด้วยมือเลยตลอดโปรเจกต์
+ *
+ * ⚠ ชั้นที่ 3 หลบได้เฉพาะของที่ "เราวาดเอง" เท่านั้น
+ *   มันมองไม่เห็นตัวหนังสือที่พิมพ์ติดมากับ map.jpg และนั่นคือของที่รกจริง:
+ *   119 จาก 122 สถานที่มีชื่ออังกฤษพิมพ์อยู่บนภาพพื้นแล้ว (places.js ฟิลด์ `map`)
+ *   ตอนเป็นชื่อไทยเรื่องนี้ไม่เป็นปัญหา เพราะ "เตียงอาน" กับ "Chang An" อ่านแยกกันออก
+ *   พอแปลเป็นอังกฤษ เรากลายเป็นพิมพ์ "Chang'an" ทับ "Chang An" ที่ห่างกันไม่กี่พิกเซล
+ *   — และถ้าฉากนั้นปักหมุดด้วย ก็ได้ข้อความสามชั้นซ้อนกัน (ป้ายหมุด + ชื่อเมือง + ชื่อบนภาพ)
+ *
+ *   ทางแก้ไม่ใช่ไปหลบให้เก่งขึ้น แต่คือ "เลิกแข่งกับแผนที่พื้น":
+ *     วาดชื่อของเราเฉพาะเมื่อ (ก) ฉากนี้พูดถึงมัน หรือ (ข) แผนที่พื้นไม่ได้พิมพ์ชื่อไว้ให้
+ *   ที่เหลือปล่อยให้แผนที่พื้นทำหน้าที่ของมัน — ที่ระดับซูมของฉากจริง ๆ
+ *   ตัวหนังสือบนภาพถูกขยายจนใหญ่กว่าป้ายของเราอยู่แล้ว
+ */
+window.TK = window.TK || {};
+
+TK.labeler = (function(){
+
+  const RANK = { capital:1, city:2, town:3, pass:4, ford:4, mountain:4, camp:4 };
+
+  /* ซูมออกสุด (w=1650) โชว์แค่นครหลวง · ยิ่งซูมเข้ายิ่งปล่อยอันดับรองออกมา
+     ด่านกับภูเขา (อันดับ 4) โผล่เฉพาะตอนซูมเข้าใกล้จริง ๆ
+     — แต่ถ้าฉากนั้นพูดถึงมัน จะถูก force ให้โผล่เสมอไม่ว่าซูมระดับไหน */
+  function maxRank(vbw){
+    if (vbw > 1100) return 1;
+    if (vbw > 650)  return 2;
+    if (vbw > 330)  return 3;
+    return 4;
+  }
+
+  /* วัดความกว้างข้อความจริงด้วย canvas — แม่นกว่าเดาจากจำนวนตัวอักษร
+     สำคัญมากกับภาษาไทยที่สระบน-ล่างไม่กินความกว้าง */
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const wCache = new Map();
+  function textWidth(text, fontPx, fontFamily){
+    const key = text + '|' + fontPx;
+    if (wCache.has(key)) return wCache.get(key);
+    ctx.font = `600 ${fontPx}px ${fontFamily}`;
+    const w = ctx.measureText(text).width;
+    wCache.set(key, w);
+    return w;
+  }
+
+  /* ตำแหน่งผู้สมัคร 8 จุดรอบหมุด เรียงตามความสวยงาม (ขวาก่อน แล้วซ้าย แล้วบน-ล่าง แล้วมุม) */
+  const CANDIDATES = [
+    { dx: 1, dy: 0.32, anchor:'start'  },   // ขวา
+    { dx:-1, dy: 0.32, anchor:'end'    },   // ซ้าย
+    { dx: 0, dy:-0.9,  anchor:'middle' },   // บน
+    { dx: 0, dy: 1.5,  anchor:'middle' },   // ล่าง
+    { dx: 1, dy:-0.75, anchor:'start'  },   // บนขวา
+    { dx: 1, dy: 1.35, anchor:'start'  },   // ล่างขวา
+    { dx:-1, dy:-0.75, anchor:'end'    },   // บนซ้าย
+    { dx:-1, dy: 1.35, anchor:'end'    }    // ล่างซ้าย
+  ];
+
+  const overlaps = (a,b) =>
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+
+  /**
+   * @param places  {id: {label,map,x,y,type}}  ทั้งหมด
+   * @param vb      {x,y,w,h} viewBox ปัจจุบัน
+   * @param screenW ความกว้างจริงบนจอ (px)
+   * @param opts    { force:Set<id>  สถานที่ที่ฉากนี้พูดถึง — โชว์เสมอไม่สนใจ LOD
+   *                  quiet:Set<id>  ฉากนี้พิมพ์ข้อความของมันเองไว้ตรงหมุดแล้ว
+   *                                 (m.label ของ marker) → อย่าพิมพ์ชื่อเมืองซ้ำอีก
+   *                  fontPx:number  ขนาดตัวอักษรบนจอ (คงที่ทุกระดับซูม)
+   *                  fontFamily:string
+   *                  pinR:number    รัศมีหมุดบนจอ
+   *                  avoid:[{x,y,w,h}]  ★ กล่องที่จองไว้แล้วโดย *ชั้นอื่น* (หน่วยแผนที่)
+   *                                 — ป้ายของฉาก (mk-chip/mk-cap) อยู่คนละชั้นกับที่นี่
+   *                                 ถ้าไม่ส่งมา ชื่อเมืองจะไปนอนทับป้ายของฉากได้ ซึ่ง
+   *                                 ตัวตรวจข้อ 5 ของ selfcheck จับได้ 5 จุดตอน 2026-08-26
+   *                                 กติกา: **ป้ายของฉากชนะเสมอ** ชื่อเมืองเป็นฝ่ายหลบ }
+   * @returns { labels:[{id,x,y,anchor,fontMU}], pins:[id], hidden:number }
+   */
+  function layout(places, vb, screenW, opts){
+    opts = opts || {};
+    const force      = opts.force || new Set();
+    const quiet      = opts.quiet || new Set();
+    const fontPx     = opts.fontPx || 12;
+    const fontFamily = opts.fontFamily || '"Leelawadee UI",sans-serif';
+    const pinRpx     = opts.pinR || 5;
+
+    const mu     = vb.w / screenW;          // map-unit ต่อ 1 screen px
+    const fontMU = fontPx * mu;             // ป้ายมีขนาดคงที่บนจอทุกระดับซูม
+    const lineMU = fontMU * 1.15;
+    const limit  = maxRank(vb.w);
+    const pad    = fontMU * 0.28;
+
+    /* คัดเฉพาะที่อยู่ในกรอบภาพ (เผื่อขอบไว้กันป้ายกระพริบตอนแพน) */
+    const m = vb.w * 0.04;
+    const inView = ([id,p]) =>
+      p.x >= vb.x - m && p.x <= vb.x + vb.w + m &&
+      p.y >= vb.y - m && p.y <= vb.y + vb.h + m;
+
+    const visible = Object.entries(places).filter(inView);
+
+    /* หมุดที่แสดง — เดิมคือ "ทุกอันที่ผ่าน LOD" ซึ่งแปลว่าเราเอาจุดขาวไปแปะทับ
+       จุดที่ map.jpg พิมพ์มาให้แล้วนับร้อยจุด เหลื่อมกันไปสองสามพิกเซล = เห็นเป็นจุดคู่
+       ตอนนี้เหลือสองกรณีเท่านั้น:
+         1. ฉากนี้พูดถึงมัน (force) — เป็นการชี้ ไม่ใช่การทำสารบัญ
+         2. แผนที่พื้นไม่มีชื่อให้ (p.map เป็น null) — ของเราเป็นแหล่งเดียวที่มี
+            กรณีนี้ยังคิด LOD อยู่ ไม่งั้นตอนซูมออกสุดจะมีจุดลอยไร้บริบท */
+    const shown = visible.filter(([id,p]) =>
+      force.has(id) || (!p.map && (RANK[p.type] || 4) <= limit));
+
+    /* จองพื้นที่ของหมุดทุกอันก่อน — ป้ายห้ามทับจุดของสถานที่อื่น */
+    const taken = shown.map(([id,p]) => {
+      const r = (p.type === 'capital' ? pinRpx + 2 : pinRpx) * mu;
+      return { x:p.x - r, y:p.y - r, w:r*2, h:r*2 };
+    });
+    /* ★ กล่องของชั้นอื่นที่จองไว้ก่อนแล้ว — ป้ายของฉากเป็นเจ้าของที่ ชื่อเมืองต้องหลบ */
+    if (opts.avoid) for (const b of opts.avoid) if (b && b.w > 0 && b.h > 0) taken.push(b);
+
+    /* เรียงลำดับ: ที่ถูก force มาก่อน แล้วตามอันดับความสำคัญ
+       เพื่อให้เมืองสำคัญได้เลือกที่ก่อน เมืองรองค่อยหลบ */
+    shown.sort((A,B) => {
+      const fa = force.has(A[0]) ? 0 : 1, fb = force.has(B[0]) ? 0 : 1;
+      if (fa !== fb) return fa - fb;
+      return (RANK[A[1].type]||4) - (RANK[B[1].type]||4);
+    });
+
+    const labels = [];
+    let hidden = 0;
+    const cap = opts.maxLabels || 26;      // เพดานกันจอรก อ่านไม่ออก
+
+    for (const [id,p] of shown){
+      /* ฉากพิมพ์ข้อความของมันเองไว้ที่หมุดนี้แล้ว (เช่น "Guo Huai stops the rout here")
+         ชื่อเมืองอีกอันจะเป็นข้อความชั้นที่สาม ซ้อนกับชื่อบนแผนที่พื้นอีกที — ข้ามไป
+         หมุดยังอยู่ มันแค่ไม่มีชื่อเมืองกำกับ */
+      if (quiet.has(id)) continue;
+      if (labels.length >= cap && !force.has(id)){ hidden++; continue; }
+      const wPx = textWidth(p.label, fontPx, fontFamily);
+      const wMU = wPx * mu;
+      const r   = (p.type === 'capital' ? pinRpx + 2 : pinRpx) * mu;
+
+      let placed = null;
+      for (const c of CANDIDATES){
+        const x = p.x + c.dx * (r + pad*1.6);
+        const y = p.y + c.dy * lineMU;
+        const boxX = c.anchor === 'start' ? x
+                   : c.anchor === 'end'   ? x - wMU
+                   :                        x - wMU/2;
+        const box = { x:boxX - pad, y:y - lineMU*0.82,
+                      w:wMU + pad*2, h:lineMU*1.02 };
+        if (!taken.some(t => overlaps(box, t))){
+          taken.push(box);
+          placed = { id, x, y, anchor:c.anchor, fontMU };
+          break;
+        }
+      }
+      if (placed) labels.push(placed);
+      else hidden++;                       // ไม่มีที่ว่าง → เหลือแต่หมุด (hover ค่อยโผล่)
+    }
+
+    return { labels, pins: shown.map(s => s[0]), hidden, limit };
+  }
+
+  return { layout, RANK, maxRank };
+})();

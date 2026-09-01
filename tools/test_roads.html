@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><title>test roads builder</title>
+<style>
+ body{font:13px/1.6 ui-monospace,Consolas,monospace;background:#12151a;color:#dfe4ea;padding:20px}
+ h2{color:#7fd4a1;font-size:14px;margin:18px 0 6px}
+ .ok{color:#7fd4a1} .bad{color:#ff8b7a} .warn{color:#f0c674} .dim{color:#7a828c}
+ pre{white-space:pre-wrap;margin:2px 0}
+ svg{background:#1b1f26;border:1px solid #2c333d;margin-top:8px}
+</style></head><body>
+<div id="out"></div>
+<svg id="viz" viewBox="0 0 1650 1950" width="560"></svg>
+<!-- ⚠ places.js ต้องมาก่อน roads.js (DECISIONS กฎ 4) — เคยลืมบรรทัดนี้หลังย้ายพิกัด
+     ไป places.js แล้ว builder ก็ throw ตอนโหลด ผลคือ TK.routes เป็น undefined และ
+     ทุกลูป for-in ข้างล่างวนศูนย์รอบเงียบ ๆ = หน้านี้ "ผ่าน" ทั้งที่ไม่ได้ตรวจอะไรเลย
+     (BUGS_SEEN §C4 — ตัวตรวจที่ไม่เจออะไร อาจแปลว่ามันพัง) · กันซ้ำ: บรรทัด guard ข้างล่าง -->
+<script src="../data/places.js"></script>
+<script src="../data/roads.js"></script>
+<script>
+const o = document.getElementById('out');
+if (!window.TK || !TK.routes || !Object.keys(TK.routes).length){
+  document.body.insertAdjacentHTML('afterbegin',
+    '<pre class="bad">✖✖ TK.routes ว่าง — builder ใน roads.js พังตอนโหลด (ดู console) ผลทดสอบข้างล่างไม่มีความหมาย</pre>');
+}
+const p = (cls,t) => { const e=document.createElement('pre'); e.className=cls; e.textContent=t; o.append(e); };
+
+p('', 'nodes: ' + Object.keys(TK.nodes).length + ' · edges: ' + TK.edges.length +
+     ' · marches: ' + Object.keys(TK.marches).length);
+
+/* ── 1 · edge ทุกเส้นต้องมีปลายทั้งสองอยู่ในตาราง node ── */
+o.insertAdjacentHTML('beforeend','<h2>1 · edge ชี้ไป node ที่มีจริง</h2>');
+let bad = 0;
+TK.edges.forEach(e => {
+  if (!TK.nodes[e.a]) { p('bad','✖ ไม่มี node: ' + e.a); bad++; }
+  if (!TK.nodes[e.b]) { p('bad','✖ ไม่มี node: ' + e.b); bad++; }
+});
+if (!bad) p('ok','✔ ผ่านทั้ง ' + TK.edges.length + ' เส้น');
+
+/* ── 2 · march ทุกเส้นต่อกันได้ครบ ── */
+o.insertAdjacentHTML('beforeend','<h2>2 · march ต่อ edge ได้ครบ</h2>');
+for (const id in TK.routeMeta){
+  const m = TK.routeMeta[id];
+  if (m.missing.length) p('bad','✖ ' + id + ' — ขาด edge: ' + m.missing.join(', '));
+  else p('ok','✔ ' + id + '  ' + m.path.join(' → ') + '  ' + m.li + ' ลี้  ' +
+              (m.wagons ? 'เกวียนผ่านได้' : 'เกวียนผ่านไม่ได้') +
+              (m.untraced.length ? '  [ยังไม่ลาก: ' + m.untraced.join(', ') + ']' : ''));
+}
+
+/* ── 3 · side บังคับทุกเส้น (DECISIONS §4) ── */
+o.insertAdjacentHTML('beforeend','<h2>3 · side บังคับ · troops บังคับถ้ามีรบ</h2>');
+let n3 = 0;
+for (const id in TK.routeMeta){
+  if (!TK.routeMeta[id].side){ p('bad','✖ ' + id + ' ไม่มี side'); n3++; }
+}
+if (!n3) p('ok','✔ ทุกเส้นมี side');
+
+/* ── 4 · reverseD — เดินสวนทางแล้วต้องได้เส้นเดิม กลับหัวกลับหาง ── */
+o.insertAdjacentHTML('beforeend','<h2>4 · กลับด้าน path (edge ที่มี d จริง)</h2>');
+TK.marches.__revtest = { label:'ทดสอบกลับด้าน', side:'han',
+  path:['chencang','jieting','tianshui'] };   /* สองช่วงนี้ประกาศไว้ทิศตรงข้ามทั้งคู่ */
+/* สร้างใหม่ด้วยมือเพื่อดูผล — builder รันไปแล้วตอนโหลด */
+const NS='http://www.w3.org/2000/svg', viz=document.getElementById('viz');
+function draw(d,col,w){ const e=document.createElementNS(NS,'path');
+  e.setAttribute('d',d); e.setAttribute('stroke',col); e.setAttribute('fill','none');
+  e.setAttribute('stroke-width',w||6); viz.append(e); return e; }
+
+for (const id in TK.routes){
+  const d = TK.routes[id].d;
+  const el = draw(d, TK.routeMeta[id].side === 'han' ? '#2E9E5B' : '#2563A8');
+  const L = el.getTotalLength();
+  const s = el.getPointAtLength(0), t = el.getPointAtLength(L);
+  const n0 = TK.nodes[TK.routeMeta[id].path[0]];
+  const n1 = TK.nodes[TK.routeMeta[id].path[TK.routeMeta[id].path.length-1]];
+  const d0 = Math.hypot(s.x-n0.x, s.y-n0.y), d1 = Math.hypot(t.x-n1.x, t.y-n1.y);
+  const okk = d0 < 2 && d1 < 2;
+  p(okk?'ok':'bad', (okk?'✔ ':'✖ ') + id + '  ยาว ' + L.toFixed(0) +
+    '  หัวห่างจุดแรก ' + d0.toFixed(1) + 'px  ท้ายห่างจุดสุดท้าย ' + d1.toFixed(1) + 'px');
+}
+
+/* ── 5 · ความต่อเนื่อง — เดินตามเส้นแล้วต้องไม่มีการกระโดด ── */
+o.insertAdjacentHTML('beforeend','<h2>5 · ไม่มีรอยกระโดดกลางเส้น</h2>');
+for (const id in TK.routes){
+  const el = draw(TK.routes[id].d,'transparent',0);
+  const L = el.getTotalLength(); let maxJump = 0, prev = el.getPointAtLength(0);
+  for (let i = 1; i <= 400; i++){
+    const q = el.getPointAtLength(L*i/400);
+    maxJump = Math.max(maxJump, Math.hypot(q.x-prev.x, q.y-prev.y)); prev = q;
+  }
+  const lim = L/400 * 4 + 3;
+  p(maxJump < lim ? 'ok' : 'bad',
+    (maxJump < lim ? '✔ ' : '✖ ') + id + '  ก้าวยาวสุด ' + maxJump.toFixed(1) +
+    'px (เพดาน ' + lim.toFixed(1) + ')');
+  el.remove();
+}
+
+for (const k in TK.nodes){ const n=TK.nodes[k];
+  const c=document.createElementNS(NS,'circle');
+  c.setAttribute('cx',n.x); c.setAttribute('cy',n.y); c.setAttribute('r',8);
+  c.setAttribute('fill', n.chk ? '#f0c674' : '#dfe4ea'); viz.append(c); }
+p('dim','จุดสีเหลือง = พิกัดยังไม่สอบเทียบ (chk:true)');
+</script>
+</body></html>

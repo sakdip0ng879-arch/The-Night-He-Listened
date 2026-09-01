@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "tk3",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.js", "8778"],
+      "port": 8778
+    },
+    {
+      "name": "tk3b",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.js", "8779"],
+      "port": 8779
+    }
+  ]
+}

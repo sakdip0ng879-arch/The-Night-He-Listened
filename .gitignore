@@ -1,0 +1,27 @@
+# OneDrive / Windows
+desktop.ini
+Thumbs.db
+*.tmp
+~$*
+
+# editor
+.vscode/
+.idea/
+
+# scratch
+scratch/
+
+# ── ไม่เผยแพร่ซ้ำงานของคนอื่นเกินจำเป็น ──
+# repo นี้เป็น public เพื่อให้ GitHub Pages ทำงาน แปลว่าทุกไฟล์ที่ track ถูกเผยแพร่ด้วย
+# แผนที่พื้นเป็นงานแฟนเมดของ William L (kongming.net) ไม่ใช่ของโปรเจกต์นี้
+# จึงเก็บไว้ในสำเนาเดียวคือ assets/map.jpg ซึ่งเว็บใช้จริงและมีเครดิตกำกับท้ายหน้า
+#
+# สองไฟล์ข้างล่างยังอยู่ในเครื่อง แค่ไม่ถูก track:
+#   ต้นฉบับที่วางไว้ตอนเริ่มงาน — ไฟล์เดียวกับ assets/map.jpg เป๊ะ ไม่มีโค้ดไหนเรียกใช้
+Map_of_Three_Kingdoms_(English).jpg
+#   ภาพหน้าจอตอนสอบเทียบพิกัด — เป็นแผนที่เขาที่มีหมุดของเราทับ ใช้ตอนทำงานเท่านั้น
+docs/phase1_calibration.png
+
+# ไฟล์ทดสอบชั่วคราวที่ generate ขึ้นมา (tools/_*.html)
+tools/_*.html
+tools/_board*.html

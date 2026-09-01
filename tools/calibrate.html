@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>สอบเทียบพิกัด — Three Kingdoms What If</title>
+<style>
+  :root{
+    --han:#2E9E5B; --wei:#2563A8; --wu:#C2413A; --none:#9AA0A6;
+    --bg:#12141a; --panel:#1b1e26; --line:#2c3040; --text:#e6e8ee; --dim:#8b93a7;
+    --accent:#e0b25c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%; overflow:hidden}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Leelawadee UI","Segoe UI",Tahoma,system-ui,sans-serif;
+    display:flex;
+  }
+
+  /* ── แผนที่ ── */
+  #stage{flex:1; position:relative; background:#0d0f14; cursor:grab}
+  #stage.grabbing{cursor:grabbing}
+  svg{width:100%; height:100%; display:block}
+  #basemap{filter:saturate(.30) brightness(1.12) contrast(.92)}
+
+  /* stroke สีเดียวกับ fill = ขยายรูปออกด้านละ ~17px
+     ปิดช่องว่างระหว่างภูมิภาคโดยไม่ต้องแก้พิกัด และลบมุมเหลี่ยมให้ดูเป็นดินแดนจริง
+     ตั้ง opacity ที่ <g> ไม่ใช่ที่ path — ไม่งั้น stroke ทับ fill แล้วเกิดขอบเข้มรอบรูป */
+  #gRegions{opacity:.36}
+  .region{stroke-width:34; stroke-linejoin:round; cursor:pointer}
+  .region:hover{filter:brightness(1.5)}
+  .region-label{fill:#fff; font-size:15px; font-weight:600; text-anchor:middle;
+    paint-order:stroke; stroke:#000; stroke-width:3.5px; stroke-linejoin:round; pointer-events:none}
+
+  .route{fill:none; stroke:var(--accent); stroke-width:2.6; stroke-dasharray:9 6; opacity:.9}
+  .route-hit{fill:none; stroke:transparent; stroke-width:14; cursor:pointer}
+
+  .pin{cursor:move}
+  .pin circle{stroke:#000; stroke-width:1.4}
+  .pin.t-capital circle{fill:#ffd76a; r:7}
+  .pin.t-city    circle{fill:#ff9d4d}
+  .pin.t-town    circle{fill:#8fd0ff}
+  .pin.t-pass    circle{fill:#c88cff}
+  .pin.t-ford    circle{fill:#5ee0d0}
+  .pin.t-mountain circle{fill:#7ee08a}
+  .pin.t-camp    circle{fill:#ff7fb0}
+  .pin.needs-check circle{stroke:#ff4d4d; stroke-width:3}
+  .pin.moved circle{stroke:var(--accent); stroke-width:3}
+  .pin text{fill:#fff; font-size:11px; paint-order:stroke; stroke:#000;
+    stroke-width:3px; stroke-linejoin:round; pointer-events:none}
+  .pin.hi circle{stroke:#fff; stroke-width:4}
+
+  #grid line{stroke:#5cf; stroke-width:.5; opacity:.3}
+  #grid text{fill:#5cf; font-size:9px; opacity:.75}
+
+  /* ── แผงควบคุม ── */
+  aside{
+    width:310px; flex:none; background:var(--panel); border-left:1px solid var(--line);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  aside h1{font-size:14px; padding:13px 14px; border-bottom:1px solid var(--line); letter-spacing:.2px}
+  aside h1 small{display:block; color:var(--dim); font-weight:400; font-size:11px; margin-top:3px}
+  .sec{padding:11px 14px; border-bottom:1px solid var(--line)}
+  .sec h2{font-size:11px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:.8px; margin-bottom:8px; font-weight:600}
+  label.chk{display:flex; align-items:center; gap:8px; font-size:13px; padding:3px 0; cursor:pointer}
+  input[type=checkbox]{accent-color:var(--accent); width:15px; height:15px}
+  input[type=search]{
+    width:100%; background:#0f1218; border:1px solid var(--line); color:var(--text);
+    padding:7px 9px; border-radius:5px; font-size:13px; font-family:inherit;
+  }
+  #readout{font-family:Consolas,monospace; font-size:13px; line-height:1.7}
+  #readout b{color:var(--accent)}
+  .stat{display:flex; justify-content:space-between; font-size:12px; padding:2px 0; color:var(--dim)}
+  .stat b{color:var(--text)}
+  button{
+    width:100%; background:#2a3040; color:var(--text); border:1px solid var(--line);
+    padding:8px; border-radius:5px; font-size:12.5px; cursor:pointer;
+    font-family:inherit; margin-top:6px;
+  }
+  button:hover{background:#333b4f; border-color:var(--accent)}
+  button.primary{background:var(--accent); color:#1a1408; border-color:var(--accent); font-weight:600}
+  #hits{flex:1; overflow-y:auto; padding:6px 8px}
+  #hits .row{padding:6px 8px; border-radius:5px; cursor:pointer; font-size:12.5px; line-height:1.45}
+  #hits .row:hover{background:#252b38}
+  #hits .row small{color:var(--dim); display:block; font-family:Consolas,monospace; font-size:11px}
+  #hits .row.flag{border-left:3px solid #ff4d4d; padding-left:7px}
+  #toast{
+    position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    background:var(--accent); color:#1a1408; padding:10px 20px; border-radius:6px;
+    font-size:13px; font-weight:600; opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  #toast.on{opacity:1}
+  .legend{display:flex; flex-wrap:wrap; gap:5px 10px; font-size:11px; color:var(--dim)}
+  .legend i{display:inline-block; width:9px; height:9px; border-radius:50%;
+    margin-right:4px; vertical-align:-1px; border:1px solid #000}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <svg id="map" viewBox="0 0 1650 1950" preserveAspectRatio="xMidYMid meet">
+    <image id="basemap" href="../assets/map.jpg" x="0" y="0" width="1650" height="1950"/>
+    <g id="gRegions"></g>
+    <g id="gRegionLabels"></g>
+    <g id="gRoutes"></g>
+    <g id="grid"></g>
+    <g id="gPins"></g>
+  </svg>
+</div>
+
+<aside>
+  <h1>สอบเทียบพิกัด — เฟส 1
+    <small>ลากหมุดเพื่อแก้ตำแหน่ง · คลิกแผนที่เพื่ออ่านพิกัด · ล้อเลื่อน = ซูม</small></h1>
+
+  <div class="sec">
+    <h2>ชั้นข้อมูล</h2>
+    <label class="chk"><input type="checkbox" id="cBase" checked> แผนที่พื้น (ลดสีแล้ว)</label>
+    <label class="chk"><input type="checkbox" id="cRegions" checked> พื้นที่ยึดครอง ปี 228</label>
+    <label class="chk"><input type="checkbox" id="cRoutes" checked> เส้นทางเดินทัพ</label>
+    <label class="chk"><input type="checkbox" id="cPins" checked> หมุดสถานที่</label>
+    <label class="chk"><input type="checkbox" id="cLabels" checked> ชื่อกำกับหมุด</label>
+    <label class="chk"><input type="checkbox" id="cGrid"> เส้นตาราง 100 px</label>
+    <label class="chk"><input type="checkbox" id="cOnlyChk"> แสดงเฉพาะจุดที่ยังไม่ชัวร์</label>
+  </div>
+
+  <div class="sec">
+    <h2>พิกัดที่คลิกล่าสุด</h2>
+    <div id="readout">x <b>—</b> &nbsp; y <b>—</b></div>
+    <button id="bCopy">คัดลอกพิกัด</button>
+  </div>
+
+  <div class="sec">
+    <h2>สรุป</h2>
+    <div class="stat"><span>สถานที่</span><b id="nPlaces">0</b></div>
+    <div class="stat"><span>ภูมิภาค</span><b id="nRegions">0</b></div>
+    <div class="stat"><span>เส้นทาง</span><b id="nRoutes">0</b></div>
+    <div class="stat"><span style="color:#ff6b6b">ยังไม่ชัวร์ (ขอบแดง)</span><b id="nChk">0</b></div>
+    <div class="stat"><span style="color:#e0b25c">ถูกลากแก้แล้ว</span><b id="nMoved">0</b></div>
+    <button id="bExport" class="primary">คัดลอก places.js ที่แก้แล้ว</button>
+    <button id="bReset">คืนค่าเดิมทั้งหมด</button>
+  </div>
+
+  <div class="sec">
+    <h2>ค้นหา</h2>
+    <input type="search" id="q" placeholder="พิมพ์ชื่อไทยหรือพินอิน เช่น เกเต๋ง / Jieting">
+  </div>
+
+  <div id="hits"></div>
+
+  <div class="sec">
+    <h2>ชนิดสถานที่</h2>
+    <div class="legend">
+      <span><i style="background:#ffd76a"></i>นครหลวง</span>
+      <span><i style="background:#ff9d4d"></i>เมืองใหญ่</span>
+      <span><i style="background:#8fd0ff"></i>เมือง</span>
+      <span><i style="background:#c88cff"></i>ด่าน</span>
+      <span><i style="background:#5ee0d0"></i>ท่าข้าม</span>
+      <span><i style="background:#7ee08a"></i>ภูเขา</span>
+      <span><i style="background:#ff7fb0"></i>ค่าย</span>
+    </div>
+  </div>
+</aside>
+
+<div id="toast"></div>
+
+<script src="../data/names.js"></script>
+<script src="../data/places.js"></script>
+<script src="../data/geo.js"></script>
+<script src="../data/routes.js"></script>
+<script>
+(function(){
+  const SVG = "http://www.w3.org/2000/svg";
+  const svg  = document.getElementById('map');
+  const stage= document.getElementById('stage');
+  const P = TK.places, R = TK.regions, RT = TK.routes, F = TK.factions;
+  const ORIG = JSON.parse(JSON.stringify(P));      // สำเนาต้นฉบับไว้ reset
+  const moved = new Set();
+  const el = id => document.getElementById(id);
+  const mk = (n,a={}) => { const e=document.createElementNS(SVG,n);
+    for(const k in a) e.setAttribute(k,a[k]); return e; };
+
+  /* ── วาดภูมิภาค ── */
+  for(const id in R){
+    const r = R[id];
+    const p = mk('path',{d:r.d, class:'region',
+                         fill:F[r.owner].color, stroke:F[r.owner].color});
+    p.dataset.id = id;
+    const rti = mk('title');
+    rti.textContent = `${r.label} (${r.py}) — ${F[r.owner].label}`;
+    p.append(rti);
+    el('gRegions').append(p);
+    if(r.labelAt){
+      const t = mk('text',{x:r.labelAt[0], y:r.labelAt[1], class:'region-label'});
+      t.textContent = r.label;
+      el('gRegionLabels').append(t);
+    }
+  }
+
+  /* ── วาดเส้นทาง ── */
+  for(const id in RT){
+    const rt = RT[id];
+    const hit = mk('path',{d:rt.d, class:'route-hit'});
+    const hti = mk('title');
+    hti.textContent = rt.label;
+    hit.append(hti);
+    el('gRoutes').append(hit);
+    el('gRoutes').append(mk('path',{d:rt.d, class:'route'}));
+  }
+
+  /* ── วาดหมุด ── */
+  const pinOf = {};
+  for(const id in P){
+    const pl = P[id];
+    const g = mk('g',{class:`pin t-${pl.type}` + (pl.chk?' needs-check':'')});
+    g.dataset.id = id;
+    g.append(mk('circle',{cx:pl.x, cy:pl.y, r: pl.type==='capital'?7:5}));
+    const t = mk('text',{x:pl.x+9, y:pl.y+4});
+    t.textContent = pl.label;
+    g.append(t);
+    const ti = mk('title');
+    ti.textContent = `${pl.label} / ${pl.py}\nบนแผนที่: ${pl.map || '— ไม่มีป้าย —'}\nx:${pl.x} y:${pl.y}`;
+    g.append(ti);
+    el('gPins').append(g);
+    pinOf[id] = g;
+  }
+
+  /* ── เส้นตาราง ── */
+  (function(){ const g = el('grid');
+    for(let x=0; x<=1650; x+=100){
+      g.append(mk('line',{x1:x,y1:0,x2:x,y2:1950}));
+      const t=mk('text',{x:x+3,y:12}); t.textContent=x; g.append(t);
+    }
+    for(let y=0; y<=1950; y+=100){
+      g.append(mk('line',{x1:0,y1:y,x2:1650,y2:y}));
+      const t=mk('text',{x:3,y:y-3}); t.textContent=y; g.append(t);
+    }
+  })();
+
+  /* ── สลับชั้น ── */
+  const layer = (cb, node, disp='') =>
+    el(cb).onchange = e => node.style.display = e.target.checked ? disp : 'none';
+  layer('cBase',    el('basemap'));
+  layer('cRegions', el('gRegions'));
+  layer('cRoutes',  el('gRoutes'));
+  layer('cPins',    el('gPins'));
+  el('cRegions').addEventListener('change', e =>
+    el('gRegionLabels').style.display = e.target.checked ? '' : 'none');
+  el('cGrid').onchange = e => el('grid').style.display = e.target.checked ? '' : 'none';
+  el('grid').style.display = 'none';
+  el('cLabels').onchange = e =>
+    el('gPins').querySelectorAll('text').forEach(t =>
+      t.style.display = e.target.checked ? '' : 'none');
+  el('cOnlyChk').onchange = e =>
+    Object.entries(pinOf).forEach(([id,g]) =>
+      g.style.display = (!e.target.checked || P[id].chk) ? '' : 'none');
+
+  /* ── แปลงพิกัดจอ → พิกัดแผนที่ ── */
+  function toMap(evt){
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX; pt.y = evt.clientY;
+    const m = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return {x: Math.round(m.x), y: Math.round(m.y)};
+  }
+
+  /* ── ซูม / แพน viewBox (พิสูจน์กลไกตาม DECISIONS §5) ── */
+  let vb = {x:0, y:0, w:1650, h:1950};
+  const applyVB = () => svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    const p = toMap(e);
+    const k = e.deltaY > 0 ? 1.15 : 1/1.15;
+    const nw = Math.min(1650*2, Math.max(120, vb.w*k));
+    const nh = nw * (1950/1650);
+    vb.x = p.x - (p.x - vb.x) * (nw/vb.w);
+    vb.y = p.y - (p.y - vb.y) * (nh/vb.h);
+    vb.w = nw; vb.h = nh;
+    applyVB();
+  }, {passive:false});
+
+  let panFrom = null, dragId = null;
+
+  stage.addEventListener('mousedown', e => {
+    const pin = e.target.closest('.pin');
+    if(pin){ dragId = pin.dataset.id; e.preventDefault(); return; }
+    panFrom = {mx:e.clientX, my:e.clientY, vx:vb.x, vy:vb.y};
+    stage.classList.add('grabbing');
+  });
+
+  window.addEventListener('mousemove', e => {
+    if(dragId){
+      const p = toMap(e);
+      P[dragId].x = p.x; P[dragId].y = p.y;
+      const g = pinOf[dragId];
+      g.querySelector('circle').setAttribute('cx', p.x);
+      g.querySelector('circle').setAttribute('cy', p.y);
+      g.querySelector('text').setAttribute('x', p.x+9);
+      g.querySelector('text').setAttribute('y', p.y+4);
+      g.classList.add('moved');
+      moved.add(dragId);
+      show(p); stats();
+      return;
+    }
+    if(panFrom){
+      const sc = vb.w / stage.clientWidth;
+      vb.x = panFrom.vx - (e.clientX - panFrom.mx) * sc;
+      vb.y = panFrom.vy - (e.clientY - panFrom.my) * sc;
+      applyVB();
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    dragId = null; panFrom = null; stage.classList.remove('grabbing');
+  });
+
+  /* ── อ่านพิกัดจากการคลิก ── */
+  let last = {x:0,y:0};
+  const show = p => { last = p;
+    el('readout').innerHTML = `x <b>${p.x}</b> &nbsp; y <b>${p.y}</b>`; };
+  stage.addEventListener('click', e => { if(!panMoved) show(toMap(e)); });
+  let panMoved = false;
+  stage.addEventListener('mousedown', () => panMoved = false);
+  stage.addEventListener('mousemove', () => { if(panFrom) panMoved = true; });
+
+  el('bCopy').onclick = () => copy(`x:${last.x}, y:${last.y}`, 'คัดลอกพิกัดแล้ว');
+
+  /* ── ค้นหา + บินไปหา ── */
+  function flyTo(id){
+    const pl = P[id];
+    vb.w = 340; vb.h = 340*(1950/1650);
+    vb.x = pl.x - vb.w/2; vb.y = pl.y - vb.h/2;
+    applyVB();
+    Object.values(pinOf).forEach(g => g.classList.remove('hi'));
+    pinOf[id].classList.add('hi');
+    show({x:pl.x, y:pl.y});
+  }
+  function render(term){
+    const t = (term||'').trim().toLowerCase();
+    const list = Object.entries(P)
+      .filter(([id,pl]) => !t || pl.label.includes(t) ||
+              pl.py.toLowerCase().includes(t) || id.includes(t))
+      .slice(0, 120);
+    el('hits').innerHTML = list.map(([id,pl]) =>
+      `<div class="row${pl.chk?' flag':''}" data-id="${id}">${pl.label} · ${pl.py}
+        <small>x:${pl.x} y:${pl.y} · ${pl.map || 'ไม่มีป้ายบนแผนที่'}</small></div>`).join('');
+    el('hits').querySelectorAll('.row').forEach(r =>
+      r.onclick = () => flyTo(r.dataset.id));
+  }
+  el('q').oninput = e => render(e.target.value);
+
+  /* ── ส่งออก / คืนค่า ── */
+  el('bExport').onclick = () => {
+    const body = Object.entries(P).map(([id,p]) => {
+      const f = [`label:"${p.label}"`, `py:"${p.py}"`, `map:${p.map===null?'null':`"${p.map}"`}`,
+                 `x:${p.x}`, `y:${p.y}`, `type:"${p.type}"`];
+      if(p.chk) f.push('chk:true');
+      return `  ${id}: { ${f.join(', ')} }`;
+    }).join(',\n');
+    copy(`window.TK = window.TK || {};\nwindow.TK.places = {\n${body}\n};\n`,
+         `คัดลอก places.js แล้ว (แก้ ${moved.size} จุด)`);
+  };
+  el('bReset').onclick = () => {
+    for(const id in ORIG){
+      P[id].x = ORIG[id].x; P[id].y = ORIG[id].y;
+      const g = pinOf[id];
+      g.querySelector('circle').setAttribute('cx', P[id].x);
+      g.querySelector('circle').setAttribute('cy', P[id].y);
+      g.querySelector('text').setAttribute('x', P[id].x+9);
+      g.querySelector('text').setAttribute('y', P[id].y+4);
+      g.classList.remove('moved');
+    }
+    moved.clear(); stats(); render(el('q').value);
+    toast('คืนค่าเดิมแล้ว');
+  };
+
+  function copy(text, msg){
+    navigator.clipboard.writeText(text).then(() => toast(msg))
+      .catch(() => {                                   // file:// บางเครื่องบล็อก clipboard
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.append(ta); ta.select();
+        document.execCommand('copy'); ta.remove(); toast(msg);
+      });
+  }
+  let tid;
+  function toast(m){
+    const t = el('toast'); t.textContent = m; t.classList.add('on');
+    clearTimeout(tid); tid = setTimeout(() => t.classList.remove('on'), 1800);
+  }
+
+  function stats(){
+    el('nPlaces').textContent  = Object.keys(P).length;
+    el('nRegions').textContent = Object.keys(R).length;
+    el('nRoutes').textContent  = Object.keys(RT).length;
+    el('nChk').textContent     = Object.values(P).filter(p => p.chk).length;
+    el('nMoved').textContent   = moved.size;
+  }
+
+  stats(); render('');
+})();
+</script>
+</body>
+</html>

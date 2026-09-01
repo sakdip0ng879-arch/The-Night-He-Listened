@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What If — ถ้าหลิวเป้ยฟังคำทัดทานของจ้าวหยุน</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="stage">
+  <div id="where"></div>
+  <div id="seasonnote"></div>
+  <div id="maptools">
+    <button id="btnSpine"  title="สงครามทั้งก้อนในหน้าจอเดียว — 53 ปี สามฝ่าย และราคาที่จ่ายไปทั้งหมด">แกนสงคราม</button>
+    <button id="btnSeason" title="แสดงทุกอย่างที่เกิดขึ้นในฤดูเดียวกัน ไม่ใช่แค่ฉากนี้">ทั้งฤดู</button>
+    <button id="btnRoads"  title="เปิดกราฟถนน — เห็นว่าทำไมกองทัพต้องไปทางนั้น (DECISIONS §4)">ถนน</button>
+    <button id="btnMirror" style="display:none"
+            title="เหลือบมองเอกภพของเรา — แผ่นดินผืนเดียวกัน ณ เวลาเดียวกัน ในประวัติศาสตร์จริง (§15)">สองเอกภพ</button>
+    <button id="btnPlay"   title="เดินเรื่องเองทีละฉาก">▶ เล่น</button>
+    <button id="mapmode"   title="สลับความเข้มของแผนที่พื้น">แผนที่: ปกติ</button>
+  </div>
+  <div id="hud"></div>
+  <!-- คลุมเฉพาะพื้นที่แผนที่ ไม่คลุมคอลัมน์นิยาย — จะได้อ่านไปดูไปได้ -->
+  <div id="spine"></div>
+</div>
+
+<div id="time">
+  <div id="tstack">
+    <div id="chapstrip"></div>
+    <div id="track"></div>
+  </div>
+  <span id="counter">—</span>
+</div>
+
+<aside>
+  <div class="head">
+    <div id="nowchap"></div>
+    <div id="nowyear"></div>
+  </div>
+
+  <!-- พงศาวดารทั้งเล่มอยู่ในนี้ เลื่อนอ่านแล้วแผนที่เดินตาม -->
+  <div class="body" id="reader"></div>
+
+  <div class="hint">
+    <b>เลื่อนอ่านได้เลย — แผนที่เดินตามเรื่อง</b><br>
+    ← → เปลี่ยนฉาก · ลูกกลิ้งซูมแผนที่ · Esc คืนมุมมองเดิม
+  </div>
+
+  <div class="foot">
+    <button id="btnPrev">◀ ย้อน</button>
+    <button id="btnNext">ต่อไป ▶</button>
+    <button id="btnReset" title="กลับไปดูทั้งแผ่นดิน">⤢</button>
+  </div>
+
+  <!-- DECISIONS §3 ล็อกไว้ว่าเครดิตแผนที่ต้องอยู่ท้ายหน้าเสมอ — แผ่นนี้เป็นงานของคนอื่น -->
+  <div class="credit">
+    แผนที่พื้น <a href="https://kongming.net/novel/maps/" target="_blank" rel="noopener noreferrer">kongming.net</a> โดย William L ·
+    เนื้อเรื่องและการนำเสนอโดย Sakdipong
+  </div>
+</aside>
+
+<!-- data โหลดก่อน engine เสมอ (DECISIONS กฎ 3 — ไม่ใช้ fetch เพื่อให้ file:// เปิดได้) -->
+<script src="data/names.js"></script>
+<script src="data/places.js"></script>
+<script src="data/geo.js"></script>
+<!-- รูปเขตแบบไม่มีรอยต่อ สร้างจาก geo.js + ชายฝั่ง (tools/build_geo.js)
+     ลบบรรทัดนี้เพื่อกลับไปใช้รูปที่วาดมือใน geo.js -->
+<script src="data/geo_fill.js"></script>
+<!-- ★ roads.js แทน routes.js ของสองโปรเจกต์ก่อน (DECISIONS §4)
+     มันสร้าง TK.routes ให้ในรูปแบบเดิมทุกประการ engine จึงไม่ต้องแก้ -->
+<script src="data/roads.js"></script>
+<script src="data/timeline.js"></script>
+
+<script src="js/labeler.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/strategic.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/spine.js"></script>
+<script>
+  TK.map.init(document.getElementById('stage'));
+  TK.ui.init();
+  TK.spine.init();
+</script>
+</body>
+</html>

@@ -100,6 +100,60 @@ TK.ui = (function(){
     E.on('beat', render);
     E.goTo(0, 'init');
     bindControls();
+    setupIntro();
+  }
+
+  /* ══ ★ ลิงก์ตรงถึงฉาก + หน้าเปิด (เพิ่ม 2026-09-01) ══════════════════════
+     `#c7-13` ในลิงก์ = เปิดมาที่ฉากนั้นเลย · ใช้ได้ทุกฉาก ไม่ใช่แค่สามฉากในหน้าเปิด
+     ⚠ อ่านอย่างเดียว ไม่เขียน hash กลับตอนผู้อ่านเลื่อน — เพราะการเขียน hash ทุกฉาก
+       จะถล่ม history ของเบราว์เซอร์ (132 รายการ) และไปกวน observer ของคอลัมน์นิยาย */
+  const beatIndexById = id => E.beats.findIndex(b => b.id === id);
+
+  function applyDeepLink(){
+    const id = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+    if (!id) return false;
+    const n = beatIndexById(id);
+    if (n < 0) return false;
+    scrollTo(n);
+    return true;
+  }
+
+  function setupIntro(){
+    const el = $('#intro');
+    if (!el) return;
+    const close = () => {
+      el.remove();
+      try { localStorage.setItem('tk-intro', '1'); } catch {}
+    };
+
+    /* ⚠⚠ สามทางที่ต้องไม่โชว์หน้าเปิด — ข้อสองสำคัญที่สุด:
+         1. เคยดูแล้ว
+         2. `?intro=0` — **ตัวตรวจกับตัวถ่ายภาพส่งมา** ถ้าไม่มีข้อนี้
+            `check_click` จะกดปุ่มไม่โดน (overlay บัง) และภาพจาก `shot.ps1`
+            จะมีหน้าเปิดทับทุกใบ
+         3. มาด้วยลิงก์ตรงถึงฉาก — คนที่รู้ว่ามาหาอะไร ไม่ต้องอ่านคำนำ */
+    let seen = false;
+    try { seen = localStorage.getItem('tk-intro') === '1'; } catch {}
+    const skip = new URLSearchParams(location.search).get('intro') === '0';
+    const deep = applyDeepLink();
+    if (skip || seen || deep){ el.remove(); return; }
+
+    $('#introStart').onclick = close;
+    $('#introPeek').onclick  = () => el.classList.add('peek');
+    el.querySelectorAll('.peeks button').forEach(btn => {
+      btn.onclick = () => {
+        const n = beatIndexById(btn.dataset.goto);
+        close();
+        if (n >= 0) scrollTo(n);
+      };
+    });
+    document.addEventListener('keydown', function esc(e){
+      if (e.key === 'Escape' && document.body.contains(el)){
+        close(); document.removeEventListener('keydown', esc);
+      }
+    });
+    /* เปลี่ยน hash ทีหลังก็ยังกระโดดได้ (เช่นคนแก้ URL เอง) */
+    window.addEventListener('hashchange', applyDeepLink);
   }
 
   /* ══ นิยาย: สร้างทุกตอนไว้ในหน้าเดียว ══ */

@@ -208,6 +208,8 @@ try {
     if ($Spine)  { $qs += "&spine=1";  $file += "-spine" }
     if ($Roads)  { $qs += "&roads=1";  $file += "-roads" }
     if ($Mirror) { $qs += "&mirror=1"; $file += "-mirror" }
+    # ★ 2026-09-01 — ปิดหน้าเปิด ไม่งั้นมันทับภาพตรวจงานทุกใบ (ui.js setupIntro)
+    $qs += "&intro=0"
     $png = Join-Path $Out "$file.png"
     # โปรไฟล์ใหม่ทุกครั้ง ใช้ซ้ำแล้ว Chrome จะไม่ยอมเขียนไฟล์รอบที่สอง
     $prof = Join-Path $Out ("prof-" + [guid]::NewGuid().ToString('N').Substring(0,8))

@@ -63,7 +63,8 @@ async function main(){
   const chrome = spawn(CHROME, [
     '--headless', '--disable-gpu', '--no-sandbox', '--hide-scrollbars',
     `--user-data-dir=${profile}`, `--remote-debugging-port=${DBG}`,
-    '--window-size=1904,980', `http://localhost:${PORT}/index.html`
+    /* ★ 2026-09-01 — intro=0 ปิดหน้าเปิด ไม่งั้น overlay บังปุ่มแล้วทุกแถวขึ้น DEAD */
+    '--window-size=1904,980', `http://localhost:${PORT}/index.html?intro=0`
   ], { stdio:'ignore' });
 
   /* รอให้ DevTools endpoint ขึ้น */

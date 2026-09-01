@@ -81,6 +81,14 @@ TK.ui = (function(){
     return [cx - w/2, cy - h/2, w, h];
   }
 
+  /* ⚠⚠ ต้องอ่าน "ตำแหน่งที่ค้างไว้" **ก่อน** E.goTo(0) เสมอ — เพราะ goTo ยิง render
+     ซึ่งเขียนทับ tk-place ด้วยฉากแรกทันที · ตอนแรกเขียน setupResume() ไว้ท้าย init()
+     แล้วแถบไม่ขึ้นเลยทั้งที่ค่าถูกเก็บไว้จริง (อ่านได้ 'p0-01' ทุกครั้ง)
+     ★ ตระกูลเดียวกับบั๊กลำดับใน init() ที่คอมเมนต์ข้างล่างเล่าไว้ — ในฟังก์ชันนี้
+       **ลำดับสำคัญกว่าที่หน้าตาโค้ดทำให้คิด** ทุกครั้ง */
+  let placeAtLoad = null;
+  try { placeAtLoad = localStorage.getItem('tk-place'); } catch {}
+
   function init(){
     E.beats.forEach((b, i) => {
       const k = seasonKey(b);
@@ -101,6 +109,8 @@ TK.ui = (function(){
     E.goTo(0, 'init');
     bindControls();
     setupIntro();
+    setupResume();
+    const ri = $('#reopenIntro'); if (ri) ri.onclick = reopenIntro;
   }
 
   /* ══ ★ ลิงก์ตรงถึงฉาก + หน้าเปิด (เพิ่ม 2026-09-01) ══════════════════════
@@ -154,6 +164,40 @@ TK.ui = (function(){
     });
     /* เปลี่ยน hash ทีหลังก็ยังกระโดดได้ (เช่นคนแก้ URL เอง) */
     window.addEventListener('hashchange', applyDeepLink);
+  }
+
+  /* ══ ★ อ่านต่อจากที่ค้างไว้ (เพิ่ม 2026-09-02) ═════════════════════════════
+     เจ้าของทัก: *"พอกดดูฉากไปแล้วครั้งนึง พอออกเข้าใหม่มันเด้งไปให้อ่านตั้งแต่ต้น"*
+     ต้นเหตุมีมาก่อนหน้าเปิด — แอปนี้ **ไม่เคยจำตำแหน่งเลย** (E.goTo(0,'init'))
+     แต่หน้าเปิดทำให้มันเจ็บขึ้น เพราะพอใช้ทางลัดแล้วกลับมา ได้ทั้งเริ่มใหม่จากศูนย์
+     และเมนูสามฉากหายถาวร
+     ★ เลือก **เสนอ ไม่ใช่ยึด** — เปิดมายังเริ่มที่ฉากแรกเหมือนเดิม แล้วขึ้นแถบเล็ก ๆ
+       ให้กดอ่านต่อ · เพราะพงศาวดารเป็นของที่คนกลับมาอ่านใหม่ตั้งแต่ต้นได้ การโยน
+       คนเข้ากลางภาคเจ็ดเงียบ ๆ สร้างความงงมากกว่าความสะดวก (และลิงก์ที่แชร์กันต่อ
+       ต้องเริ่มที่เดียวกันเสมอ ไม่ใช่ขึ้นกับว่าเครื่องนั้นเคยอ่านถึงไหน) */
+  function setupResume(){
+    const bar = $('#resume');
+    if (!bar) return;
+    const id = placeAtLoad;              /* ค่าที่อ่านไว้ตั้งแต่ก่อน goTo(0) */
+    if (!id) return;
+    const n = beatIndexById(id);
+    /* หนีบเสมอ ห้ามเชื่อค่าที่เก็บไว้ว่ายังมีอยู่ — ฉากอาจถูกลบ/เปลี่ยน id ไปแล้ว
+       และอย่าเสนอถ้าเพิ่งอ่านไปไม่กี่ฉาก มันไม่ได้ช่วยอะไร */
+    if (n < 3) return;
+    const b = E.beats[n];
+    const chap = TK.chapters.find(c => c.n === b.chapter);
+    $('#resumeWhere').textContent =
+      (chap ? chap.label.replace(/^ภาค/, 'ภาค') + ' · ' : '') + 'ฉากที่ ' + (n + 1);
+    bar.hidden = false;
+    $('#resumeGo').onclick = () => { bar.hidden = true; scrollTo(n); };
+    $('#resumeNo').onclick = () => { bar.hidden = true; };
+  }
+
+  /* กลับไปดูหน้าเปิดอีกครั้ง — ล้างธงแล้วโหลดใหม่ ใช้ทางเดิมทั้งหมด ไม่มีสถานะซ้อน */
+  function reopenIntro(){
+    try { localStorage.removeItem('tk-intro'); } catch {}
+    location.hash = '';
+    location.reload();
   }
 
   /* ══ นิยาย: สร้างทุกตอนไว้ในหน้าเดียว ══ */
@@ -462,6 +506,11 @@ TK.ui = (function(){
   /* ══ วาดใหม่เมื่อตอนที่อ่านอยู่เปลี่ยน ══ */
   function render(ev){
     const b = ev.beat, i = ev.index;
+    /* ⚠⚠ เก็บ **id ของฉาก** ไม่ใช่ดัชนี — ดัชนีผูกกับความยาวอาร์เรย์ ณ วันที่เก็บ
+       ไม่ใช่กับความหมาย · โปรเจกต์นี้เคยโดนกับดักนี้มาแล้วครั้งหนึ่งกับ tk-mapmode
+       (ดูคอมเมนต์ยาวที่ MODES) แล้วผลคือแผนที่ไม่วาดเลยทั้งหน้า
+       ถ้าวันไหนมีการแทรกฉากใหม่ ดัชนีจะเลื่อนทั้งเล่ม แต่ id ไม่เลื่อน */
+    try { localStorage.setItem('tk-place', b.id); } catch {}
     const chap = TK.chapters.find(c => c.n === b.chapter);
 
     $('#nowchap').textContent = chap ? chap.label : '';

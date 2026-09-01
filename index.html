@@ -118,9 +118,17 @@
   <!-- พงศาวดารทั้งเล่มอยู่ในนี้ เลื่อนอ่านแล้วแผนที่เดินตาม -->
   <div class="body" id="reader"></div>
 
+  <!-- แถบอ่านต่อ — โผล่เฉพาะตอนมีตำแหน่งค้างไว้จริง (ui.js setupResume) -->
+  <div id="resume" hidden>
+    <span class="rtext">ค้างไว้ที่ <b id="resumeWhere"></b></span>
+    <button id="resumeGo">อ่านต่อ ▸</button>
+    <button id="resumeNo" title="เริ่มจากต้น">✕</button>
+  </div>
+
   <div class="hint">
     <b>เลื่อนอ่านได้เลย — แผนที่เดินตามเรื่อง</b><br>
-    ← → เปลี่ยนฉาก · ลูกกลิ้งซูมแผนที่ · Esc คืนมุมมองเดิม
+    ← → เปลี่ยนฉาก · ลูกกลิ้งซูมแผนที่ · Esc คืนมุมมองเดิม ·
+    <button id="reopenIntro" class="linkish">หน้าเปิด</button>
   </div>
 
   <div class="foot">

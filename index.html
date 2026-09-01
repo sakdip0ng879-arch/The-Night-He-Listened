@@ -28,6 +28,20 @@
 <meta name="theme-color"        content="#12151a">
 
 <link rel="stylesheet" href="css/style.css">
+
+<!-- ⚠⚠ ต้องตัดสินใจ "โชว์หน้าเปิดไหม" **ก่อนเบราว์เซอร์วาด** ไม่ใช่ตอน ui.js ทำงาน
+     (เจ้าของทัก 2026-09-02: *"กดเข้าลิงก์มามันเด้งหน้า Intro เสร็จแล้วเปลี่ยนไปหน้าแรกทันที"*)
+     เหตุ: #intro อยู่ต้น <body> แต่สคริปต์กับข้อมูลรวม **2.3 MB** อยู่ท้าย <body>
+     ผู้อ่านที่เคยดูหน้าเปิดแล้ว (หรือมาด้วยลิงก์ตรงถึงฉาก) จึงเห็นมัน **แว้บขึ้นมาแล้วหาย**
+     ทุกครั้ง เพราะกว่า setupIntro() จะได้ลบ หน้าก็ถูกวาดไปแล้วเป็นวินาที
+     ★ สคริปต์นี้ทำอย่างเดียวคือติดคลาสกันวาด · ตัวตัดสินจริงยังเป็น setupIntro() ใน ui.js -->
+<script>
+try{
+  var _q = new URLSearchParams(location.search);
+  if (localStorage.getItem('tk-intro') === '1' || location.hash || _q.get('intro') === '0')
+    document.documentElement.classList.add('no-intro');
+}catch(e){}
+</script>
 </head>
 <body>
 

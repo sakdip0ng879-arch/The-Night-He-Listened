@@ -543,3 +543,7 @@ button:disabled{opacity:.32; cursor:default}
   font:inherit; background:none; border:0; padding:0; cursor:pointer;
   color:var(--gold); text-decoration:underline; text-underline-offset:2px;
 }
+
+/* กันหน้าเปิด "แว้บ" ตอนโหลด — คลาสนี้ถูกติดโดยสคริปต์จิ๋วใน <head> ก่อน paint
+   (ดูคอมเมนต์ยาวที่ index.html) · ui.js ถอดออกเองถ้าตัดสินใจว่าจะโชว์จริง */
+html.no-intro #intro{display:none}

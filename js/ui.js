@@ -148,6 +148,10 @@ TK.ui = (function(){
     const deep = applyDeepLink();
     if (skip || seen || deep){ el.remove(); return; }
 
+    /* มาถึงตรงนี้ = ตัดสินใจแล้วว่า **โชว์** · ถอดคลาสกันวาดที่สคริปต์ใน <head> ติดไว้
+       (จำเป็นสำหรับเคส hash ที่ชี้ไปฉากซึ่งไม่มีอยู่จริง — สคริปต์ใน head เห็นแค่ว่า
+        "มี hash" แต่ตัดสินไม่ได้ว่ามันชี้ไปฉากที่มีจริงหรือเปล่า) */
+    document.documentElement.classList.remove('no-intro');
     $('#introStart').onclick = close;
     $('#introPeek').onclick  = () => el.classList.add('peek');
     el.querySelectorAll('.peeks button').forEach(btn => {

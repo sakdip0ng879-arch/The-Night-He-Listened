@@ -110,7 +110,7 @@ TK.ui = (function(){
     bindControls();
     setupIntro();
     setupResume();
-    const ri = $('#reopenIntro'); if (ri) ri.onclick = reopenIntro;
+    const ri = $('#btnIntro'); if (ri) ri.onclick = reopenIntro;
   }
 
   /* ══ ★ ลิงก์ตรงถึงฉาก + หน้าเปิด (เพิ่ม 2026-09-01) ══════════════════════
@@ -142,11 +142,13 @@ TK.ui = (function(){
             `check_click` จะกดปุ่มไม่โดน (overlay บัง) และภาพจาก `shot.ps1`
             จะมีหน้าเปิดทับทุกใบ
          3. มาด้วยลิงก์ตรงถึงฉาก — คนที่รู้ว่ามาหาอะไร ไม่ต้องอ่านคำนำ */
+    const q = new URLSearchParams(location.search);
+    const force = q.get('intro') === '1';      /* ?intro=1 = บังคับโชว์ ชนะทุกเงื่อนไข */
     let seen = false;
     try { seen = localStorage.getItem('tk-intro') === '1'; } catch {}
-    const skip = new URLSearchParams(location.search).get('intro') === '0';
-    const deep = applyDeepLink();
-    if (skip || seen || deep){ el.remove(); return; }
+    const skip = q.get('intro') === '0';
+    const deep = force ? false : applyDeepLink();
+    if (!force && (skip || seen || deep)){ el.remove(); return; }
 
     /* มาถึงตรงนี้ = ตัดสินใจแล้วว่า **โชว์** · ถอดคลาสกันวาดที่สคริปต์ใน <head> ติดไว้
        (จำเป็นสำหรับเคส hash ที่ชี้ไปฉากซึ่งไม่มีอยู่จริง — สคริปต์ใน head เห็นแค่ว่า

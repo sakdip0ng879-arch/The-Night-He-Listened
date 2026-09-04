@@ -66,7 +66,7 @@ TK.map = (function(){
     svg.append(mk('image',{href:'assets/map.jpg', x:0, y:0, width:W, height:H, id:'basemap'}));
     /* ชั้น roads อยู่ใต้ routes เสมอ — กราฟถนนเป็นฉากหลัง การเดินทัพของฉากต้องอยู่ทับ
        (DECISIONS §15 "โหมดถนน · มาฟรีกับ §4" — ข้อมูลมาจาก TK.edges ไม่มีของใหม่) */
-    for (const name of ['regions','wall','focus','roads','routes','markers','pins','labels'])
+    for (const name of ['regions','wall','works','focus','roads','routes','markers','pins','labels'])
       svg.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
@@ -93,6 +93,7 @@ TK.map = (function(){
 
     buildRegions();
     buildWall();
+    buildWorks();
     buildPins();
     bindPanZoom();
     vb = fitBox(0, 0, W, H);        // เริ่มที่ทั้งแผ่นดิน โดยสัดส่วนตรงกับกล่อง
@@ -124,29 +125,29 @@ TK.map = (function(){
      ไม่เคลื่อน** ส่วนกองทัพ **ทึบ มีสีฝ่าย เคลื่อนบนเส้นทาง** — จึงไม่ต้องแย่งรูปกัน
      ⚠ `px` คือความสูงบนจอ (คงที่ทุกระดับซูม) ไม่ใช่หน่วยแผนที่                      */
   const GLYPH = {
-    capital: { px:32, fill:[
+    capital: { px:34, fill:[
       'M12,0.5 L14.2,3.2 L9.8,3.2 Z',
       'M4.5,8.6 C6.2,8.2 6.6,5.6 8.4,4.6 H15.6 C17.4,5.6 17.8,8.2 19.5,8.6 Z',
       'M8,8.6 H16 V12.2 H8 Z',
       'M0.8,16.4 C3,15.9 3.4,13.2 5.4,12.2 H18.6 C20.6,13.2 21,15.9 23.2,16.4 Z',
       'M2.6,16.4 H21.4 V22 H2.6 Z M10.4,18.2 H13.6 V22 H10.4 Z' ] },
-    city: { px:26, fill:[
+    city: { px:30, fill:[
       'M3.2,10.2 C5.2,9.7 5.6,7.2 7.4,6.2 H16.6 C18.4,7.2 18.8,9.7 20.8,10.2 Z',
       'M6.6,10.2 H17.4 V13.6 H6.6 Z',
       'M3.4,13.6 H20.6 V22 H3.4 Z M10.4,17.4 H13.6 V22 H10.4 Z' ] },
-    town: { px:21, fill:[
+    town: { px:30, fill:[
       'M4.6,13.4 C6.6,12.9 8.6,9.2 12,7.6 C15.4,9.2 17.4,12.9 19.4,13.4 Z',
       'M6.8,13.4 H17.2 V22 H6.8 Z M10.6,17.2 H13.4 V22 H10.6 Z' ] },
     /* ★ ด่านต้อง "คร่อมถนน" — ประตูสองบานเว้นช่องกลางไว้ให้เส้นทางลอด */
-    pass: { px:32, fill:[
+    pass: { px:30, fill:[
       'M0.4,8.4 C1.9,8 2.2,5.6 3.8,4.8 H8.4 V8.4 Z',  'M2.2,8.4 H8.4 V22 H2.2 Z',
       'M23.6,8.4 C22.1,8 21.8,5.6 20.2,4.8 H15.6 V8.4 Z', 'M15.6,8.4 H21.8 V22 H15.6 Z',
       'M8.4,6.2 H15.6 V9.4 H8.4 Z' ] },
-    fort: { px:28, fill:[
+    fort: { px:30, fill:[
       'M12,2.4 L15.4,6 L8.6,6 Z', 'M9.6,6 H14.4 V11.4 H9.6 Z',
       'M3,11.4 h3 v-2.2 h2.4 v2.2 h7.2 v-2.2 h2.4 v2.2 h3 V22 H3 Z' ] },
     /* ⚠ กระโจมโค้ง ไม่ใช่สามเหลี่ยม — สามเหลี่ยมชนกับภูเขา (เจ้าของจับได้ 2026-09-02) */
-    camp: { px:28, fill:[
+    camp: { px:30, fill:[
       'M4,17.2 C4,9.4 20,9.4 20,17.2 Z M10.6,17.2 V13.4 H13.4 V17.2 Z',
       'M1.2,18.4 H22.8 V20.6 H1.2 Z',
       'M2.4,18.4 H4.4 V22 H2.4 Z M7.6,18.4 H9.6 V22 H7.6 Z ' +
@@ -156,17 +157,17 @@ TK.map = (function(){
       fill:['M1.2,9.6 C2.6,9.2 3.6,7 5.8,6 C8,7 9,9.2 10.4,9.6 Z','M3.2,9.6 H8.4 V14.6 H3.2 Z'],
       stroke:[{d:'M1.4,15.4 L21,13.2',w:1.85},{d:'M1.4,18.6 L21,16.4',w:1.85},
               {d:'M1.4,21.8 L21,19.6',w:1.85}] },
-    depot: { px:25, fill:[
+    depot: { px:30, fill:[
       'M2.6,9.4 C5,8.8 8,4.4 12,3 C16,4.4 19,8.8 21.4,9.4 Z',
       'M5,9.4 h14 v8.2 a7,4.4 0 0 1 -14,0 Z' ] },
-    ford: { px:25, stroke:[
+    ford: { px:30, stroke:[
       {d:'M1.6,9 q3,-2.4 6,0 t6,0 t6,0',w:2}, {d:'M1.6,15.4 q3,-2.4 6,0 t6,0 t6,0',w:2},
       {d:'M9,4.6 V19.8',w:2,dash:'3 2.6'},    {d:'M15,4.6 V19.8',w:2,dash:'3 2.6'} ] },
-    valley_mouth: { px:28, fill:[
+    valley_mouth: { px:30, fill:[
       'M0,21.4 L7,5.4 L10.4,21.4 Z','M13.6,21.4 L17,5.4 L24,21.4 Z','M11.2,17 H12.8 V22 H11.2 Z' ] },
     /* ภูเขาที่มีชื่อ = สามเหลี่ยมทึบ — คอนเวนชันเดิมของแผ่น (เขาฮวา · ติ้งจวิน · เฉินชาง
        พิมพ์แบบนี้อยู่แล้ว) · ส่วน *ภูมิประเทศ* ภูเขาเป็นคนละชั้น ยังไม่ได้ทำ (เฟส 4) */
-    mountain: { px:26, fill:['M2,21.5 L12,6 L22,21.5 Z'] }
+    mountain: { px:30, fill:['M2,21.5 L12,6 L22,21.5 Z'] }
   };
 
   /* ★★ LOD ของ *สัญลักษณ์* — **ห้ามใช้ `RANK` ของ labeler** ถึงจะมีอยู่แล้วก็ตาม
@@ -232,10 +233,41 @@ TK.map = (function(){
     if (scaleCache !== null && Math.abs(vb.w / scaleCache - 1) < 0.01) return;
     scaleCache = vb.w;
     const cap = symMaxRank(vb.w), f = symZoomFactor(vb.w);
+
+    /* ★★★ ตรวจชนแล้วยุบ — กติกาเดียวกับชั้นที่ 3 ของ `labeler` (2026-09-05)
+       เจ้าของทัก: *"ตอนซูมออกแบบแผนที่ใหญ่ทั้งหมดมันใหญ่จนเกยกัน"*
+       **ทางแก้ที่ผิดคือย่อรูปลง** — รูปเล็กจนอ่านไม่ออกก็ไม่มีความหมายที่จะวาด
+       (เจ้าของพูดเองว่า *"ใช้สัญลักษณ์เล็กแทนเมืองเล็ก ๆ มันก็ไม่มีความหมาย
+       เพราะมันเล็กจิ๋ว"*) → **คงขนาดไว้ แล้วให้ตัวที่แพ้ยุบเป็นจุดกลมแทน**
+       ผลคือความหนาแน่นถูกคุมด้วย *จำนวน* ไม่ใช่ด้วย *ขนาด* — ซึ่งเป็นวิธีที่แผนที่
+       ทำกันมาตลอด และเป็นเหตุผลเดียวกับที่ labeler ซ่อนป้ายแทนที่จะย่อฟอนต์
+
+       ลำดับผู้ชนะ: ฉากนี้พูดถึง > SYM_RANK > ชนิดที่นิ่ง (เรียงชื่อ) — ต้องนิ่ง
+       ไม่งั้นพอ relayout ทีไรตัวที่โผล่จะสลับกันไปมาแล้วภาพกะพริบ                */
+    const cand = [];
+    layers.pins.querySelectorAll('.pin').forEach(g => {
+      const id = g.dataset.id, ty = TK.places[id].type;
+      if (!g.querySelector('.pin-sym') || (SYM_RANK[ty] || 3) > cap) return;
+      cand.push({ id, ty, g,
+                  pri: (forceLabels && forceLabels.has && forceLabels.has(id) ? 0 : 1),
+                  rank: SYM_RANK[ty] || 3 });
+    });
+    cand.sort((a,b) => a.pri - b.pri || a.rank - b.rank || (a.id < b.id ? -1 : 1));
+    const taken = [], keep = new Set();
+    const PAD = 0.86;                    /* ยอมให้เฉียดกันได้นิดหน่อย ไม่งั้นซ่อนเยอะเกิน */
+    for (const c of cand){
+      const p = TK.places[c.id];
+      const s = GLYPH[c.ty].px * f * mu * PAD;
+      const box = { x:p.x - s/2, y:p.y - s, w:s, h:s };
+      if (taken.some(t => box.x < t.x+t.w && t.x < box.x+box.w &&
+                          box.y < t.y+t.h && t.y < box.y+box.h)) continue;
+      taken.push(box); keep.add(c.id);
+    }
+
     layers.pins.querySelectorAll('.pin').forEach(g => {
       const id = g.dataset.id, ty = TK.places[id].type;
       const dot = g.querySelector('.pin-dot'), sym = g.querySelector('.pin-sym');
-      const show = !!sym && (SYM_RANK[ty] || 3) <= cap;
+      const show = keep.has(id);
       if (dot){
         dot.setAttribute('r', (ty==='capital' ? 5 : 3.4) * mu);
         dot.style.strokeWidth = (1.3 * mu) + 'px';
@@ -312,6 +344,69 @@ TK.map = (function(){
       }
     }
     if (teeth) layers.wall.append(mk('path',{class:'wall-teeth', d:teeth}));
+  }
+
+  /* ── ★★ โซ่ป้อม / แนวรั้ว (DECISIONS §3 · เจ้าของอนุญาต 2026-09-05) ──────────
+     ★ **ไม่มีพิกัดของตัวเอง** — สุ่มจุดจาก `d` ของ edge ที่มันเกาะอยู่ แล้วตัดเอา
+       เฉพาะช่วง from–to · ถ้าถนนถูกลากใหม่วันไหน สิ่งก่อสร้างขยับตามเอง
+     ⚠ ป้อมเป็น **หน่วยแผนที่** เหมือนกำแพง — มันคือสิ่งที่ตั้งอยู่บนแผ่นดิน
+       ไม่ใช่สัญลักษณ์บนจอ                                                        */
+  /* ⚠ แผ่นบีบระยะ — edge 180 ลี้ (tianshui–jieting) ยาวแค่ ~58 หน่วยบนแผ่น
+     ระยะป้อมจึงต้องคิดจาก *หน่วยแผ่น* ไม่ใช่จากลี้ ไม่งั้นได้ป้อมสองหลังทั้งโซ่ */
+  const FORT_STEP = 11, FORT_SIZE = 4.2, FENCE_STEP = 7, FENCE_TOOTH = 3.6;
+  function buildWorks(){
+    const list = TK.works || [];
+    if (!list.length) return;
+    const byPair = {};
+    (TK.edges || []).forEach(e => { byPair[e.a+' '+e.b] = e; byPair[e.b+' '+e.a] = e; });
+
+    for (const w of list){
+      const e = byPair[w.on[0]+' '+w.on[1]];
+      if (!e || !e.d) continue;                    /* ข้อ 14 ของตัวตรวจฟ้องให้แล้ว */
+      const probe = mk('path',{d:e.d});
+      layers.works.append(probe);                  /* ต้องอยู่ใน DOM ถึงจะวัดความยาวได้ */
+      const total = probe.getTotalLength();
+      /* `d` ลากจาก a ไป b เสมอ (กติกา §4) — ถ้า `on` กลับด้าน ต้องกลับเศษส่วนด้วย */
+      const flip = (e.a !== w.on[0]);
+      const t0 = flip ? 1 - w.to : w.from, t1 = flip ? 1 - w.from : w.to;
+      const s0 = total * t0, s1 = total * t1;
+      const g = mk('g',{class:'works w-'+w.kind+' s-'+(w.side||'none')});
+      g.dataset.id = w.id;
+
+      /* เส้นแกน — เก็บจุดตามช่วงที่กิน */
+      let d = '', first = true;
+      for (let s = s0; s <= s1; s += 4){
+        const p = probe.getPointAtLength(s);
+        d += (first ? 'M' : ' L') + p.x.toFixed(1) + ',' + p.y.toFixed(1);
+        first = false;
+      }
+      g.append(mk('path',{class:'works-spine', d}));
+
+      if (w.kind === 'fortchain'){
+        /* ป้อมเป็นสี่เหลี่ยมเล็ก ๆ เรียงตามถนน — "แต่ละป้อมมองเห็นป้อมถัดไป" (c7-01) */
+        for (let s = s0; s <= s1 + 0.01; s += FORT_STEP){
+          const p = probe.getPointAtLength(Math.min(s, s1));
+          g.append(mk('rect',{class:'works-fort', x:(p.x-FORT_SIZE/2).toFixed(1),
+            y:(p.y-FORT_SIZE/2).toFixed(1), width:FORT_SIZE, height:FORT_SIZE}));
+        }
+      } else {
+        /* รั้ว — หลักไม้ตั้งฉากกับแนว สั้นและถี่กว่าฟันเสมาของกำแพง */
+        let teeth = '';
+        for (let s = s0; s <= s1; s += FENCE_STEP){
+          const p = probe.getPointAtLength(s);
+          const q = probe.getPointAtLength(Math.min(s + 2, total));
+          const dx = q.x - p.x, dy = q.y - p.y, len = Math.hypot(dx,dy) || 1;
+          const nx = -dy/len * FENCE_TOOTH, ny = dx/len * FENCE_TOOTH;
+          teeth += `M${(p.x-nx/2).toFixed(1)},${(p.y-ny/2).toFixed(1)}` +
+                   `l${nx.toFixed(1)},${ny.toFixed(1)}`;
+        }
+        if (teeth) g.append(mk('path',{class:'works-stake', d:teeth}));
+      }
+      const t = mk('title'); t.textContent = w.label + (w.note ? ' — ' + w.note : '');
+      g.append(t);
+      probe.remove();
+      layers.works.append(g);
+    }
   }
 
   function buildPins(){

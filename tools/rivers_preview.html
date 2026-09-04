@@ -21,15 +21,19 @@ svg{background:#efeadd;border:1px solid #c9c3b4;display:block;width:100%;max-wid
 </div>
 <svg id="s" viewBox="0 0 1650 1950"></svg>
 <div class="k" id="info"></div>
-<script src="../data/rivers.js"></script>
+<script src="../data/water.js"></script>
 <script>
 const NS='http://www.w3.org/2000/svg';
 const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const svg=document.getElementById('s');
 const img=mk('image',{href:'../assets/map.jpg',x:0,y:0,width:1650,height:1950,opacity:.55});
 svg.append(img);
-const gR=mk('g',{}); const gN=mk('g',{}); svg.append(gR,gN);
-const R=TK.rivers;
+const W_=TK.water, R=W_.rivers, CO=W_.coast, LK=W_.lakes;
+const gL=mk('g',{}); const gC=mk('g',{}); const gR=mk('g',{}); const gN=mk('g',{});
+svg.append(gL,gC,gR,gN);
+/* ทะเลสาบเป็นพื้น ชายฝั่งเป็นเส้นขอบ แม่น้ำอยู่บนสุดของชั้นน้ำ */
+for(const l of LK) gL.append(mk('path',{d:'M'+l.p.map(p=>p.join(',')).join(' L')+' Z',fill:'#1f6fb8','fill-opacity':.28,stroke:'#1f6fb8','stroke-opacity':.55,'stroke-width':1.2}));
+for(const l of CO) gC.append(mk('path',{class:'riv',d:'M'+l.p.map(p=>p.join(',')).join(' L'),'stroke-width':2,'stroke-opacity':.75}));
 
 function draw(){
   const cap=+document.getElementById('rk').value;

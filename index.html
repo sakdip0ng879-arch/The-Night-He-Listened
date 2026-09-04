@@ -110,7 +110,6 @@ try{
     <button id="btnRoads"  title="เปิดกราฟถนน — เห็นว่าทำไมกองทัพต้องไปทางนั้น (DECISIONS §4)">ถนน</button>
     <button id="btnMirror" style="display:none"
             title="เหลือบมองเอกภพของเรา — แผ่นดินผืนเดียวกัน ณ เวลาเดียวกัน ในประวัติศาสตร์จริง (§15)">สองเอกภพ</button>
-    <button id="btnWater" title="ทับชั้นน้ำจริง (Natural Earth) ลงบนแผ่น — ไว้เทียบว่าตรงกับที่แผ่นวาดไว้แค่ไหน">น้ำ</button>
     <button id="btnLegend" title="ตารางสัญลักษณ์ — รูปแต่ละแบบบนแผนที่แปลว่าอะไร">สัญลักษณ์</button>
     <button id="btnPlay"   title="เดินเรื่องเองทีละฉาก">▶ เล่น</button>
     <button id="mapmode"   title="สลับความเข้มของแผนที่พื้น">แผนที่: ปกติ</button>
@@ -176,9 +175,7 @@ try{
 <script src="data/geo_fill.js"></script>
 <!-- ★ roads.js แทน routes.js ของสองโปรเจกต์ก่อน (DECISIONS §4)
      มันสร้าง TK.routes ให้ในรูปแบบเดิมทุกประการ engine จึงไม่ต้องแก้ -->
-<script src="data/wall.js"></script>
-<script src="data/water.js"></script>  <!-- ชั้นน้ำจริง Natural Earth ดัดเข้าพิกัดแผ่น -->
-<script src="data/works.js"></script>  <!-- โซ่ป้อม/แนวรั้ว · เกาะ edge ของกราฟถนน -->   <!-- กำแพงเมืองจีน · สร้างจาก bordermask โดย tools/build_wall.js -->
+<script src="data/works.js"></script>  <!-- โซ่ป้อม/แนวรั้ว · เกาะ edge ของกราฟถนน -->
 <script src="data/roads.js"></script>
 <script src="data/timeline.js"></script>
 

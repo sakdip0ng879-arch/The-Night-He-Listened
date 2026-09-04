@@ -31,6 +31,7 @@ const CONTROLS = [
   ['btnSpine',  `document.getElementById('spine').className`],
   ['btnSeason', `document.getElementById('btnSeason').className`],
   ['btnPlay',   `document.getElementById('btnPlay').textContent`],
+  ['btnLegend', `document.getElementById('legend').hidden`],
   ['mapmode',   `document.getElementById('mapmode').textContent`],
   ['btnNext',   `TK.engine.index`],
   ['btnPrev',   `TK.engine.index`],

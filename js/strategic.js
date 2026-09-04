@@ -1486,7 +1486,10 @@ TK.map = (function(){
     return false;
   }
 
+  /* ★ เปิดตาราง GLYPH ให้ ui.js เอาไปทำปุ่มสัญลักษณ์ — **อ่านอย่างเดียว**
+     ห้ามให้ที่อื่นแก้ ไม่งั้นตารางสัญลักษณ์จะมีสองแหล่ง (§14) */
   const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads,
+                get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };
   return api;

@@ -577,3 +577,33 @@ button:disabled{opacity:.32; cursor:default}
 /* กันหน้าเปิด "แว้บ" ตอนโหลด — คลาสนี้ถูกติดโดยสคริปต์จิ๋วใน <head> ก่อน paint
    (ดูคอมเมนต์ยาวที่ index.html) · ui.js ถอดออกเองถ้าตัดสินใจว่าจะโชว์จริง */
 html.no-intro #intro{display:none}
+
+/* ══ ★★ ตารางสัญลักษณ์ (ปุ่ม "สัญลักษณ์" · 2026-09-05) ══
+   วางใต้แถบปุ่มมุมขวาบน · z-index ต่ำกว่าปุ่มเอง จะได้ไม่บังปุ่มที่ใช้ปิดมัน
+   (บทเรียนเดียวกับ #spine ที่เคยคลุมปุ่มตัวเองจนคนอ่านติดอยู่ข้างใน) */
+#legend{position:absolute; right:var(--pad); top:calc(var(--pad) + 40px); z-index:7;
+  width:298px; max-height:calc(100% - 110px); overflow-y:auto;
+  background:rgba(14,16,21,.94); backdrop-filter:blur(10px);
+  border:1px solid var(--line); border-radius:10px; padding:11px 13px 13px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5); font-size:11.5px; line-height:1.45}
+#legend .lg-head{color:var(--gold); font-size:10.5px; font-weight:700; letter-spacing:.3px;
+  margin:11px 0 5px; padding-bottom:4px; border-bottom:1px solid var(--line)}
+#legend .lg-head:first-child{margin-top:0}
+.lg-row{display:flex; gap:9px; align-items:flex-start; padding:3px 0}
+.lg-ico{flex:0 0 26px; height:26px; display:flex; align-items:center; justify-content:center}
+.lg-row b{display:block; color:var(--text); font-weight:600}
+.lg-row span{display:block; color:var(--dim); font-size:10.5px; line-height:1.35}
+/* ⚠ ต้องเป็นสีอ่อนที่นี่ — พาเนลพื้นมืด ต่างจากบนแผนที่ที่พื้นเป็นกระดาษ */
+#legend svg path{fill:#dfe3ec; fill-opacity:.95; stroke:none}
+#legend svg path.gs{fill:none; stroke:#dfe3ec; stroke-linecap:round}
+#legend .lg-unit{fill:var(--gold)}
+#legend .lg-wall{stroke:#c9c1ad; stroke-width:2.4}
+#legend .lg-wall-t{stroke:#c9c1ad; stroke-width:1.6; fill:none}
+#legend .lg-spine{stroke:#9a927f; stroke-width:1.4}
+#legend .lg-fort{fill:var(--han); stroke:#0b0d12; stroke-width:1}
+#legend .lg-stake{stroke:#9a927f; stroke-width:1.5; fill:none; stroke-linecap:round}
+.lg-sides{display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  color:var(--dim); font-size:10.5px; margin-top:7px}
+.lg-sides i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px}
+.lg-foot{color:var(--dim); font-size:10.5px; line-height:1.4; margin-top:9px;
+  padding-top:8px; border-top:1px solid var(--line)}

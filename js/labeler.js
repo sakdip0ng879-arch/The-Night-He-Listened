@@ -120,11 +120,20 @@ TK.labeler = (function(){
     const shown = visible.filter(([id,p]) =>
       force.has(id) || (!p.map && (RANK[p.type] || 4) <= limit));
 
-    /* จองพื้นที่ของหมุดทุกอันก่อน — ป้ายห้ามทับจุดของสถานที่อื่น */
-    const taken = shown.map(([id,p]) => {
+    /* ★★ 2026-09-05 — หมุดไม่ใช่จุดกลม 4px อีกแล้ว
+       ตั้งแต่มีสัญลักษณ์สถานที่ (§3) รูปที่วาดจริงสูงได้ถึง ~34px และ **ยึดที่ฐาน**
+       (พิกัดของสถานที่อยู่กึ่งกลางฐานของรูป รูปจึงกินที่ *เหนือ* จุดขึ้นไปทั้งหมด)
+       ถ้ายังคิดเป็นวงกลมรัศมี 4 ป้ายจะไปนอนทับรูปเต็ม ๆ
+       → `opts.pinBox(id, p)` ให้ `strategic.js` ส่งกล่องจริงมา (มันเป็นคนวาด มันรู้ขนาด)
+         ไม่ส่งมา = ใช้วงกลมแบบเดิม ของเก่าจึงไม่พัง */
+    const boxOf = (id, p) => {
+      const b = opts.pinBox && opts.pinBox(id, p);
+      if (b && b.w > 0) return b;
       const r = (p.type === 'capital' ? pinRpx + 2 : pinRpx) * mu;
       return { x:p.x - r, y:p.y - r, w:r*2, h:r*2 };
-    });
+    };
+    /* จองพื้นที่ของหมุดทุกอันก่อน — ป้ายห้ามทับรูปของสถานที่อื่น */
+    const taken = shown.map(([id,p]) => boxOf(id, p));
     /* ★ กล่องของชั้นอื่นที่จองไว้ก่อนแล้ว — ป้ายของฉากเป็นเจ้าของที่ ชื่อเมืองต้องหลบ */
     if (opts.avoid) for (const b of opts.avoid) if (b && b.w > 0 && b.h > 0) taken.push(b);
 
@@ -148,12 +157,19 @@ TK.labeler = (function(){
       if (labels.length >= cap && !force.has(id)){ hidden++; continue; }
       const wPx = textWidth(p.label, fontPx, fontFamily);
       const wMU = wPx * mu;
-      const r   = (p.type === 'capital' ? pinRpx + 2 : pinRpx) * mu;
+      /* ★ ระยะเยื้องต้องคิดจาก **กล่องจริง** ไม่ใช่รัศมีเดียวใช้ทุกทิศ
+         รูปยึดที่ฐาน → ด้านบนต้องเยื้องเท่าความสูงของรูป ส่วนด้านล่างไม่ต้องเยื้องเลย
+         (ใต้จุดยึดไม่มีอะไรวาดอยู่) — ใช้รัศมีเดียวทุกทิศคือที่มาของป้ายทับรูป */
+      const bx  = boxOf(id, p);
+      const halfW = bx.w / 2;
+      const upH   = (p.y - bx.y);            /* รูปสูงเหนือจุดยึดเท่าไร */
 
       let placed = null;
       for (const c of CANDIDATES){
-        const x = p.x + c.dx * (r + pad*1.6);
-        const y = p.y + c.dy * lineMU;
+        const x = p.x + c.dx * (halfW + pad*1.6);
+        const y = c.dy < 0 ? bx.y - pad*1.2 + c.dy * lineMU * 0.1
+                : c.dy > 1 ? p.y + c.dy * lineMU        /* ล่าง — ไม่มีรูปขวาง */
+                :            p.y + c.dy * lineMU + (c.dx === 0 ? 0 : -upH * 0.35);
         const boxX = c.anchor === 'start' ? x
                    : c.anchor === 'end'   ? x - wMU
                    :                        x - wMU/2;

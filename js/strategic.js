@@ -193,6 +193,9 @@ TK.map = (function(){
 
   /* จุดไหนที่ labeler เลือกจะเขียนชื่อให้ — จุดกลมยังผูกกับชุดนี้ ส่วนสัญลักษณ์ไม่ผูก */
   let labelPins = new Set();
+  /* ★ กล่องจริงของหมุดที่วาดอยู่ตอนนี้ (หน่วยแผนที่) — labeler ยืมไปใช้กันป้ายทับรูป
+     เขียนตอน scalePins เพราะที่นั่นเป็นที่เดียวที่รู้ทั้งขนาดและ LOD */
+  const symBox = {};
 
   /* ★★ ขนาดสัญลักษณ์ — **ไม่ใช่ "คงที่บนจอ"** (เจ้าของทัก 2026-09-02:
      *"ตอนซูมออกไอคอนใหญ่กำลังดี แต่ซูมเข้ามันโคตรเล็ก"*)
@@ -274,8 +277,11 @@ TK.map = (function(){
       }
       if (sym){
         sym.dataset.lod = show ? '1' : '0';
+        if (!show) delete symBox[id];
         if (show){
           const p = TK.places[id], k = GLYPH[ty].px * f * mu / 24;
+          symBox[id] = { x:p.x - GLYPH[ty].px*f*mu/2, y:p.y - GLYPH[ty].px*f*mu,
+                         w:GLYPH[ty].px*f*mu, h:GLYPH[ty].px*f*mu };
           sym.setAttribute('transform',
             `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
         }
@@ -1298,6 +1304,7 @@ TK.map = (function(){
     }
     const res = TK.labeler.layout(TK.places, vb, screenW, {
       force: forceLabels, quiet: quietLabels, fontPx: FONT_PX, pinR: 4, avoid,
+      pinBox: (id) => symBox[id],      /* ★ กล่องจริงของรูป ไม่ใช่วงกลม 4px */
       fontFamily: '"Leelawadee UI","Segoe UI",Tahoma,sans-serif'
     });
 

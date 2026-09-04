@@ -1,0 +1,285 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<title>ตารางสัญลักษณ์สถานที่ — ร่างรอบสอง</title>
+<style>
+:root{ --paper:#f2efe6; --ink:#14181f; --han:#2E9E5B; --wei:#2563A8; --line:#c9c3b4; }
+*{box-sizing:border-box}
+body{margin:0;padding:26px 30px 60px;background:var(--paper);color:var(--ink);
+     font:14px/1.6 "Segoe UI","Leelawadee UI",Tahoma,sans-serif}
+h1{font-size:20px;margin:0 0 4px}
+h2{font-size:15px;margin:32px 0 10px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+h3{font-size:13.5px;margin:18px 0 6px;color:#4a4536}
+.sub{color:#6b6555;margin:0 0 6px}
+table{border-collapse:collapse;width:100%;max-width:1180px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+th{font-size:12px;color:#6b6555;font-weight:600}
+td.g{width:66px;text-align:center}
+.nm{font-family:Consolas,monospace;font-size:12px;color:#6b6555}
+.cnt{font-variant-numeric:tabular-nums;color:#6b6555;font-size:12px}
+svg.sym{color:var(--ink);display:block;margin:0 auto}
+.note{font-size:12.5px;color:#6b6555}
+.new{background:#fff8dc}
+.scene{background:#efeadd;border:1px solid var(--line);border-radius:3px;display:block;width:100%;max-width:1180px;height:auto}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:#6b6555;margin-top:8px}
+.q{background:#fffdf5;border-left:3px solid var(--ink);padding:10px 14px;margin:16px 0;max-width:1180px}
+.verdict{font-size:12.5px;padding:6px 0 14px;color:#4a4536}
+.ok{color:#1d7a45;font-weight:600} .bad{color:#a8332c;font-weight:600}
+</style></head><body>
+
+<h1>ตารางสัญลักษณ์สถานที่ — ✅ ล็อกแล้ว 2026-09-02 (DECISIONS §3)</h1>
+<p class="sub">แก้ตามที่เคาะ: ค่าย = กระโจมโค้งใบเดียว + รั้วเด่น · ค่ายนา = กระท่อม + ร่องนา · <b>และแยกภูเขาออกจากตารางสัญลักษณ์ ไปเป็นชั้นภูมิประเทศ</b></p>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="s-capital" viewBox="0 0 24 24"><g fill="currentColor">
+    <polygon points="12,0.5 14.2,3.2 9.8,3.2"/>
+    <path d="M4.5,8.6 C6.2,8.2 6.6,5.6 8.4,4.6 H15.6 C17.4,5.6 17.8,8.2 19.5,8.6 Z"/>
+    <rect x="8" y="8.6" width="8" height="3.6"/>
+    <path d="M0.8,16.4 C3,15.9 3.4,13.2 5.4,12.2 H18.6 C20.6,13.2 21,15.9 23.2,16.4 Z"/>
+    <path fill-rule="evenodd" d="M2.6,16.4 H21.4 V22 H2.6 Z M10.4,18.2 H13.6 V22 H10.4 Z"/>
+  </g></symbol>
+
+  <symbol id="s-city" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M3.2,10.2 C5.2,9.7 5.6,7.2 7.4,6.2 H16.6 C18.4,7.2 18.8,9.7 20.8,10.2 Z"/>
+    <rect x="6.6" y="10.2" width="10.8" height="3.4"/>
+    <path fill-rule="evenodd" d="M3.4,13.6 H20.6 V22 H3.4 Z M10.4,17.4 H13.6 V22 H10.4 Z"/>
+  </g></symbol>
+
+  <symbol id="s-town" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M4.6,13.4 C6.6,12.9 8.6,9.2 12,7.6 C15.4,9.2 17.4,12.9 19.4,13.4 Z"/>
+    <path fill-rule="evenodd" d="M6.8,13.4 H17.2 V22 H6.8 Z M10.6,17.2 H13.4 V22 H10.6 Z"/>
+  </g></symbol>
+
+  <symbol id="s-pass" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M0.4,8.4 C1.9,8 2.2,5.6 3.8,4.8 H8.4 V8.4 Z"/>
+    <rect x="2.2" y="8.4" width="6.2" height="13.6"/>
+    <path d="M23.6,8.4 C22.1,8 21.8,5.6 20.2,4.8 H15.6 V8.4 Z"/>
+    <rect x="15.6" y="8.4" width="6.2" height="13.6"/>
+    <rect x="8.4" y="6.2" width="7.2" height="3.2"/>
+  </g></symbol>
+
+  <symbol id="s-fort" viewBox="0 0 24 24"><g fill="currentColor">
+    <polygon points="12,2.4 15.4,6 8.6,6"/>
+    <rect x="9.6" y="6" width="4.8" height="5.4"/>
+    <path d="M3,11.4 h3 v-2.2 h2.4 v2.2 h7.2 v-2.2 h2.4 v2.2 h3 V22 H3 Z"/>
+  </g></symbol>
+
+  <!-- ★ รอบสอง: กระโจมโค้งใบเดียว + รั้วหนาขึ้น — เลิกใช้สามเหลี่ยมเพื่อไม่ให้ชนกับภูเขา -->
+  <symbol id="s-camp" viewBox="0 0 24 24"><g fill="currentColor">
+    <path fill-rule="evenodd" d="M4,17.2 C4,9.4 20,9.4 20,17.2 Z M10.6,17.2 V13.4 H13.4 V17.2 Z"/>
+    <rect x="1.2" y="18.4" width="21.6" height="2.2"/>
+    <rect x="2.4" y="18.4" width="2" height="3.6"/><rect x="7.6" y="18.4" width="2" height="3.6"/>
+    <rect x="12.8" y="18.4" width="2" height="3.6"/><rect x="18" y="18.4" width="2" height="3.6"/>
+  </g></symbol>
+
+  <!-- ★ รอบสอง: กระท่อม + ร่องนา -->
+  <symbol id="s-farm" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M1.2,9.6 C2.6,9.2 3.6,7 5.8,6 C8,7 9,9.2 10.4,9.6 Z"/>
+    <rect x="3.2" y="9.6" width="5.2" height="5"/>
+    <!-- ★ ร่องนาเป็นเส้นตรงเฉียง ไม่ใช่เส้นหยัก — หยัก = น้ำ (ชนกับท่าข้าม) · ตรง = ร่องไถ -->
+    <g fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round">
+      <path d="M1.4,15.4 L21,13.2"/>
+      <path d="M1.4,18.6 L21,16.4"/>
+      <path d="M1.4,21.8 L21,19.6"/>
+    </g>
+  </g></symbol>
+
+  <symbol id="s-depot" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M2.6,9.4 C5,8.8 8,4.4 12,3 C16,4.4 19,8.8 21.4,9.4 Z"/>
+    <path d="M5,9.4 h14 v8.2 a7,4.4 0 0 1 -14,0 Z"/>
+  </g></symbol>
+
+  <symbol id="s-ford" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <path d="M1.6,9 q3,-2.4 6,0 t6,0 t6,0"/><path d="M1.6,15.4 q3,-2.4 6,0 t6,0 t6,0"/>
+    <path d="M9,4.6 V19.8" stroke-dasharray="3 2.6"/><path d="M15,4.6 V19.8" stroke-dasharray="3 2.6"/>
+  </g></symbol>
+
+  <symbol id="s-valley" viewBox="0 0 24 24"><g fill="currentColor">
+    <polygon points="0,21.4 7,5.4 10.4,21.4"/><polygon points="13.6,21.4 17,5.4 24,21.4"/>
+    <rect x="11.2" y="17" width="1.6" height="5"/>
+  </g></symbol>
+
+  <symbol id="s-peak" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M1.4,20.6 L8.4,8 L13,15.4 L15.8,11.2 L22.6,20.6 Z"/>
+    <path d="M8.4,8 L10.8,12.2" stroke-width="1.6"/>
+  </g></symbol>
+
+  <symbol id="s-wall" viewBox="0 0 24 24"><g fill="currentColor">
+    <path d="M0,13 h24 v6 H0 Z"/>
+    <rect x="1" y="9.6" width="3.4" height="3.4"/><rect x="7.4" y="9.6" width="3.4" height="3.4"/>
+    <rect x="13.8" y="9.6" width="3.4" height="3.4"/><rect x="20.2" y="9.6" width="3.4" height="3.4"/>
+  </g></symbol>
+</defs></svg>
+
+<h2>1 · สิบเอ็ดสัญลักษณ์จุด (ภูเขาย้ายออกแล้ว — ดูหัวข้อ 4)</h2>
+<p class="note">คอลัมน์ <b>ฉาก</b> = ขนาดที่เห็นจริงตอนกล้องซูมฉาก (~17px) · <b>ทั้งแผ่น</b> = ตอนถอยออกดูทั้งแผ่นดิน (~9px)</p>
+<table id="tbl">
+<tr><th>ออกแบบ 48px</th><th>ฉาก</th><th>ทั้งแผ่น</th><th>ชนิด</th><th>ในข้อมูล</th><th>คนอ่านควรอ๋อว่า</th></tr>
+</table>
+
+<h2>2 · แถบจำลองบริบทจริง</h2>
+<p class="note">สีเขต + กราฟถนน + สัญลักษณ์ + ลูกศรเดินทัพของฉากทับข้างบน — ทุกชั้นซ้อนกันแบบบนจอจริง</p>
+<svg class="scene" viewBox="0 0 1180 300" width="1180" height="300">
+  <rect x="0" y="0" width="1180" height="300" fill="#efeadd"/>
+  <path d="M0,0 H520 V300 H0 Z" fill="#2E9E5B" opacity=".13"/>
+  <path d="M520,0 H1180 V300 H520 Z" fill="#2563A8" opacity=".13"/>
+  <path d="M520,0 V300" stroke="#9AA0A6" stroke-width="2" stroke-dasharray="7 6"/>
+  <g id="ctxRidge" color="#14181f"></g>
+  <path d="M60,215 C 190,215 235,150 330,150 C 430,150 470,196 520,196 C 610,196 640,120 760,120 C 880,120 940,175 1120,175"
+        fill="none" stroke="#b3ab98" stroke-width="3.4"/>
+  <g color="#14181f" opacity=".85">
+    <use href="#s-valley"  x="292" y="76"  width="80"  height="80"/>
+    <use href="#s-farm"    x="146" y="198" width="70"  height="70"/>
+    <use href="#s-farm"    x="214" y="204" width="62"  height="62"/>
+    <use href="#s-town"    x="34"  y="182" width="52"  height="52"/>
+    <use href="#s-depot"   x="358" y="158" width="60"  height="60"/>
+    <use href="#s-camp"    x="592" y="126" width="74"  height="74"/>
+    <use href="#s-city"    x="700" y="70"  width="68"  height="68"/>
+    <use href="#s-fort"    x="820" y="86"  width="58"  height="58"/>
+    <use href="#s-capital" x="1046" y="110" width="86" height="86"/>
+  </g>
+  <g color="#14181f"><use href="#s-pass" x="486" y="160" width="72" height="72"/></g>
+  <path d="M62,213 C 190,213 235,148 330,148 C 420,148 465,193 502,195"
+        fill="none" stroke="#1a1a1a" stroke-width="9.5" opacity=".5" stroke-linecap="round"/>
+  <path d="M62,213 C 190,213 235,148 330,148 C 420,148 465,193 502,195"
+        fill="none" stroke="#2E9E5B" stroke-width="5.5" stroke-linecap="round"/>
+  <polygon points="522,195 500,186 500,204" fill="#2E9E5B" stroke="#12151b" stroke-width="1.3"/>
+  <rect x="326" y="119" width="13" height="13" fill="#2E9E5B" stroke="#12151b" stroke-width="1.5"/>
+  <g font-size="12.5" fill="#4a4536" font-family="Segoe UI,Leelawadee UI,Tahoma,sans-serif">
+    <text x="30"  y="256">เมืองเล็ก</text><text x="150" y="284">ค่ายนา</text>
+    <text x="286" y="170">ปากหุบ</text><text x="352" y="234">ยุ้ง</text>
+    <text x="450" y="252">ด่านคร่อมถนน</text><text x="594" y="214">ค่าย</text>
+    <text x="700" y="152">เมือง</text><text x="812" y="152">ป้อม</text>
+    <text x="1040" y="214">นครหลวง</text><text x="150" y="60">เทือกเขา = ชั้นภูมิประเทศ</text>
+  </g>
+</svg>
+
+<h2>3 · ★ ภูเขา — คุณทักถูก ผมแก้ตารางตัวเอง</h2>
+<p class="note">
+สามแผงข้างล่างใช้ <b>ข้อมูลสันเขาชุดเดียวกันเป๊ะ</b> (24 สัน จำลองความหนาแน่นแถบฉินหลิ่ง–ฉีซาน)
+มีถนนสองสายลอดหุบเหมือนกันทั้งสามแผง ต่างกันแค่วิธีวาด · ขนาดคือสเกลจริงตอนซูมฉาก</p>
+
+<h3>ก · ทึบล้วน (ที่ผมเสนอรอบแรก)</h3>
+<svg class="scene" id="mSolid" viewBox="0 0 1180 170" width="1180" height="170"></svg>
+<p class="verdict"><span class="bad">ตก</span> — ซ้อนกันแล้วเป็นก้อนดำก้อนเดียว ไม่รู้ว่ามีกี่สัน หุบอยู่ไหน ถนนหายเข้าไปในก้อน</p>
+<h3>ข · เส้นโปร่งล้วน (แบบที่แผ่นเดิมใช้)</h3>
+<svg class="scene" id="mLine" viewBox="0 0 1180 170" width="1180" height="170"></svg>
+<p class="verdict"><span class="bad">ตกเหมือนกัน แต่คนละอาการ</span> — เส้นของสันที่อยู่*ข้างหลัง*ทะลุออกมาหมด กลายเป็นตาข่าย ไม่ใช่ภูเขา</p>
+<h3>ค · เงาข้างเดียว แต่ยังไม่บังกัน</h3>
+<svg class="scene" id="mHach" viewBox="0 0 1180 170" width="1180" height="170"></svg>
+<p class="verdict">มีมิติขึ้นมาก แต่ยังเห็นเส้นของสันหลังทะลุสันหน้าอยู่</p>
+<h3>★ ง · เงาข้างเดียว + บังกัน — สันหน้าบังสันหลัง</h3>
+<svg class="scene" id="mOcc" viewBox="0 0 1180 170" width="1180" height="170"></svg>
+<p class="verdict"><span class="ok">อันนี้แหละ</span> — เติมสีกระดาษทึบในตัวสันก่อนลากเส้น สันที่อยู่หน้าจึงบังสันที่อยู่หลังเหมือนของจริง · ตาอ่านเป็น <b>เทือก</b> ทันที เห็นชั้นลึก เห็นหุบ และถนนยังเด่นอยู่</p>
+<div class="q"><b>✅ เคาะครบแล้ว 2026-09-02</b><br>ชายคาโค้ง · ด่านคร่อมถนน · ค่ายนา = กระท่อม + ร่องนาเส้นตรงเฉียง · ค่าย = กระโจมโค้ง + รั้วหนา<br>ภูเขา: ภูมิประเทศใช้ <b>เส้นสัน + ขีดลาด + เงาลาดขวา</b> (ดู <span class="nm">relief_test.html</span>) · ภูเขาที่มีชื่อใช้สามเหลี่ยมทึบตามคอนเวนชันเดิมของแผ่น</div>
+
+<script>
+/* ── สันเขาชุดเดียว ใช้ทั้งสามแผง เพื่อให้เทียบกันได้จริง ── */
+const NS='http://www.w3.org/2000/svg';
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+let seed=20260902;
+const rnd=()=>{seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;};
+
+/* สร้างเทือก: สามแถวซ้อนกัน แถวหลังเล็กกว่าและสูงกว่า */
+function makeRange(){
+  const out=[];
+  const rows=[{y:150,w:[46,70],h:[34,54],n:8},{y:132,w:[54,84],h:[42,64],n:10},{y:112,w:[62,96],h:[46,72],n:12}];
+  for(const r of rows){
+    let x=40+rnd()*40;
+    for(let i=0;i<r.n;i++){
+      const w=r.w[0]+rnd()*(r.w[1]-r.w[0]), h=r.h[0]+rnd()*(r.h[1]-r.h[0]);
+      out.push({cx:x+w/2, base:r.y, w, h, skew:0.06+rnd()*0.26});
+      x+=w*(0.52+rnd()*0.22);
+      if(x>1140) break;
+    }
+  }
+  return out;
+}
+const RANGE=makeRange();
+
+/* ถนนสองสายลอดหุบ — เหมือนกันทั้งสามแผง */
+const ROADS=[
+  'M30,152 C 210,148 300,120 430,124 C 560,128 640,104 780,110 C 920,116 1010,136 1150,132',
+  'M300,164 C 360,138 392,96 470,76 C 548,56 604,78 660,66'
+];
+
+function ridgePts(p){
+  const l=p.cx-p.w/2, r=p.cx+p.w/2, t=p.base-p.h;
+  const sx=p.cx+p.w*p.skew, sy=p.base-p.h*(0.30+p.skew);   /* ไหล่ขวา ไม่เท่ากันทุกลูก */
+  return {l,r,t,sx,sy};
+}
+
+function draw(id,style){
+  const svg=document.getElementById(id);
+  svg.append(mk('rect',{x:0,y:0,width:1180,height:170,fill:'#efeadd'}));
+  const gT=mk('g',{}); svg.append(gT);
+
+  for(const p of RANGE){
+    const {l,r,t,sx,sy}=ridgePts(p);
+    const outline=`M${l.toFixed(1)},${p.base} L${p.cx.toFixed(1)},${t.toFixed(1)} L${sx.toFixed(1)},${sy.toFixed(1)} L${r.toFixed(1)},${p.base} Z`;
+    if(style==='solid'){
+      gT.append(mk('path',{d:outline,fill:'#14181f','fill-opacity':.82}));
+    } else if(style==='line'){
+      gT.append(mk('path',{d:outline,fill:'none',stroke:'#14181f','stroke-width':1.7,
+                           'stroke-opacity':.62,'stroke-linejoin':'round'}));
+    } else {
+      const shade=`M${p.cx.toFixed(1)},${t.toFixed(1)} L${sx.toFixed(1)},${sy.toFixed(1)} ` +
+                  `L${r.toFixed(1)},${p.base} L${(p.cx+p.w*0.06).toFixed(1)},${p.base} Z`;
+      if(style==='occ') gT.append(mk('path',{d:outline,fill:'#efeadd'}));   /* บังสันที่อยู่หลัง */
+      gT.append(mk('path',{d:shade,fill:'#14181f','fill-opacity':.30}));
+      gT.append(mk('path',{d:outline,fill:'none',stroke:'#14181f','stroke-width':1.7,
+                           'stroke-opacity':.72,'stroke-linejoin':'round'}));
+    }
+  }
+  for(const d of ROADS){
+    svg.append(mk('path',{d,fill:'none',stroke:'#b3ab98','stroke-width':3.4}));
+  }
+  /* ลูกศรเดินทัพหนึ่งเส้น ให้เห็นว่าของฉากยังเด่นอยู่ไหม */
+  svg.append(mk('path',{d:ROADS[0],fill:'none',stroke:'#1a1a1a','stroke-width':9,'stroke-opacity':.45,'stroke-linecap':'round'}));
+  svg.append(mk('path',{d:ROADS[0],fill:'none',stroke:'#2E9E5B','stroke-width':5.2,'stroke-linecap':'round'}));
+}
+draw('mSolid','solid'); draw('mLine','line'); draw('mHach','hach'); draw('mOcc','occ');
+
+/* เทือกเบา ๆ ในแถบบริบท */
+(function(){
+  const g=document.getElementById('ctxRidge');
+  const bits=[{cx:96,base:150,w:88,h:52,skew:.10},{cx:232,base:150,w:96,h:60,skew:.22},
+              {cx:150,base:150,w:120,h:78,skew:.16},
+              {cx:872,base:130,w:88,h:54,skew:.12},{cx:1040,base:130,w:100,h:62,skew:.24},
+              {cx:950,base:130,w:130,h:84,skew:.18}];
+  for(const p of bits){
+    const {l,r,t,sx,sy}=ridgePts(p);
+    const outline=`M${l},${p.base} L${p.cx},${t} L${sx},${sy} L${r},${p.base} Z`;
+    const shade=`M${p.cx},${t} L${sx},${sy} L${r},${p.base} L${p.cx+p.w*0.06},${p.base} Z`;
+    g.append(mk('path',{d:outline,fill:'#efeadd'}));
+    g.append(mk('path',{d:shade,fill:'#14181f','fill-opacity':.26}));
+    g.append(mk('path',{d:outline,fill:'none',stroke:'#14181f','stroke-width':1.7,'stroke-opacity':.68,'stroke-linejoin':'round'}));
+  }
+})();
+
+/* ── ตารางสัญลักษณ์ ── */
+const ROWS=[
+ ['s-capital','นครหลวง','capital','7','สามชั้น ฐานกว้างสุด — คนละระดับกับเมืองใหญ่',0],
+ ['s-city','เมือง','city','35','มีกำแพงมีประตู = ล้อมได้ ยึดได้ มียุ้ง',0],
+ ['s-town','เมืองเล็ก','town','38','หลังคาเดียว ไม่มีกำแพง = ผ่านได้ ไม่ต้องหยุด',0],
+ ['s-pass','ด่าน','pass','11','<b>ประตูคร่อมถนน — อ้อมไม่ได้</b>',0],
+ ['s-fort','ป้อม','fort','1 → ต้องเติม','ใบเสมา + หอคอย = จุดที่ไม่ยอม',0],
+ ['s-camp','ค่าย','camp','4','<b>รอบสอง: กระโจมโค้ง + รั้วหนา</b> — เลิกชนกับภูเขาแล้ว',1],
+ ['s-farm','ค่ายนา','farm','ใหม่','<b>รอบสอง: กระท่อม + ร่องนา</b> — "ข้าวปลูกตรงนี้"',1],
+ ['s-depot','ยุ้ง/คลัง','depot','ใหม่','ยุ้งกลมทรงฮั่น — "ฮั่นจงเป็นคลัง ไม่ใช่ทาง"',0],
+ ['s-ford','ท่าข้าม','ford','3','คลื่นสองสาย + รอยข้าม = ข้ามได้ที่นี่ที่เดียว',0],
+ ['s-valley','ปากหุบ','valley_mouth','4','ผาสองข้างบีบ + ช่องแคบตรงกลาง',0],
+ ['s-peak','ภูเขาที่มีชื่อ','mountain','4','<b>เส้นสัน + เงา</b> — ภาษาเดียวกับชั้นภูมิประเทศ',1],
+ ['s-wall','กำแพง/รั้ว','works','มีข้อมูลแล้ว','เป็น <b>เส้น</b> ไม่ใช่จุด',0]
+];
+const tb=document.getElementById('tbl');
+for(const [id,th,en,cnt,desc,isNew] of ROWS){
+  const tr=document.createElement('tr'); if(isNew) tr.className='new';
+  tr.innerHTML=
+   `<td class="g"><svg class="sym" width="48" height="48"><use href="#${id}"/></svg></td>`+
+   `<td class="g"><svg class="sym" width="17" height="17"><use href="#${id}"/></svg></td>`+
+   `<td class="g"><svg class="sym" width="9" height="9"><use href="#${id}"/></svg></td>`+
+   `<td>${th} <span class="nm">${en}</span></td><td class="cnt">${cnt}</td><td>${desc}</td>`;
+  tb.append(tr);
+}
+</script>
+</body></html>

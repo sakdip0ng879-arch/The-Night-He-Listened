@@ -171,6 +171,19 @@ rect.sp-none{fill:#6b7285}
 .pin circle{fill:#f3f6ff; stroke:#0b0d12; stroke-width:1.4; opacity:.9}
 .pin.t-capital circle{fill:var(--gold); stroke-width:2}
 
+/* ★★ สัญลักษณ์สถานที่ (DECISIONS §3 · ล็อก 2026-09-02)
+   หมึกดำล้วน **ไม่มีสีฝ่าย** — สีฝ่ายเป็นภาษาของกองทัพเท่านั้น
+   ขอบขาวบาง ๆ ด้วย paint-order เพื่อให้อ่านออกบนพื้นเขียวของแผ่นเดิม
+   ⚠ ความหนาเส้นอยู่ในหน่วยกล่อง 24 แล้ว ห้ามใส่ stroke-width เป็น px ที่นี่ */
+/* ⚠⚠ ต้องขึ้นต้นด้วย #tkmap — บรรทัด 133 `#tkmap path:not(.region){fill:none}`
+   มี specificity สูงกว่า `.pin-sym path` และจะลบสีทิ้งเงียบ ๆ (เจอ 2026-09-02:
+   สัญลักษณ์ถูกวาดครบ 69 ตัว transform ถูกหมด แต่ fill กลายเป็น none = มองไม่เห็นเลย) */
+#tkmap .pin-sym path{fill:#12161d; fill-opacity:.88; stroke:#f4f1e8; stroke-width:.7;
+              paint-order:stroke fill; stroke-linejoin:round}
+#tkmap .pin-sym path.gs{fill:none; stroke:#12161d; stroke-opacity:.88;
+                 stroke-linecap:round; paint-order:normal}
+#tkmap .pin.t-capital .pin-sym path{fill:#2a1d05; stroke:#f6efdc}
+
 /* ป้ายกับหมุดเฟดหายระหว่างกล้องเคลื่อน แล้วโผล่กลับมาตอนนิ่ง
    ทั้งเร็วกว่าและดูดีกว่าปล่อยให้วิ่งสะบัดตามกล้อง */
 #L-labels, #L-pins, #L-focus{transition:opacity .28s ease}

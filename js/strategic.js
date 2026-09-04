@@ -115,12 +115,117 @@ TK.map = (function(){
     }
   }
 
+  /* ── ★★ สัญลักษณ์สถานที่ (DECISIONS §3 · ล็อก 2026-09-02) ──────────────────
+     ทุกรูปวาดบนกล่อง 24×24 · **จุดยึด = (12,22) กึ่งกลางฐาน** = พิกัดจริงของสถานที่
+     สเปกภาพฉบับเต็ม + ที่มาของแต่ละรูป: tools/symbols_preview.html
+
+     ⚠ ภาษาของสถานที่ต่างจากภาษาของกองทัพ (§3): **หมึกดำล้วน ไม่มีสีฝ่าย · ติดพื้น
+     ไม่เคลื่อน** ส่วนกองทัพ **ทึบ มีสีฝ่าย เคลื่อนบนเส้นทาง** — จึงไม่ต้องแย่งรูปกัน
+     ⚠ `px` คือความสูงบนจอ (คงที่ทุกระดับซูม) ไม่ใช่หน่วยแผนที่                      */
+  const GLYPH = {
+    capital: { px:20, fill:[
+      'M12,0.5 L14.2,3.2 L9.8,3.2 Z',
+      'M4.5,8.6 C6.2,8.2 6.6,5.6 8.4,4.6 H15.6 C17.4,5.6 17.8,8.2 19.5,8.6 Z',
+      'M8,8.6 H16 V12.2 H8 Z',
+      'M0.8,16.4 C3,15.9 3.4,13.2 5.4,12.2 H18.6 C20.6,13.2 21,15.9 23.2,16.4 Z',
+      'M2.6,16.4 H21.4 V22 H2.6 Z M10.4,18.2 H13.6 V22 H10.4 Z' ] },
+    city: { px:17, fill:[
+      'M3.2,10.2 C5.2,9.7 5.6,7.2 7.4,6.2 H16.6 C18.4,7.2 18.8,9.7 20.8,10.2 Z',
+      'M6.6,10.2 H17.4 V13.6 H6.6 Z',
+      'M3.4,13.6 H20.6 V22 H3.4 Z M10.4,17.4 H13.6 V22 H10.4 Z' ] },
+    town: { px:13, fill:[
+      'M4.6,13.4 C6.6,12.9 8.6,9.2 12,7.6 C15.4,9.2 17.4,12.9 19.4,13.4 Z',
+      'M6.8,13.4 H17.2 V22 H6.8 Z M10.6,17.2 H13.4 V22 H10.6 Z' ] },
+    /* ★ ด่านต้อง "คร่อมถนน" — ประตูสองบานเว้นช่องกลางไว้ให้เส้นทางลอด */
+    pass: { px:18, fill:[
+      'M0.4,8.4 C1.9,8 2.2,5.6 3.8,4.8 H8.4 V8.4 Z',  'M2.2,8.4 H8.4 V22 H2.2 Z',
+      'M23.6,8.4 C22.1,8 21.8,5.6 20.2,4.8 H15.6 V8.4 Z', 'M15.6,8.4 H21.8 V22 H15.6 Z',
+      'M8.4,6.2 H15.6 V9.4 H8.4 Z' ] },
+    fort: { px:16, fill:[
+      'M12,2.4 L15.4,6 L8.6,6 Z', 'M9.6,6 H14.4 V11.4 H9.6 Z',
+      'M3,11.4 h3 v-2.2 h2.4 v2.2 h7.2 v-2.2 h2.4 v2.2 h3 V22 H3 Z' ] },
+    /* ⚠ กระโจมโค้ง ไม่ใช่สามเหลี่ยม — สามเหลี่ยมชนกับภูเขา (เจ้าของจับได้ 2026-09-02) */
+    camp: { px:16, fill:[
+      'M4,17.2 C4,9.4 20,9.4 20,17.2 Z M10.6,17.2 V13.4 H13.4 V17.2 Z',
+      'M1.2,18.4 H22.8 V20.6 H1.2 Z',
+      'M2.4,18.4 H4.4 V22 H2.4 Z M7.6,18.4 H9.6 V22 H7.6 Z ' +
+      'M12.8,18.4 H14.8 V22 H12.8 Z M18,18.4 H20 V22 H18 Z' ] },
+    /* ⚠ ร่องนาเป็นเส้น **ตรง** เฉียง — เส้นหยักแปลว่าน้ำ จะชนกับท่าข้าม */
+    farm: { px:16,
+      fill:['M1.2,9.6 C2.6,9.2 3.6,7 5.8,6 C8,7 9,9.2 10.4,9.6 Z','M3.2,9.6 H8.4 V14.6 H3.2 Z'],
+      stroke:[{d:'M1.4,15.4 L21,13.2',w:1.85},{d:'M1.4,18.6 L21,16.4',w:1.85},
+              {d:'M1.4,21.8 L21,19.6',w:1.85}] },
+    depot: { px:15, fill:[
+      'M2.6,9.4 C5,8.8 8,4.4 12,3 C16,4.4 19,8.8 21.4,9.4 Z',
+      'M5,9.4 h14 v8.2 a7,4.4 0 0 1 -14,0 Z' ] },
+    ford: { px:15, stroke:[
+      {d:'M1.6,9 q3,-2.4 6,0 t6,0 t6,0',w:2}, {d:'M1.6,15.4 q3,-2.4 6,0 t6,0 t6,0',w:2},
+      {d:'M9,4.6 V19.8',w:2,dash:'3 2.6'},    {d:'M15,4.6 V19.8',w:2,dash:'3 2.6'} ] },
+    valley_mouth: { px:16, fill:[
+      'M0,21.4 L7,5.4 L10.4,21.4 Z','M13.6,21.4 L17,5.4 L24,21.4 Z','M11.2,17 H12.8 V22 H11.2 Z' ] },
+    /* ภูเขาที่มีชื่อ = สามเหลี่ยมทึบ — คอนเวนชันเดิมของแผ่น (เขาฮวา · ติ้งจวิน · เฉินชาง
+       พิมพ์แบบนี้อยู่แล้ว) · ส่วน *ภูมิประเทศ* ภูเขาเป็นคนละชั้น ยังไม่ได้ทำ (เฟส 4) */
+    mountain: { px:15, fill:['M2,21.5 L12,6 L22,21.5 Z'] }
+  };
+
+  /* ★★ LOD ของ *สัญลักษณ์* — **ห้ามใช้ `RANK` ของ labeler** ถึงจะมีอยู่แล้วก็ตาม
+     สองตารางนี้จัดลำดับด้วยเหตุผลคนละอย่างและขัดกันโดยตรง:
+       labeler จัดตาม **ความสำคัญของชื่อ** → ด่านอยู่อันดับ 4 เพราะชื่อด่านน่าเบื่อ
+       ที่นี่จัดตาม **ปริมาณข้อมูลของรูป**  → ด่านอยู่อันดับ 1 เพราะรูปด่านคือทั้งหมด
+         ของประโยค "อ้อมไม่ได้ ต้องผ่านตรงนี้"
+     ★ ถ้าใช้ RANK ของ labeler ด่านทั้ง 11 จะไม่มีวันโผล่เลยสักฉาก — เพราะมันต้องรอ
+       vbw ≤ 330 แต่กล้องของฉากต่ำสุดคือ 560 แล้วอัตราส่วนจอดันเป็น ~766 (ลองแล้ว 2026-09-02)
+
+     วัดความหนาแน่นจริงที่กล้องฉาก (vbw 766) ได้ 56 จุดในกรอบ: town 23 · pass 10 ·
+     city 10 · valley 4 · camp 3 · capital 2 · mountain 2 · ford 2
+     → **town คือตัวที่ทำให้รก และเป็นตัวที่มีข้อมูลน้อยที่สุด** จึงเป็นอันดับท้ายสุด */
+  const SYM_RANK = {
+    capital:1, pass:1, ford:1, valley_mouth:1, camp:1, farm:1, depot:1, fort:1, mountain:1,
+    city:2, town:3
+  };
+  function symMaxRank(vbw){
+    if (vbw > 1300) return 1;      /* ถอยดูทั้งแผ่นดิน — เหลือนครหลวงกับสัญลักษณ์ภูมิศาสตร์ */
+    if (vbw > 700)  return 2;      /* กล้องของฉากปกติ (~766) — เพิ่มเมือง ยังไม่ปล่อยหมู่บ้าน */
+    return 3;                      /* ซูมเข้าจริง — ปล่อยครบ */
+  }
+
+  /* จุดไหนที่ labeler เลือกจะเขียนชื่อให้ — จุดกลมยังผูกกับชุดนี้ ส่วนสัญลักษณ์ไม่ผูก */
+  let labelPins = new Set();
+
+  /* ★ ตัวเดียวที่ตัดสินว่าหมุดไหนโผล่ — เรียกจากทั้ง relayout (ตอนสเกลเปลี่ยน)
+     และจากตอน labeler คำนวณป้ายเสร็จ · แยกออกมาเพราะสองเหตุการณ์นี้เกิดคนละจังหวะ
+     และถ้าต่างคนต่างเขียน `display` จะทับกันเองจนหมุดกะพริบ                        */
+  function applyPinVisibility(){
+    for (const id in pinEl){
+      const g   = pinEl[id];
+      const sym = g.querySelector('.pin-sym');
+      const dot = g.querySelector('.pin-dot');
+      const symOn = !!sym && sym.dataset.lod === '1';
+      g.style.display = (symOn || labelPins.has(id)) ? '' : 'none';
+      if (sym) sym.style.display = symOn ? '' : 'none';
+      if (dot) dot.style.display = symOn ? 'none' : '';
+    }
+  }
+
   function buildPins(){
     for (const id in TK.places){
       const p = TK.places[id];
       const g = mk('g',{class:'pin t-'+p.type});
       g.dataset.id = id;
-      g.append(mk('circle',{cx:p.x, cy:p.y, r: p.type==='capital' ? 6 : 4}));
+      /* จุดกลม — ยังอยู่ ไม่ได้ถอด: มันคือระดับ LOD ต่ำสุดตอนซูมออก (สเปก §3
+         "9px ทั้งคู่อ่านไม่ออก → ขนาดนั้นต้องตัดเหลือจุดกลม ห้ามย่อสัญลักษณ์ลงไป") */
+      g.append(mk('circle',{cx:p.x, cy:p.y, r: p.type==='capital' ? 6 : 4, class:'pin-dot'}));
+      const spec = GLYPH[p.type];
+      if (spec){
+        const sym = mk('g',{class:'pin-sym'});
+        (spec.fill   || []).forEach(d => sym.append(mk('path',{d, 'fill-rule':'evenodd'})));
+        (spec.stroke || []).forEach(o => {
+          const a = {d:o.d, class:'gs', 'stroke-width':o.w};
+          if (o.dash) a['stroke-dasharray'] = o.dash;
+          sym.append(mk('path', a));
+        });
+        g.append(sym);
+      }
       const t = mk('title'); t.textContent = p.map && p.map !== p.label ? `${p.label} · บนแผ่น: ${p.map}` : p.label;
       g.append(t);
       layers.pins.append(g);
@@ -950,14 +1055,31 @@ TK.map = (function(){
       const t = g.getAttribute('transform').replace(/ scale\([^)]*\)/,'');
       g.setAttribute('transform', `${t} scale(${mu.toFixed(3)})`);
     });
-    /* 122 หมุด — เขียนใหม่เฉพาะตอนสเกลเปลี่ยนจริง ไม่ใช่ทุกครั้งที่เรียก */
+    /* 107 หมุด — เขียนใหม่เฉพาะตอนสเกลเปลี่ยนจริง ไม่ใช่ทุกครั้งที่เรียก
+       ★ 2026-09-02 เพิ่มสัญลักษณ์ตามชนิด (§3) · **LOD เดียวกับ labeler**:
+       อันดับที่เกินระดับซูมจะยุบเหลือจุดกลม ไม่ใช่ย่อสัญลักษณ์ลงไป
+       (สัญลักษณ์ขนาดคงที่บนจอ พอซูมออกมันจะชนกันเอง ไม่ใช่เล็กลง)              */
     if (scaleCache === null || Math.abs(mu / scaleCache - 1) > 0.01){
       scaleCache = mu;
-      layers.pins.querySelectorAll('circle').forEach(c => {
-        const id = c.parentNode.dataset.id;
-        c.setAttribute('r', (TK.places[id].type==='capital' ? 5 : 3.4) * mu);
-        c.style.strokeWidth = (1.3 * mu) + 'px';
+      const cap = symMaxRank(vb.w);
+      layers.pins.querySelectorAll('.pin').forEach(g => {
+        const id = g.dataset.id, ty = TK.places[id].type;
+        const dot = g.querySelector('.pin-dot'), sym = g.querySelector('.pin-sym');
+        const show = !!sym && (SYM_RANK[ty] || 3) <= cap;
+        if (dot){
+          dot.setAttribute('r', (ty==='capital' ? 5 : 3.4) * mu);
+          dot.style.strokeWidth = (1.3 * mu) + 'px';
+        }
+        if (sym){
+          sym.dataset.lod = show ? '1' : '0';
+          if (show){
+            const p = TK.places[id], k = GLYPH[ty].px * mu / 24;
+            sym.setAttribute('transform',
+              `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
+          }
+        }
       });
+      applyPinVisibility();
     }
 
     /* สเกลเปลี่ยน = ขนาดป้ายเทียบกับระยะบนแผนที่เปลี่ยน ต้องจัดตำแหน่งใหม่
@@ -989,8 +1111,15 @@ TK.map = (function(){
       fontFamily: '"Leelawadee UI","Segoe UI",Tahoma,sans-serif'
     });
 
+    /* ★★ 2026-09-02 — **หมุดเลิกผูกกับป้าย** (เดิม: `display = on.has(id)` บรรทัดเดียว)
+       เดิมหมุดโผล่เฉพาะจุดที่ labeler เลือกจะ *เขียนชื่อ* ให้ ซึ่งถูกสำหรับจุดกลม
+       (จุดที่ไม่มีชื่อกำกับก็ไม่มีความหมาย) แต่ **ผิดสำหรับสัญลักษณ์** —
+       รูปด่านบอกว่า "อ้อมไม่ได้" ได้ด้วยตัวมันเอง ไม่ต้องรอชื่อ และแผ่นก็พิมพ์ชื่อ
+       ไว้ให้แล้ว 119 จาก 122 จุด (ดูหัวไฟล์ labeler.js)
+       → สัญลักษณ์ใช้ LOD ของตัวเอง (`symMaxRank`) · จุดกลมยังผูกกับป้ายเหมือนเดิม */
     const on = new Set(res.pins);
-    for (const id in pinEl) pinEl[id].style.display = on.has(id) ? '' : 'none';
+    labelPins = on;
+    applyPinVisibility();
 
     layers.labels.replaceChildren();
     for (const L of res.labels){

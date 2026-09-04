@@ -175,6 +175,24 @@ rect.sp-none{fill:#6b7285}
    หมึกดำล้วน **ไม่มีสีฝ่าย** — สีฝ่ายเป็นภาษาของกองทัพเท่านั้น
    ขอบขาวบาง ๆ ด้วย paint-order เพื่อให้อ่านออกบนพื้นเขียวของแผ่นเดิม
    ⚠ ความหนาเส้นอยู่ในหน่วยกล่อง 24 แล้ว ห้ามใส่ stroke-width เป็น px ที่นี่ */
+/* ★★ ชั้นน้ำจริง (Natural Earth ดัดเข้าพิกัดแผ่น · เปิดด้วยปุ่ม "น้ำ")
+   สีเข้มกว่าน้ำที่แผ่นพิมพ์มาเล็กน้อย เพื่อให้เทียบออกว่าเส้นไหนของใคร
+   ⚠ ความหนาอยู่ใน attribute (หน่วยแผนที่) ห้ามตั้ง stroke-width ที่นี่ */
+#tkmap .wa-river{fill:none; stroke:#1f6fb8; stroke-opacity:.8;
+                 stroke-linecap:round; stroke-linejoin:round}
+#tkmap .wa-coast{fill:none; stroke:#1f6fb8; stroke-opacity:.62; stroke-width:2.2}
+#tkmap .wa-lake{fill:#1f6fb8; fill-opacity:.26; stroke:#1f6fb8;
+                stroke-opacity:.55; stroke-width:1.2}
+
+/* ★★ ชั้นน้ำจริง (Natural Earth ดัดเข้าพิกัดแผ่น · เปิดด้วยปุ่ม "น้ำ")
+   สีเข้มกว่าน้ำที่แผ่นพิมพ์มาเล็กน้อย เพื่อให้เทียบออกว่าเส้นไหนของใคร
+   ⚠ ความหนาของแม่น้ำอยู่ใน attribute (หน่วยแผนที่) ห้ามตั้ง stroke-width ที่นี่ */
+#tkmap .wa-river{fill:none; stroke:#1f6fb8; stroke-opacity:.8;
+                 stroke-linecap:round; stroke-linejoin:round}
+#tkmap .wa-coast{fill:none; stroke:#1f6fb8; stroke-opacity:.62; stroke-width:2.2}
+#tkmap .wa-lake{fill:#1f6fb8; fill-opacity:.26; stroke:#1f6fb8;
+                stroke-opacity:.55; stroke-width:1.2}
+
 /* ★★ โซ่ป้อม / แนวรั้ว — หน่วยแผนที่ ไม่ใช่หน่วยจอ (มันตั้งอยู่บนแผ่นดิน)
    สีจางกว่าลูกศรของฉากเสมอ: มันคือฉากหลังของสงคราม ไม่ใช่เหตุการณ์ */
 #tkmap .works-spine{fill:none; stroke:#2e2a20; stroke-opacity:.45; stroke-width:1.4}

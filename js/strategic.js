@@ -66,7 +66,7 @@ TK.map = (function(){
     svg.append(mk('image',{href:'assets/map.jpg', x:0, y:0, width:W, height:H, id:'basemap'}));
     /* ชั้น roads อยู่ใต้ routes เสมอ — กราฟถนนเป็นฉากหลัง การเดินทัพของฉากต้องอยู่ทับ
        (DECISIONS §15 "โหมดถนน · มาฟรีกับ §4" — ข้อมูลมาจาก TK.edges ไม่มีของใหม่) */
-    for (const name of ['regions','wall','works','focus','roads','routes','markers','pins','labels'])
+    for (const name of ['regions','water','wall','works','focus','roads','routes','markers','pins','labels'])
       svg.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
@@ -93,6 +93,7 @@ TK.map = (function(){
 
     buildRegions();
     buildWall();
+    layers.water.style.display = 'none';   /* ปิดไว้ก่อน — เปิดด้วยปุ่ม */
     buildWorks();
     buildPins();
     bindPanZoom();
@@ -324,6 +325,48 @@ TK.map = (function(){
      ⚠ ฟันเสมาเป็น **หน่วยแผนที่ ไม่ใช่หน่วยจอ** — กำแพงคือภูมิประเทศ มันต้องโตตาม
        แผ่นเหมือนแม่น้ำ ไม่ใช่คงที่บนจอเหมือนสัญลักษณ์                                */
   const WALL_TOOTH = 5.5, WALL_STEP = 17;
+  /* ── ★★ ชั้นน้ำจริง (Natural Earth ดัดเข้าพิกัดแผ่นด้วย TPS · data/water.js) ──
+     โหมด "ทับ" — วาดทับแม่น้ำที่แผ่นพิมพ์มา เพื่อ**เทียบ**ว่าตรงกันแค่ไหน
+     (เจ้าของเคาะ 2026-09-05: *"ทับก่อน จะได้เทียบกันได้"*)
+     วันที่ลบชั้นพิมพ์ทิ้ง (เฟส 5) มันจะกลายเป็นชั้นน้ำจริงของแผ่นแทน โดยไม่ต้องแก้อะไร
+
+     ★★ **ความหนาตัดสินจากความสำคัญในเรื่อง ไม่ใช่จาก `scalerank`**
+     Natural Earth ให้ **เว่ย = อันดับ 8** (สายรอง) ทั้งที่มันเป็นแกนของทั้งเล่ม
+     ส่วนแยงซีได้อันดับ 1 · ถ้าเชื่อ scalerank อย่างเดียว แม่น้ำที่สำคัญที่สุดในหนังสือ
+     จะเป็นเส้นบางที่สุดบนจอ — ตระกูลเดียวกับที่ `SYM_RANK` ต้องแยกจาก `RANK` ของ labeler
+
+     ⚠ ความหนาเป็น **หน่วยแผนที่** ไม่ใช่หน่วยจอ — แม่น้ำคือภูมิประเทศ ต้องโตตามแผ่น
+       เหมือนกำแพงกับโซ่ป้อม (ไม่ใช่สัญลักษณ์ที่ขนาดคงที่บนจอ)                       */
+  const RIVER_MAJOR = new Set(['Yangtze','Yellow','Huang','Han','Wei','Huai']);
+  const RIVER_MID   = new Set(['Jing','Jialing','Dan','Fen','Qin','Luo','Ying','Xiang','Gan','Min']);
+  function riverWidth(l){
+    if (RIVER_MAJOR.has(l.n)) return 3.4;
+    if (RIVER_MID.has(l.n))   return 2.2;
+    return l.r <= 3 ? 2.2 : 1.3;          /* ไม่มีชื่อ → ค่อยใช้ scalerank ตัดสิน */
+  }
+  let waterBuilt = false, waterOn = false;
+  function buildWater(){
+    if (waterBuilt) return;
+    waterBuilt = true;
+    const W = (TK.water || {});
+    const d = pts => 'M' + pts.map(p => p.join(',')).join(' L');
+    for (const l of (W.lakes || []))
+      layers.water.append(mk('path',{class:'wa-lake', d: d(l.p) + ' Z'}));
+    for (const l of (W.coast || []))
+      layers.water.append(mk('path',{class:'wa-coast', d: d(l.p)}));
+    for (const l of (W.rivers || []))
+      layers.water.append(mk('path',{class:'wa-river', d: d(l.p),
+        'stroke-width': riverWidth(l), 'data-n': l.n || ''}));
+  }
+  /* คืนสถานะจริงเสมอ ให้ ui.js เอาไปตั้งคลาสปุ่มได้โดยไม่ต้องเดา (แบบเดียวกับ setRoads) */
+  function setWater(on){
+    if (on) buildWater();
+    waterOn = !!on;
+    layers.water.style.display = waterOn ? '' : 'none';
+    return waterOn;
+  }
+
+
   function buildWall(){
     const lines = TK.wall || [];
     if (!lines.length) return;
@@ -1495,7 +1538,7 @@ TK.map = (function(){
 
   /* ★ เปิดตาราง GLYPH ให้ ui.js เอาไปทำปุ่มสัญลักษณ์ — **อ่านอย่างเดียว**
      ห้ามให้ที่อื่นแก้ ไม่งั้นตารางสัญลักษณ์จะมีสองแหล่ง (§14) */
-  const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads,
+  const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads, setWater,
                 get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };

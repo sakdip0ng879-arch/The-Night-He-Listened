@@ -32,6 +32,7 @@ const CONTROLS = [
   ['btnSeason', `document.getElementById('btnSeason').className`],
   ['btnPlay',   `document.getElementById('btnPlay').textContent`],
   ['btnLegend', `document.getElementById('legend').hidden`],
+  ['btnWater',  `document.getElementById('L-water').style.display`],
   ['mapmode',   `document.getElementById('mapmode').textContent`],
   ['btnNext',   `TK.engine.index`],
   ['btnPrev',   `TK.engine.index`],

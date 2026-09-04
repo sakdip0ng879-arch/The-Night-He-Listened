@@ -1,0 +1,64 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8">
+<title>ชั้นน้ำจริง — เทียบกับแผ่น</title>
+<style>
+body{margin:0;padding:14px 18px 40px;background:#f2efe6;color:#14181f;
+     font:13px/1.5 "Segoe UI","Leelawadee UI",Tahoma,sans-serif}
+h1{font-size:16px;margin:0 0 3px} p.sub{margin:0 0 8px;color:#6b6555;font-size:12px}
+svg{background:#efeadd;border:1px solid #c9c3b4;display:block;width:100%;max-width:1400px;height:auto}
+.bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:8px 0;font-size:12.5px}
+.bar label{cursor:pointer;user-select:none}
+.k{background:#fffdf5;border-left:3px solid #14181f;padding:9px 13px;margin:10px 0;
+   max-width:1400px;font-size:12.5px}
+.riv{fill:none;stroke:#1f6fb8;stroke-linecap:round;stroke-linejoin:round}
+.nm{font-size:11px;fill:#12456f;paint-order:stroke;stroke:#f2efe6;stroke-width:3;stroke-linejoin:round}
+</style></head><body>
+<h1>ชั้นน้ำจริง (Natural Earth) ดัดเข้าพิกัดแผ่นด้วย TPS</h1>
+<p class="sub">เส้นน้ำเงิน = ของจริงที่แปลงมา · ภาพพื้น = แผ่นเดิม ปรับความจางได้เพื่อเทียบว่าตรงกับแม่น้ำที่แผ่นวาดไว้ไหม</p>
+<div class="bar">
+  <label>ความจางของแผ่น <input id="op" type="range" min="0" max="100" value="55"></label>
+  <label>สายใหญ่เท่านั้น (scalerank ≤ <b id="rv">9</b>) <input id="rk" type="range" min="1" max="9" value="9"></label>
+  <label><input id="nm" type="checkbox" checked> ชื่อแม่น้ำ</label>
+</div>
+<svg id="s" viewBox="0 0 1650 1950"></svg>
+<div class="k" id="info"></div>
+<script src="../data/rivers.js"></script>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const mk=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const svg=document.getElementById('s');
+const img=mk('image',{href:'../assets/map.jpg',x:0,y:0,width:1650,height:1950,opacity:.55});
+svg.append(img);
+const gR=mk('g',{}); const gN=mk('g',{}); svg.append(gR,gN);
+const R=TK.rivers;
+
+function draw(){
+  const cap=+document.getElementById('rk').value;
+  gR.replaceChildren(); gN.replaceChildren();
+  let n=0, seen=new Set();
+  for(const l of R){
+    if(l.r>cap) continue;
+    n++;
+    /* สายใหญ่เส้นหนากว่า — scalerank 1 คือแม่น้ำระดับแยงซี */
+    const w=Math.max(1.2, 5.2 - l.r*0.45);
+    gR.append(mk('path',{class:'riv',d:'M'+l.p.map(p=>p.join(',')).join(' L'),
+                         'stroke-width':w,'stroke-opacity':.85}));
+    if(l.n && !seen.has(l.n) && l.p.length>6){
+      seen.add(l.n);
+      const m=l.p[Math.floor(l.p.length/2)];
+      const t=mk('text',{class:'nm',x:m[0]+5,y:m[1]-5}); t.textContent=l.n; gN.append(t);
+    }
+  }
+  document.getElementById('rv').textContent=cap;
+  document.getElementById('info').innerHTML =
+    '<b>'+n+'</b> ท่อนที่วาด จาก '+R.length+' ท่อนทั้งหมด · ชื่อที่ติดป้าย '+seen.size+' สาย<br>'+
+    'ไฟล์ <code>data/rivers.js</code> = 22 KB (วัตถุดิบ 7.3 MB) · '+
+    '⚠ ความแม่นวัดกับแม่น้ำเว่ยได้ห่างจากที่แผ่นวาดไว้เฉลี่ย 15.6 หน่วย (≈19 กม.) — '+
+    'ตรงไหนขัดกับแผ่นชัด ๆ ให้เชื่อแผ่น';
+  gN.style.display = document.getElementById('nm').checked ? '' : 'none';
+}
+document.getElementById('op').oninput = e => img.setAttribute('opacity', e.target.value/100);
+document.getElementById('rk').oninput = draw;
+document.getElementById('nm').onchange = draw;
+draw();
+</script>
+</body></html>

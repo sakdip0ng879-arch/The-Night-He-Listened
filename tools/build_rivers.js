@@ -143,7 +143,7 @@ const pts = out.reduce((s,l) => s + l.p.length, 0);
 console.log(`ในกรอบ: ${kept} ท่อน · ${pts} จุดหลังลดจุด · ท่อนสั้นเกินที่ทิ้ง ${dropped}`);
 
 console.log('\nแม่น้ำที่มีชื่อในกรอบ (ท่อน):');
-[...names.entries()].sort((a,b) => b[1]-a[1]).slice(0, 25)
+[...names.entries()].sort((a,b) => b[1]-a[1]).slice(0, 200)
   .forEach(([n,c]) => console.log('  ' + String(c).padStart(3) + '  ' + n));
 
 if (process.argv.includes('--list')){ console.log('\n(--list · ไม่เขียนไฟล์)'); process.exit(0); }

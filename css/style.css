@@ -178,9 +178,9 @@ rect.sp-none{fill:#6b7285}
 /* ⚠⚠ ต้องขึ้นต้นด้วย #tkmap — บรรทัด 133 `#tkmap path:not(.region){fill:none}`
    มี specificity สูงกว่า `.pin-sym path` และจะลบสีทิ้งเงียบ ๆ (เจอ 2026-09-02:
    สัญลักษณ์ถูกวาดครบ 69 ตัว transform ถูกหมด แต่ fill กลายเป็น none = มองไม่เห็นเลย) */
-#tkmap .pin-sym path{fill:#12161d; fill-opacity:.88; stroke:#f4f1e8; stroke-width:.7;
+#tkmap .pin-sym path, #tkmap .pin-role path{fill:#12161d; fill-opacity:.88; stroke:#f4f1e8; stroke-width:.7;
               paint-order:stroke fill; stroke-linejoin:round}
-#tkmap .pin-sym path.gs{fill:none; stroke:#12161d; stroke-opacity:.88;
+#tkmap .pin-sym path.gs, #tkmap .pin-role path.gs{fill:none; stroke:#12161d; stroke-opacity:.88;
                  stroke-linecap:round; paint-order:normal}
 #tkmap .pin.t-capital .pin-sym path{fill:#2a1d05; stroke:#f6efdc}
 

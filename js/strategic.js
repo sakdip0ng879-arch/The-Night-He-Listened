@@ -192,6 +192,65 @@ TK.map = (function(){
   /* จุดไหนที่ labeler เลือกจะเขียนชื่อให้ — จุดกลมยังผูกกับชุดนี้ ส่วนสัญลักษณ์ไม่ผูก */
   let labelPins = new Set();
 
+  /* ★★ ขนาดสัญลักษณ์ — **ไม่ใช่ "คงที่บนจอ"** (เจ้าของทัก 2026-09-02:
+     *"ตอนซูมออกไอคอนใหญ่กำลังดี แต่ซูมเข้ามันโคตรเล็ก"*)
+
+     ของเดิมคูณ `mu` ตรง ๆ = ขนาดคงที่บนจอเป๊ะ ซึ่งถูกสำหรับ *เส้น* กับ *ป้าย*
+     แต่ผิดสำหรับ *สัญลักษณ์* — พอซูมเข้า ทุกอย่างบนแผ่นโตขึ้นหมด (เมือง แม่น้ำ ภูเขา)
+     แต่ไอคอนไม่โต มันเลยดู**หดลงเมื่อเทียบกับสิ่งรอบตัว** ทั้งที่พิกเซลเท่าเดิม
+
+     → ใช้กฎยกกำลัง: ขนาดบนจอ = px × (VB_REF / vb.w)^(1−α)
+       α = 1 คือคงที่บนจอ (ของเดิม) · α = 0 คือโตตามแผนที่เต็มที่
+       α = 0.5 → ซูมเข้า 4 เท่า ไอคอนโต 2 เท่า = ตามันอ่านว่า "เข้าไปใกล้แล้ว"
+     ⚠ **หนีบขาต่ำไว้ที่ 1** — ตอนถอยดูทั้งแผ่นเจ้าของบอกว่าขนาดกำลังดีอยู่แล้ว
+       ห้ามให้เล็กลงกว่านั้น · ขาบนหนีบ 2.6 กันไอคอนบวมกลบแผนที่ตอนซูมสุด */
+  const VB_REF = 900, SIZE_ALPHA = 0.5, ROLE_SCALE = 0.62;
+  function symZoomFactor(vbw){
+    return Math.min(2.6, Math.max(1, Math.pow(VB_REF / vbw, 1 - SIZE_ALPHA)));
+  }
+
+  /* แยกออกมาเป็นฟังก์ชันของตัวเองเพราะ **ล้อหมุนต้องเรียกมันด้วย** —
+     `wheel` เปลี่ยน viewBox ทันทีแต่ relayout ถูกหน่วงไว้ 160ms
+     ถ้าไม่เรียกตรงนี้ ไอคอนจะค้างขนาดเดิมระหว่างหมุนล้อ แล้ว "กระตุก" ทีเดียวตอนหยุด */
+  function scalePins(mu){
+    if (mu == null){
+      const sw = host.clientWidth || 1000;
+      mu = 1 / Math.min(sw / vb.w, (host.clientHeight || 1) / vb.h);
+    }
+    /* คีย์แคชด้วย vb.w ไม่ใช่ mu — ขนาดไอคอนขึ้นกับ vb.w ผ่าน symZoomFactor ด้วย */
+    if (scaleCache !== null && Math.abs(vb.w / scaleCache - 1) < 0.01) return;
+    scaleCache = vb.w;
+    const cap = symMaxRank(vb.w), f = symZoomFactor(vb.w);
+    layers.pins.querySelectorAll('.pin').forEach(g => {
+      const id = g.dataset.id, ty = TK.places[id].type;
+      const dot = g.querySelector('.pin-dot'), sym = g.querySelector('.pin-sym');
+      const show = !!sym && (SYM_RANK[ty] || 3) <= cap;
+      if (dot){
+        dot.setAttribute('r', (ty==='capital' ? 5 : 3.4) * mu);
+        dot.style.strokeWidth = (1.3 * mu) + 'px';
+      }
+      if (sym){
+        sym.dataset.lod = show ? '1' : '0';
+        if (show){
+          const p = TK.places[id], k = GLYPH[ty].px * f * mu / 24;
+          sym.setAttribute('transform',
+            `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
+        }
+      }
+      const rg = g.querySelector('.pin-role');
+      if (rg){
+        const p = TK.places[id], rp = GLYPH[p.role].px * ROLE_SCALE;
+        const kr = rp * f * mu / 24;
+        /* ยืนขวารูปหลัก บนฐานเดียวกัน — ระยะห่างคิดจากครึ่งความกว้างของทั้งสองรูป */
+        const dx = (GLYPH[ty].px * 0.46 + rp * 0.44) * f * mu;
+        rg.style.display = show ? '' : 'none';
+        if (show) rg.setAttribute('transform',
+          `translate(${(p.x + dx).toFixed(2)},${p.y.toFixed(2)}) scale(${kr.toFixed(4)}) translate(-12,-22)`);
+      }
+    });
+    applyPinVisibility();
+  }
+
   /* ★ ตัวเดียวที่ตัดสินว่าหมุดไหนโผล่ — เรียกจากทั้ง relayout (ตอนสเกลเปลี่ยน)
      และจากตอน labeler คำนวณป้ายเสร็จ · แยกออกมาเพราะสองเหตุการณ์นี้เกิดคนละจังหวะ
      และถ้าต่างคนต่างเขียน `display` จะทับกันเองจนหมุดกะพริบ                        */
@@ -225,6 +284,19 @@ TK.map = (function(){
           sym.append(mk('path', a));
         });
         g.append(sym);
+      }
+      /* ★ `role` — ป้ายเสริมข้าง ๆ รูปหลัก ไม่ใช่ตัวแทนมัน
+         ฮั่นจงเป็น *เมือง* และ *คลัง* พร้อมกัน · ถ้าเอา depot ไปทับ type จะเสียรูปเมือง
+         และเสียอันดับป้ายไปด้วย — จึงวาดสองรูป รูปเสริมเล็กกว่าและยืนบนฐานเดียวกัน */
+      if (p.role && GLYPH[p.role]){
+        const rg = mk('g',{class:'pin-role'});
+        (GLYPH[p.role].fill   || []).forEach(d => rg.append(mk('path',{d, 'fill-rule':'evenodd'})));
+        (GLYPH[p.role].stroke || []).forEach(o => {
+          const a = {d:o.d, class:'gs', 'stroke-width':o.w};
+          if (o.dash) a['stroke-dasharray'] = o.dash;
+          rg.append(mk('path', a));
+        });
+        g.append(rg);
       }
       const t = mk('title'); t.textContent = p.map && p.map !== p.label ? `${p.label} · บนแผ่น: ${p.map}` : p.label;
       g.append(t);
@@ -1055,32 +1127,7 @@ TK.map = (function(){
       const t = g.getAttribute('transform').replace(/ scale\([^)]*\)/,'');
       g.setAttribute('transform', `${t} scale(${mu.toFixed(3)})`);
     });
-    /* 107 หมุด — เขียนใหม่เฉพาะตอนสเกลเปลี่ยนจริง ไม่ใช่ทุกครั้งที่เรียก
-       ★ 2026-09-02 เพิ่มสัญลักษณ์ตามชนิด (§3) · **LOD เดียวกับ labeler**:
-       อันดับที่เกินระดับซูมจะยุบเหลือจุดกลม ไม่ใช่ย่อสัญลักษณ์ลงไป
-       (สัญลักษณ์ขนาดคงที่บนจอ พอซูมออกมันจะชนกันเอง ไม่ใช่เล็กลง)              */
-    if (scaleCache === null || Math.abs(mu / scaleCache - 1) > 0.01){
-      scaleCache = mu;
-      const cap = symMaxRank(vb.w);
-      layers.pins.querySelectorAll('.pin').forEach(g => {
-        const id = g.dataset.id, ty = TK.places[id].type;
-        const dot = g.querySelector('.pin-dot'), sym = g.querySelector('.pin-sym');
-        const show = !!sym && (SYM_RANK[ty] || 3) <= cap;
-        if (dot){
-          dot.setAttribute('r', (ty==='capital' ? 5 : 3.4) * mu);
-          dot.style.strokeWidth = (1.3 * mu) + 'px';
-        }
-        if (sym){
-          sym.dataset.lod = show ? '1' : '0';
-          if (show){
-            const p = TK.places[id], k = GLYPH[ty].px * mu / 24;
-            sym.setAttribute('transform',
-              `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
-          }
-        }
-      });
-      applyPinVisibility();
-    }
+    scalePins(mu);
 
     /* สเกลเปลี่ยน = ขนาดป้ายเทียบกับระยะบนแผนที่เปลี่ยน ต้องจัดตำแหน่งใหม่
        ไม่งั้นซูมเข้าแล้วป้ายที่เคยหลบกันพอดีจะกางออกจนลอยห่างจากสิ่งที่มันอธิบาย */
@@ -1167,6 +1214,7 @@ TK.map = (function(){
       vb.y = p.y - (p.y - vb.y) * (nh/vb.h);
       vb.w = nw; vb.h = nh;
       applyVB();
+      scalePins();                // ★ ไอคอนต้องโตตามทันที ไม่งั้นกระตุกตอนหยุดหมุน
       settleLabels(160);          // จัดป้ายใหม่ตอนหยุดหมุนล้อ
     }, {passive:false});
 

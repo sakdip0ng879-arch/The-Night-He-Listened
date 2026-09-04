@@ -26,7 +26,12 @@ window.TK = window.TK || {};
 
 TK.labeler = (function(){
 
-  const RANK = { capital:1, city:2, town:3, pass:4, ford:4, mountain:4, camp:4 };
+  /* ★ 2026-09-02 เพิ่ม farm/depot/valley_mouth/fort — ระดับเดียวกับ camp สำหรับ *ชื่อ*
+     ⚠ ตารางนี้จัดตาม "ความสำคัญของชื่อ" เท่านั้น · **สัญลักษณ์ใช้ `SYM_RANK` ของ
+     strategic.js ซึ่งเป็นคนละตารางและจัดลำดับสวนทางกันโดยตั้งใจ** (ด่านอันดับ 4 ที่นี่
+     แต่อันดับ 1 ที่โน่น) — เหตุผลเต็มอยู่ในคอมเมนต์ของ SYM_RANK */
+  const RANK = { capital:1, city:2, town:3, pass:4, ford:4, mountain:4, camp:4,
+                 farm:4, depot:4, valley_mouth:4, fort:4 };
 
   /* ซูมออกสุด (w=1650) โชว์แค่นครหลวง · ยิ่งซูมเข้ายิ่งปล่อยอันดับรองออกมา
      ด่านกับภูเขา (อันดับ 4) โผล่เฉพาะตอนซูมเข้าใกล้จริง ๆ

@@ -37,7 +37,11 @@ window.TK.places = {
   baishui:   { label:"ด่านไป๋สุ่ย",   py:"Baishui Pass", map:"Bai Shui Pass", x:407, y:807, type:"pass" },
 
   /* ══════════ ฮั่นจงและทางขึ้นเหนือ ══════════ */
-  hanzhong:  { label:"ฮั่นจง",      py:"Hanzhong",  map:"Han Zhong (Nan Zhen)", x:477, y:805, type:"city" },
+  /* ★ `role:"depot"` — ฮั่นจง**เป็นคลัง ไม่ใช่ทาง** · ข้าวค่ายนาที่เหลือจากโควตา 30 วัน
+     ออกลงปากหุบเซียมาที่นี่ (_part8.js ข้อ ②)
+     ⚠ `type` ยังเป็น `city` เพราะมันเป็นเมืองจริง ๆ ด้วย — **`role` เป็นป้ายเสริม
+     ไม่ใช่ตัวแทน `type`** (ถ้าเปลี่ยน type จะเสียทั้งรูปเมืองและอันดับป้าย) */
+  hanzhong:  { label:"ฮั่นจง",      py:"Hanzhong",  map:"Han Zhong (Nan Zhen)", x:477, y:805, type:"city", role:"depot" },
   yangping:  { label:"ด่านหยางผิง", py:"Yangping Pass", map:"Yang Ping Pass", x:396, y:776, type:"pass" },
   baocheng:  { label:"เป่าเฉิง",     py:"Baocheng",  map:"Bao Cheng", x:450, y:795, type:"town" },
   langzhong: { label:"หลางจง",    py:"Langzhong", map:"Ba Xi (Lang Zhong)", x:393, y:893, type:"city" },
@@ -172,7 +176,8 @@ window.TK.places = {
   qilian:    { label:"เทือกเขาฉีเหลียน", py:"Qilian", map:null,       x:120, y:288, type:"mountain", chk:true },
 
   /* ══════════ ประตูกวานจง ══════════ */
-  chencang:  { label:"เฉินชาง",    py:"Chencang",  map:"Chen Cang", x:451, y:637, type:"city",
+  /* ★ `role:"depot"` — อีกปลายของข้าวค่ายนา "ขึ้นเฉินชางหลังโซ่ป้อม" (_part8.js ข้อ ②) */
+  chencang:  { label:"เฉินชาง",    py:"Chencang",  map:"Chen Cang", x:451, y:637, type:"city", role:"depot",
                note:"กุญแจดอกเดียวที่เปิดกวานจงจากทิศตะวันตก · Hao Zhao ยันไว้ 22 วันปี 228 "+
                     "· แตกปี 233 เมื่อถูกบีบสองทาง" },
   sanpass:   { label:"ด่านซ่าน",    py:"San Pass",  map:"San Pass",  x:444, y:661, type:"pass" },
@@ -190,7 +195,10 @@ window.TK.places = {
   zhouzhi:   { label:"โจวจื้อ",     py:"Zhouzhi",   map:"Zhou Zhi",  x:566, y:668, type:"town",
                note:"ถนนฝั่งใต้ลำเว่ย เหมย→นคร — เส้นตรงที่ขบวนเสด็จปี 262 ใช้ (c10-13)" },
   mei:       { label:"เหมย",       py:"Mei",       map:"Mei",       x:516, y:663, type:"town" },
-  wuzhang:   { label:"อู่จ้างหยวน",  py:"Wuzhangyuan", map:"Wu Zhang Yuan", x:503, y:661, type:"camp",
+  /* ★ 2026-09-02 `camp` → `farm` — ทั้งเล่มเรียกมันว่า **ค่ายนา-ทหาร** ไม่ใช่ค่ายเฉย ๆ
+     (ค่ายนาถาวรตั้งแต่ c7-12/c7-15 · หัวไฟล์ _part8.js ข้อ ②) และมันคือครึ่งหนึ่งของ
+     วิทยานิพนธ์เล่มนี้ — ข้าวที่ปลูกในทุ่งของศัตรู ไม่ใช่ข้าวที่เดินมาจากเฉิงตู */
+  wuzhang:   { label:"อู่จ้างหยวน",  py:"Wuzhangyuan", map:"Wu Zhang Yuan", x:503, y:661, type:"farm",
                note:"⚠ ห่างจาก Mei แค่ 13 หน่วย และ beiyuan อยู่ตรงข้ามแม่น้ำห่าง 21 หน่วย — "+
                     "**วงปะทะสองอันในย่านนี้จะพันกันเป็นก้อนเดียว** (BUGS_SEEN §B3) "+
                     "ภาคเจ็ดใช้สามจุดนี้ติดกันหลายฉาก: clash ได้ทีละอัน ที่เหลือเป็น pin" },

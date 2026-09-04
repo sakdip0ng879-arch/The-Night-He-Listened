@@ -25,3 +25,7 @@ docs/phase1_calibration.png
 # ไฟล์ทดสอบชั่วคราวที่ generate ขึ้นมา (tools/_*.html)
 tools/_*.html
 tools/_board*.html
+
+# วัตถุดิบ Natural Earth — หลายเมกะไบต์ ใช้ตอน build เท่านั้น
+# ผลลัพธ์ที่ commit คือ data/rivers.js ที่เล็กกว่ามาก (ดู tools/build_rivers.js)
+vendor/naturalearth/*.geojson

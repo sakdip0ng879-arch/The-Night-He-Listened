@@ -50,8 +50,10 @@ body{
 #L-plate .pl-shelf{fill:none; stroke:#27343F; stroke-width:22; stroke-opacity:.55}
 #L-plate .pl-isl{fill:#1C2129; stroke:#4A5C6A; stroke-width:2}
 #L-plate .pl-lake{fill:#26323D; stroke:#4A5C6A; stroke-width:1.6}
-/* หมึกน้ำอยู่คนละชั้น (#L-water) เพราะมันต้องอยู่ *บน* สีเขต ไม่ใช่ใต้ — §14 เฟส 2 */
-#L-water .pl-river{stroke:#5F8299; stroke-linecap:round; fill:none}
+/* หมึกน้ำอยู่คนละชั้น (#L-water) เพราะมันต้องอยู่ *บน* สีเขต ไม่ใช่ใต้ — §14 เฟส 2
+   ★ สายน้ำเป็น **ลายฉลุของหมึกแผ่นเอง** (assets/water_stencil.png ผ่าน SVG mask)
+     ไม่ใช่เส้นที่เราวาดใหม่ — ความเพี้ยนจากแผ่นเดิมจึงเป็นศูนย์ (§14 เฟส 4.3) */
+#L-water .pl-river-ink{fill:#5F8299}
 /* ★ กำแพงเมืองจีน — อยู่เหนือชั้นเขตเหมือนหมึกน้ำ เพราะเรื่องอ้างถึงมันตลอด
    สีหินอุ่น ตัดกับหมึกน้ำที่เย็น → อ่านออกทันทีว่าอันไหนธรรมชาติ อันไหนคนสร้าง
    ⚠ ฟันเสมาห้อยลงใต้เสมอ (ทำใน strategic.js) — กำแพงกันของที่มาจากทางเหนือ */
@@ -77,7 +79,7 @@ body{
 #stage.map-rich #L-plate .pl-isl   {fill:#171A20}
 #stage.map-rich #L-plate .pl-sea,
 #stage.map-rich #L-plate .pl-lake  {fill:#202B36}
-#stage.map-rich #L-water .pl-river {stroke:#6E93AA}
+#stage.map-rich #L-water .pl-river-ink{fill:#6E93AA}
 #stage:not(.plate-new) #L-plate,
 #stage:not(.plate-new) #L-water{display:none}
 

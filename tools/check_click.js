@@ -33,7 +33,9 @@ const CONTROLS = [
   ['btnPlay',   `document.getElementById('btnPlay').textContent`],
   ['btnLegend', `document.getElementById('legend').hidden`],
   ['mapmode',   `document.getElementById('mapmode').textContent`],
-  ['btnPlate',  `document.getElementById('stage').className`],
+  /* ⛔ btnPlate ถอดออก 2026-09-06 พร้อมโครงการแผ่นวาดเอง (DECISIONS §14 เฟส 5)
+     ถ้าปลุกแผ่นกลับมาเมื่อไหร่ ให้เอาบรรทัดข้างล่างกลับมาด้วย
+  // ['btnPlate',  `document.getElementById('stage').className`], */
   ['btnNext',   `TK.engine.index`],
   ['btnPrev',   `TK.engine.index`],
   ['btnReset',  `Math.round(TK.map.viewBox.w)`]

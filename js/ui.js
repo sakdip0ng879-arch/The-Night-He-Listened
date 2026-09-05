@@ -613,21 +613,10 @@ TK.ui = (function(){
     tap('#mapmode', () => { mi = (mi + 1) % MODES.length; applyMode(); });
     applyMode();
 
-    /* ── ★★ ปุ่มสลับแผ่น (DECISIONS §14 เฟส 4 · 2026-09-05) ──────────────
-       แผ่นที่เราวาดเองเป็นค่าเริ่มต้น · แผ่นแฟนเมดต้นฉบับยังเปิดดูได้ตลอดเพื่อเทียบ
-       ⚠ **คีย์ localStorage แยกจาก tk-mapmode โดยตั้งใจ** — tk-mapmode เก็บ
-       *ดัชนีของอาร์เรย์* ซึ่งเคยพังทั้งหน้ามาแล้วตอนความยาวอาร์เรย์เปลี่ยน (ดูหมายเหตุข้างบน)
-       ค่าที่นี่เก็บเป็นคำที่มีความหมายในตัว ไม่ผูกกับความยาวของอะไรทั้งสิ้น */
-    let plateNew = true;
-    try { if (localStorage.getItem('tk-plate') === 'old') plateNew = false; } catch {}
-    const applyPlate = () => {
-      if (!TK.map.hasPlate){ $('#btnPlate').style.display = 'none'; return; }
-      TK.map.setPlate(plateNew);
-      $('#btnPlate').textContent = 'แผ่น: ' + (plateNew ? 'กลางคืน' : 'เดิม');
-      try { localStorage.setItem('tk-plate', plateNew ? 'new' : 'old'); } catch {}
-    };
-    tap('#btnPlate', () => { plateNew = !plateNew; applyPlate(); });
-    applyPlate();
+    /* ⛔ ถอดออก 2026-09-06 — เจ้าของสั่งหยุดโครงการแผ่นวาดเอง (DECISIONS §14 เฟส 5)
+       ล้างค่าที่ค้างใน localStorage ของผู้ใช้เดิมด้วย ไม่งั้นเบราว์เซอร์ที่เคยเปิดแผ่นใหม่
+       จะถือคีย์ที่ไม่มีความหมายไว้ตลอดกาล (บทเรียน §E21 — ค่าค้างใน localStorage อันตราย) */
+    try { localStorage.removeItem('tk-plate'); } catch {}
 
     document.addEventListener('keydown', e => {
       if (e.target.closest('#reader') && ['ArrowUp','ArrowDown','PageUp','PageDown'].includes(e.key))

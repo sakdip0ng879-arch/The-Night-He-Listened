@@ -238,15 +238,23 @@ rect.sp-none{fill:#6b7285}
 #tkmap .works.s-han .works-fort{fill:#2E9E5B; fill-opacity:.75}
 #tkmap .works.s-wei .works-fort{fill:#2563A8; fill-opacity:.75}
 #tkmap .works.s-wei .works-stake{stroke:#1f4a7a; stroke-opacity:.7}
-
-/* ⚠⚠ ต้องขึ้นต้นด้วย #tkmap — บรรทัด 133 `#tkmap path:not(.region){fill:none}`
-   มี specificity สูงกว่า `.pin-sym path` และจะลบสีทิ้งเงียบ ๆ (เจอ 2026-09-02:
-   สัญลักษณ์ถูกวาดครบ 69 ตัว transform ถูกหมด แต่ fill กลายเป็น none = มองไม่เห็นเลย) */
-#tkmap .pin-sym path, #tkmap .pin-role path{fill:#12161d; fill-opacity:.88; stroke:#f4f1e8; stroke-width:.7;
-              paint-order:stroke fill; stroke-linejoin:round}
-#tkmap .pin-sym path.gs, #tkmap .pin-role path.gs{fill:none; stroke:#12161d; stroke-opacity:.88;
-                 stroke-linecap:round; paint-order:normal}
-#tkmap .pin.t-capital .pin-sym path{fill:#2a1d05; stroke:#f6efdc}
+/* ══ ★★ สัญลักษณ์ = **ขาวขอบดำ** บนแผ่นกระดาษสีอ่อน (เจ้าของสั่ง 2026-09-06) ══
+   ของเดิมเป็นรูปทึบสีเข้ม (#12161d) ซึ่งบนแผ่นขาวมันไปกลืนกับ **ชื่อเมืองที่แผ่นพิมพ์ไว้**
+   (ตัวหนังสือดำเหมือนกัน) → อ่านชื่อเมืองไม่ออกตรงที่มีสัญลักษณ์ทับ
+   ★ ขาวทึบ + ขอบเข้ม แก้สองอย่างพร้อมกัน: ตัวรูปเองอ่านออก **และ** มันบังตัวหนังสือ
+     ด้วยพื้นขาวแทนที่จะทับด้วยดำบนดำ · ออร่าขาวรอบนอกดันตัวหนังสือให้ห่างอีกชั้น
+   ⚠⚠ ต้องขึ้นต้นด้วย #tkmap — กฎ "#tkmap path:not(.region){fill:none}" ข้างบน
+      มี specificity สูงกว่า ".pin-sym path" และจะลบสีทิ้งเงียบ ๆ (เจอ 2026-09-02:
+      สัญลักษณ์วาดครบ 69 ตัว transform ถูกหมด แต่ fill กลายเป็น none = มองไม่เห็นเลย) */
+#tkmap .pin-sym, #tkmap .pin-role{
+  filter:drop-shadow(0 0 1.6px rgba(255,255,255,.95)) drop-shadow(0 0 3px rgba(255,255,255,.7));
+}
+#tkmap .pin-sym path, #tkmap .pin-role path{fill:#fff; fill-opacity:1; stroke:#151a22; stroke-width:1.15;
+              paint-order:normal; stroke-linejoin:round}
+#tkmap .pin-sym path.gs, #tkmap .pin-role path.gs{fill:none; stroke:#151a22; stroke-opacity:.95;
+                 stroke-width:1.35; stroke-linecap:round; paint-order:normal}
+/* เมืองหลวงยังต้องเด่นกว่าเมืองอื่น — ใช้พื้นทองอ่อนแทนขาว ขอบเข้มชุดเดียวกัน */
+#tkmap .pin.t-capital .pin-sym path{fill:#F3D590; stroke:#2a1d05; stroke-width:1.25}
 
 /* ป้ายกับหมุดเฟดหายระหว่างกล้องเคลื่อน แล้วโผล่กลับมาตอนนิ่ง
    ทั้งเร็วกว่าและดูดีกว่าปล่อยให้วิ่งสะบัดตามกล้อง */

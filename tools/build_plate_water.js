@@ -372,6 +372,30 @@ if (require.main === module){
 
   const O = components(W, H, open);   classifyOpen(W, H, O.comps);
   const T = components(W, H, thinMask); classifyThin(W, H, T.comps, D);
+
+  /* ── ★★ คัด **กรอบป้ายสี่เหลี่ยมสีน้ำเงิน** ของแผ่นออกจากชั้นแม่น้ำ ──────────
+     แผ่นใส่ชื่อหุบเขาไว้ในกล่องเส้นน้ำเงิน ("Xie Gu" · "Luo Gu" · "Zi Wi Gu" ฯลฯ)
+     เส้นกรอบเป็นหมึกน้ำเงินเหมือนแม่น้ำเป๊ะ · ตัวกรอง "ตัวอักษร" จับไม่ได้เพราะมันเป็น
+     *เส้น* ไม่ใช่ก้อนทึบ → หลุดมาเป็นขีดหักมุมลอย ๆ กลางที่ราบกวานจง
+     (เจ้าของเห็นเป็น "ส่วนที่ลอย" — ครอปแผ่นดูแล้วเป็นกรอบป้ายทั้งหมด)
+
+     ★ ลายเซ็นที่ชี้ขาด: **กล่องเล็ก + กลวง + มีตัวหนังสือดำอยู่ข้างใน**
+       ข้อสุดท้ายสำคัญที่สุด — กรอบมีไว้ล้อมชื่อ ถ้าไม่มีชื่ออยู่ข้างในก็ไม่ใช่กรอบ  */
+  if (fs.existsSync(path.join(__dirname, '_plate_dark.rle'))){
+    const dk = readRle(path.join(__dirname, '_plate_dark.rle')).m;
+    let nBox = 0;
+    for (const c of T.comps){
+      if (c.kind !== 'river') continue;
+      if (c.w > 115 || c.h > 115) continue;
+      if (c.n / (c.w * c.h) > 0.34) continue;                 /* ต้องกลวง */
+      let dark = 0;
+      for (let y = c.y0; y <= c.y1; y++) for (let x = c.x0; x <= c.x1; x++)
+        if (dk[y*W + x]) dark++;
+      if (dark < 80) continue;                                /* ต้องมีชื่ออยู่ข้างใน */
+      c.kind = 'labelbox'; nBox++;
+    }
+    if (nBox) console.log(`  ทิ้งกรอบป้ายสี่เหลี่ยมของแผ่น ${nBox} ชิ้น (กรอบชื่อหุบเขา ฯลฯ)`);
+  }
   const pick = (S, k) => S.comps.filter(c => c.kind === k);
   const sum  = a => a.reduce((s, c) => s + c.n, 0);
 
@@ -423,6 +447,12 @@ if (require.main === module){
   const riv = new Uint8Array(W*H);
   for (const c of pick(T, 'river')) for (const p of c.px) riv[p] = 1;
 
+  /* ★ จำไว้ว่าพิกเซลไหนคือ "ตัวอักษร" ที่เราคัดทิ้งไป — ตอนยืดปลายห้ามเดินเข้าไป
+     ไม่งั้นเส้นจะงอกเข้าไปในชื่อแม่น้ำที่แผ่นพิมพ์ไว้ แล้วได้ขีดสั้น ๆ เป็นรูปตัวอักษร
+     (เจอจริงแถบฉินหลิ่งตอนไล่ห้าจุดสุดท้าย — เป็นขีดหักมุมสามสี่ขีดกลางที่ราบ) */
+  const textPx = new Uint8Array(W*H);
+  for (const c of pick(T, 'text')) for (const p of c.px) textPx[p] = 1;
+
   const sk = thin(W, H, riv);
   let skn = 0; for (let i = 0; i < W*H; i++) if (sk[i]) skn++;
   const raw = skeletonLines(W, H, sk);
@@ -448,8 +478,44 @@ if (require.main === module){
       a += Math.hypot(L2[i]%W - L2[i-1]%W, ((L2[i]/W)|0) - ((L2[i-1]/W)|0));
     return a;
   };
-  let pool = kept.map(L2 => ({ L2, arc: arcOf(L2) })).filter(o => o.arc >= 3);
-  const stub = kept.length - pool.length;
+  /* ── ★★ ทิ้ง **กรอบป้ายสี่เหลี่ยมสีน้ำเงิน** ที่แผ่นพิมพ์ไว้ ──────────────
+     แผ่นใส่ชื่อหุบเขาไว้ในกล่องสี่เหลี่ยมเส้นน้ำเงิน ("Xie Gu" · "Luo Gu" · "Zi Wi Gu" ฯลฯ)
+     เส้นกรอบพวกนี้เป็นหมึกน้ำเงินเหมือนแม่น้ำเป๊ะ ตัวกรอง "ตัวอักษร" จับไม่ได้เพราะ
+     มันเป็น *เส้น* ไม่ใช่ก้อนทึบ → โผล่มาเป็นขีดหักมุมลอย ๆ กลางที่ราบกวานจง
+     (เจ้าของเห็นเป็น "ส่วนที่ลอย" ในภาพ — ครอปแผ่นดูแล้วเป็นกรอบป้ายทั้งหมด)
+
+     ลายเซ็นของมันชัด: **วงปิดเล็ก ๆ** — แม่น้ำไม่วนกลับมาบรรจบตัวเองในกล่อง 100×100 */
+  const BOXMAX = 105;
+  const isLabelBox = L2 => {
+    if (L2.length < 6) return false;
+    let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1;
+    for (const i of L2){
+      const x = i % W, y = (i / W) | 0;
+      if (x < x0) x0 = x; if (x > x1) x1 = x;
+      if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+    if (Math.max(x1-x0, y1-y0) > BOXMAX) return false;
+    if (L2[0] === L2[L2.length-1]) return true;         /* วงปิด = กรอบเต็มใบ */
+    /* ⚠ กรอบส่วนใหญ่ **ไม่ปิด** — ตัวหนังสือข้างในกินเส้นไปด้านหนึ่งสองด้าน
+       เหลือเป็นรูปตัว L หรือสามเหลี่ยม · ลายเซ็นที่แน่กว่าคือ
+       **มุมหักเกิน 65° ระหว่างท่อนตรงที่ยาวเกิน 12 หน่วยทั้งคู่**
+       ลำน้ำในกล่อง 105 หน่วยไม่หักมุมแบบนั้น มันคดเป็นท่อนสั้น ๆ ต่อกัน */
+    const q = dp(L2.map(i => [i % W, (i / W) | 0]), 1.5);
+    for (let k = 1; k + 1 < q.length; k++){
+      const ax = q[k][0]-q[k-1][0], ay = q[k][1]-q[k-1][1];
+      const bx = q[k+1][0]-q[k][0], by = q[k+1][1]-q[k][1];
+      const la = Math.hypot(ax, ay), lb = Math.hypot(bx, by);
+      if (la < 12 || lb < 12) continue;
+      if ((ax*bx + ay*by) / (la*lb) < 0.42) return true;
+    }
+    return false;
+  };
+  const boxes = kept.filter(isLabelBox).length;
+  if (boxes) console.log(`  ทิ้งกรอบป้ายสี่เหลี่ยมของแผ่น ${boxes} ชิ้น (กรอบชื่อหุบเขา ฯลฯ)`);
+
+  let pool = kept.filter(L2 => !isLabelBox(L2))
+                 .map(L2 => ({ L2, arc: arcOf(L2) })).filter(o => o.arc >= 3);
+  const stub = kept.length - boxes - pool.length;
   let orphan = 0;
   for (let round = 0; round < 5; round++){
     const d = new Map();
@@ -611,7 +677,9 @@ if (require.main === module){
           if (deg.get(kk2(e.x, e.y)) === 1) tips.push(e);
       });
       let made = 0;
+      const done = new Set();                     /* กันเย็บคู่เดิมสองรอบ (ไป-กลับ) */
       for (const A of tips){
+        if (done.has(kk2(A.x, A.y))) continue;
         let best = null;
         for (const s of segs){
           if (s.i === A.i) continue;
@@ -625,7 +693,9 @@ if (require.main === module){
         }
         if (!best) continue;
         const nx = (best.px - A.x) / best.d, ny = (best.py - A.y) / best.d;
-        if (A.ux*nx + A.uy*ny < COS) continue;
+        /* ⚠ สาขาที่ไหลมาชนสายหลัก **ไม่จำเป็นต้องชี้ตรงเข้าหาจุดที่ใกล้ที่สุด**
+           เกณฑ์ทิศจึงผ่อนกว่าการต่อปลายชนปลาย แต่หลักฐานหมึกยังเข้มเท่าเดิม */
+        if (A.ux*nx + A.uy*ny < 0.15) continue;
         if (Math.max(A.w, best.w) / Math.max(0.1, Math.min(A.w, best.w)) > WRATIO) continue;
         const cov = covered(A, { x:best.px, y:best.py });
         if (cov < COVER) continue;
@@ -636,9 +706,81 @@ if (require.main === module){
         rivers.push({ p:pts.flat(), w:ws });
         bridges.push({ d:best.d, x:A.x, y:A.y, x2:Math.round(best.px), y2:Math.round(best.py),
                        why:`บรรจบกลางลำ · หมึกทับ ${(cov*100).toFixed(0)}%`, round:9 });
+        done.add(kk2(A.x, A.y));
+        done.add(kk2(Math.round(best.px), Math.round(best.py)));
         made++;
       }
       if (made) console.log(`  ★ ต่อแบบบรรจบกลางลำอีก ${made} จุด`);
+    }
+
+    /* ── ★ รอบสุดท้าย: **ยืดปลายเข้าไปกินน้ำที่ยังเหลือข้างหน้า** ───────────────
+       ปลายที่เหลือหลังเย็บสองแบบแล้ว มักเป็นปลายที่ *มีน้ำอยู่ข้างหน้าจริง* แต่ก้อนน้ำนั้น
+       ถูกตัวกรอง "ตัวอักษร/เศษ" ตัดทิ้งไป จึงไม่มีเส้นให้ไปบรรจบ
+       → เดินหน้าไปตามทิศของลำน้ำทีละหน่วย ตราบใดที่ **mask ของแผ่นยังบอกว่าเป็นน้ำ**
+       นี่ไม่ใช่การเดา มันคือการไปเก็บน้ำที่เราทิ้งไว้เองกลับมา                        */
+    {
+      const kk3 = (x, y) => x + ',' + y;
+      const deg = new Map();
+      for (const r of rivers){
+        const n = r.p.length;
+        for (const k of [kk3(r.p[0], r.p[1]), kk3(r.p[n-2], r.p[n-1])]) deg.set(k, (deg.get(k) || 0) + 1);
+      }
+      /* ⚠ รัศมีต้องเทียบเท่ากับความหยาบของ landmask (ช่องละ 5 หน่วย) ที่ตัวตรวจใช้
+         ถ้าแคบกว่านั้น จะมีจุดที่ *ตัวตรวจ* บอกว่ายังมีน้ำ แต่ *ตัวสร้าง* มองไม่เห็น
+         แล้วสองฝั่งจะเถียงกันไม่จบ — เจอจริงตอนไล่ห้าจุดสุดท้าย */
+      const wetNear = (x, y) => {
+        const xi = Math.round(x), yi = Math.round(y);
+        for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++){
+          const nx = xi+dx, ny = yi+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          if (m[ny*W+nx] && !textPx[ny*W+nx]) return true;
+        }
+        return false;
+      };
+      let grown = 0, unit = 0;
+      rivers.slice().forEach(r => {
+        const n = r.p.length;
+        const tipOf = (x, y, px, py, w) => {
+          const Ln = Math.hypot(x - px, y - py) || 1;
+          return { x, y, ux:(x - px) / Ln, uy:(y - py) / Ln, w };
+        };
+        for (const A of [ tipOf(r.p[0], r.p[1], r.p[2], r.p[3], r.w[0]),
+                          tipOf(r.p[n-2], r.p[n-1], r.p[n-4], r.p[n-3], r.w[r.w.length-1]) ]){
+          if (deg.get(kk3(A.x, A.y)) !== 1) continue;
+          /* ★★ **เดินตามน้ำ ไม่ใช่พุ่งตรง**
+             ⚠ รอบแรกยิงเส้นตรงตามแนวเดิมไปเลย 30 หน่วย ผลคือได้ **ขีดตรงยาว 30 หน่วย**
+               งอกออกมาจากปลายเป็นรูปตัว L กับสามเหลี่ยมกลางที่ราบ (เจ้าของเห็นว่า "ลอย")
+               เพราะมันพุ่งข้ามไปเกาะกรอบป้ายสีน้ำเงินที่อยู่ใกล้ ๆ
+             ที่ถูกคือเดินทีละสองหน่วย แล้ว**ให้น้ำเป็นคนบอกทิศ**: ลองเบนซ้าย/ตรง/ขวา
+             เลือกทางที่เปียก แล้วอัปเดตทิศตาม · หมดน้ำเมื่อไหร่หยุดทันที
+             และห้ามเลี้ยวสะสมเกิน 75° — ลำน้ำไม่วนกลับ แต่กรอบป้ายวน                */
+          const STEP = 2, MAXGROW = 40;
+          let dirx = A.ux, diry = A.uy, turned = 0;
+          let cx2 = A.x, cy2 = A.y;
+          const walk = [];
+          for (let step = 0; step * STEP < MAXGROW; step++){
+            let picked = null;
+            for (const ang of [0, -0.30, 0.30, -0.60, 0.60]){
+              const ca = Math.cos(ang), sa = Math.sin(ang);
+              const ux2 = dirx*ca - diry*sa, uy2 = dirx*sa + diry*ca;
+              const nx2 = cx2 + ux2*STEP, ny2 = cy2 + uy2*STEP;
+              if (wetNear(nx2, ny2)){ picked = { ux2, uy2, nx2, ny2, ang }; break; }
+            }
+            if (!picked) break;
+            turned += Math.abs(picked.ang);
+            if (turned > 1.31) break;                      /* 75° */
+            dirx = picked.ux2; diry = picked.uy2;
+            cx2 = picked.nx2; cy2 = picked.ny2;
+            walk.push([+cx2.toFixed(1), +cy2.toFixed(1)]);
+          }
+          const bestPath = walk.length >= 3 ? walk : null;   /* ต้องเดินได้อย่างน้อย 6 หน่วย */
+          if (!bestPath) continue;
+          const pts = [[A.x, A.y], ...bestPath];
+          rivers.push({ p:pts.flat(), w:pts.map(() => A.w) });
+          grown++; unit += bestPath.length * 2;
+        }
+      });
+      if (grown) console.log(`  ★ ยืดปลายเข้าไปกินน้ำที่เหลือ ${grown} ปลาย (รวม ~${unit} หน่วย)`);
     }
 
     const rounds = bridges.length ? Math.max(...bridges.map(b => b.round)) : 0;

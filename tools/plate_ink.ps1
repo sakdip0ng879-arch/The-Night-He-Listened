@@ -44,9 +44,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 public static class PlateInk {
-  public const byte PAPER=0, WATER=1, RELIEF=2, DARK=3;
+  public const byte PAPER=0, WATER=1, RELIEF=2, DARK=3, WALL=4;
 
-  public static string Run(string src, string outPng, string waterRle, string reliefRle, string darkRle){
+  public static string Run(string src, string outPng, string waterRle, string reliefRle, string darkRle, string wallRle){
     Bitmap bmp = (Bitmap)Bitmap.FromFile(src);
     int W = bmp.Width, H = bmp.Height;
     BitmapData bd = bmp.LockBits(new Rectangle(0,0,W,H), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
@@ -56,7 +56,7 @@ public static class PlateInk {
     bmp.UnlockBits(bd); bmp.Dispose();
 
     byte[] cls = new byte[W*H];
-    long nW=0, nR=0, nD=0, nP=0;
+    long nW=0, nR=0, nD=0, nP=0, nL=0;
     for (int y=0; y<H; y++){
       int row = y*stride, o = y*W;
       for (int x=0; x<W; x++){
@@ -65,6 +65,13 @@ public static class PlateInk {
         byte c;
         if (b > r+18 && b > 150)                 { c = WATER;  nW++; }
         else if (g > r+22 && g > b+22 && g < 215) { c = RELIEF; nR++; }
+        // กำแพงเมืองจีน — เทาอมน้ำตาลอุ่น · เกณฑ์ยกมาจาก toolsordermask.ps1 ตรง ๆ
+        // ★★ กำแพงเมืองจีน — **เทากลาง ไม่ใช่เทาอุ่น**
+        // ⚠ รอบแรกยกเกณฑ์ "เทาอมน้ำตาล" มาจาก bordermask.ps1 แล้วได้ **เส้นประเขตแดน**
+        //   มาแทน (เส้นน้ำตาลที่ลากรอบแดนฮั่น/วุ่ย/ง่อ) — คนละของกัน คนละสี
+        //   ครอปแผ่นดูของจริงแล้วพบว่ากำแพงเป็นแถบเทากลาง R≈G≈B ราว 125–195
+        else if (Math.Abs(r-g) <= 14 && Math.Abs(g-b) <= 14 &&
+                 r >= 118 && r <= 205) { c = WALL; nL++; }
         else if (r < 110 && g < 110 && b < 110)   { c = DARK;   nD++; }
         else                                      { c = PAPER;  nP++; }
         cls[o+x] = c;
@@ -110,6 +117,7 @@ public static class PlateInk {
         byte r,g,b;
         if (c==WATER)       { r=0x1b; g=0x6e; b=0xc2; }
         else if (c==RELIEF) { r=0x2f; g=0x7d; b=0x32; }
+        else if (c==WALL)   { r=0xb0; g=0x7a; b=0x3c; }
         else if (c==DARK)   { r=0x18; g=0x18; b=0x18; }
         else                { r=0xf4; g=0xf0; b=0xe6; }
         obuf[i]=b; obuf[i+1]=g; obuf[i+2]=r;
@@ -137,7 +145,8 @@ public static class PlateInk {
       for (int x=0; x<W; x++){
         int i=row+x*3; byte c=cls[o+x];
         byte r,g,b;
-        if (c==WATER && keep[lab[o+x]]) { r=0x6f; g=0x9c; b=0xbe; }
+        if (c==WALL)                    { r=0x8c; g=0x83; b=0x75; }
+        else if (c==WATER && keep[lab[o+x]]) { r=0x6f; g=0x9c; b=0xbe; }
         else if (c==RELIEF)             { r=0x93; g=0xa4; b=0x86; }
         else                            { r=0xf2; g=0xed; b=0xe3; }
         cbuf[i]=b; cbuf[i+1]=g; cbuf[i+2]=r;
@@ -151,6 +160,7 @@ public static class PlateInk {
     WriteRle(waterRle,  cls, WATER,  W, H);
     WriteRle(reliefRle, cls, RELIEF, W, H);
     WriteRle(darkRle,   cls, DARK,   W, H);
+    WriteRle(wallRle,   cls, WALL,   W, H);
 
     // ── รายงาน ──
     StringBuilder s = new StringBuilder();
@@ -158,6 +168,7 @@ public static class PlateInk {
     s.AppendLine("ขนาดแผ่น " + W + " x " + H + " = " + (W*H) + " พิกเซล");
     s.AppendLine(String.Format("  น้ำ    {0,9} ({1,5:0.00}%)", nW, nW/tot*100));
     s.AppendLine(String.Format("  ภูเขา  {0,9} ({1,5:0.00}%)", nR, nR/tot*100));
+    s.AppendLine(String.Format("  กำแพง  {0,9} ({1,5:0.00}%)", nL, nL/tot*100));
     s.AppendLine(String.Format("  หมึกดำ {0,9} ({1,5:0.00}%)  = ตัวหนังสือ+ไอคอน+เส้นเขต ที่จะหายไปตอนวาดใหม่", nD, nD/tot*100));
     s.AppendLine(String.Format("  พื้น   {0,9} ({1,5:0.00}%)", nP, nP/tot*100));
     s.AppendLine();
@@ -207,7 +218,8 @@ Add-Type -TypeDefinition $code -ReferencedAssemblies System.Drawing
 $wr = Join-Path $Rle '_plate_water.rle'
 $rr = Join-Path $Rle '_plate_relief.rle'
 $dr = Join-Path $Rle '_plate_dark.rle'
-$report = [PlateInk]::Run($src, $Out, $wr, $rr, $dr)
+$lr = Join-Path $Rle '_plate_wall.rle'
+$report = [PlateInk]::Run($src, $Out, $wr, $rr, $dr, $lr)
 Write-Output $report
 Write-Output ''
 Write-Output ("ภาพ false-colour : " + $Out)

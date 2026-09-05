@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>ตรวจชั้นน้ำที่ลอกจากแผ่น — เฟส 1</title>
+<!-- water_check.html — หน้าตรวจของเฟส 1 (DECISIONS §14 · เปิดใหม่ 2026-09-05)
+     เปิดผ่าน  node tools/serve.js  →  http://localhost:8778/tools/water_check.html
+     ⚠ ห้ามเปิดด้วย file:// (DECISIONS §13 — preview pane แคชแล้วเราจะอ่านผลผิด)
+
+     หน้านี้ตอบคำถามเดียว: **เส้นที่เราลอกออกมา ตรงกับหมึกบนแผ่นไหม**
+     ต้นฉบับกับของเราเป็นของชุดเดียวกัน จึงต้องตรงเป๊ะ — ที่ไม่ตรงคือบั๊กของตัวแปลง -->
+<style>
+  html,body{margin:0;background:#14161a;color:#e7e9ee;font:13px/1.5 system-ui,sans-serif}
+  #bar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;gap:6px;flex-wrap:wrap;
+       align-items:center;padding:8px 10px;background:rgba(14,16,21,.9);backdrop-filter:blur(8px)}
+  button{background:#232833;color:#e7e9ee;border:1px solid #39404f;border-radius:6px;
+         padding:5px 11px;cursor:pointer;font:inherit}
+  button.on{background:#2E9E5B;border-color:#2E9E5B;color:#fff}
+  #wrap{padding-top:44px}
+  svg{display:block;width:100%;height:auto}
+  #note{opacity:.65;margin-left:auto;padding-right:4px}
+</style>
+<div id="bar">
+  <button id="b-plate" class="on">แผ่นเดิม</button>
+  <button id="b-sea"   class="on">ทะเล</button>
+  <button id="b-lake"  class="on">ทะเลสาบ</button>
+  <button id="b-riv"   class="on">แม่น้ำ</button>
+  <button id="b-isl"   class="on">เกาะ</button>
+  <button id="b-solo">โหมดแผ่นใหม่</button>
+  <span id="note"></span>
+</div>
+<div id="wrap"></div>
+<script src="../data/plate_water.js"></script>
+<script>
+const D = window.TK.plateWater;
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (t, a) => { const e = document.createElementNS(NS, t);
+  for (const k in a) e.setAttribute(k, a[k]); return e; };
+const ring = f => { let d = ''; for (let i = 0; i < f.length; i += 2)
+  d += (i ? 'L' : 'M') + f[i] + ' ' + f[i+1]; return d + 'Z'; };
+
+const svg = mk('svg', { viewBox:`0 0 ${D.W} ${D.H}` });
+const plate = mk('image', { href:'../assets/map.jpg', x:0, y:0, width:D.W, height:D.H });
+svg.append(plate);
+
+/* พื้นของ "แผ่นใหม่" — ใช้ตอนกดโหมดแผ่นใหม่เท่านั้น ยังไม่ใช่สเปกสี (นั่นคือเฟส 2) */
+const paper = mk('rect', { x:0, y:0, width:D.W, height:D.H, fill:'#f2ede3', opacity:0 });
+svg.append(paper);
+
+const gSea = mk('g', {}), gIsl = mk('g', {}), gLake = mk('g', {}), gRiv = mk('g', {});
+for (const r of D.sea)     gSea.append(mk('path', { d:ring(r), fill:'#2563A8', 'fill-opacity':.28,
+                                                    stroke:'#ff2fd0', 'stroke-width':1.4 }));
+for (const r of D.islands) gIsl.append(mk('path', { d:ring(r), fill:'#f2ede3', stroke:'#ffb300',
+                                                    'stroke-width':1.2 }));
+for (const r of D.lakes)   gLake.append(mk('path', { d:ring(r), fill:'#2563A8', 'fill-opacity':.45,
+                                                     stroke:'#ff8c1a', 'stroke-width':1.2 }));
+for (const r of D.rivers){
+  /* วาดทีละท่อนเพราะความกว้างเปลี่ยนไปตามจุด — ค่า w มาจากความหนาของหมึกจริง */
+  for (let i = 0; i + 3 < r.p.length; i += 2){
+    const hw = (r.w[i/2] + r.w[i/2 + 1]) / 2;
+    gRiv.append(mk('line', { x1:r.p[i], y1:r.p[i+1], x2:r.p[i+2], y2:r.p[i+3],
+      stroke:'#e11d48', 'stroke-width':Math.max(1, hw*2), 'stroke-linecap':'round' }));
+  }
+}
+svg.append(gSea, gIsl, gLake, gRiv);
+document.getElementById('wrap').append(svg);
+
+const vtx = D.rivers.reduce((s,r) => s + r.w.length, 0);
+const pts = a => a.reduce((s,r) => s + r.length/2, 0);
+document.getElementById('note').textContent =
+  `ทะเล ${D.sea.length} รูป/${pts(D.sea)} จุด · เกาะ ${D.islands.length} · ` +
+  `ทะเลสาบ ${D.lakes.length} · แม่น้ำ ${D.rivers.length} เส้น/${vtx} จุด`;
+
+const tog = (id, el) => {
+  const b = document.getElementById(id);
+  b.onclick = () => { b.classList.toggle('on'); el.style.display = b.classList.contains('on') ? '' : 'none'; };
+};
+tog('b-sea', gSea); tog('b-lake', gLake); tog('b-riv', gRiv); tog('b-isl', gIsl);
+const bp = document.getElementById('b-plate');
+bp.onclick = () => { bp.classList.toggle('on'); plate.style.display = bp.classList.contains('on') ? '' : 'none'; };
+
+/* โหมดแผ่นใหม่: ซ่อนต้นฉบับ ปูพื้นกระดาษ แล้ววาดน้ำด้วยหมึกสีเดียว
+   — ยังไม่ใช่สไตล์จริง มันแค่ตอบว่า "ถ้าไม่มีแผ่นเดิมอยู่ข้างล่าง เส้นเราอ่านออกไหม" */
+let solo = false;
+document.getElementById('b-solo').onclick = e => {
+  solo = !solo; e.target.classList.toggle('on');
+  plate.style.display = solo ? 'none' : '';
+  paper.setAttribute('opacity', solo ? 1 : 0);
+  bp.classList.toggle('on', !solo);
+  const ink = solo ? '#5b87ab' : null;
+  for (const p of gSea.children){
+    p.setAttribute('fill', solo ? '#8fb4cd' : '#2563A8');
+    p.setAttribute('fill-opacity', solo ? 1 : .28);
+    p.setAttribute('stroke', solo ? '#5b87ab' : '#ff2fd0');
+  }
+  for (const p of gLake.children){
+    p.setAttribute('fill', solo ? '#8fb4cd' : '#2563A8');
+    p.setAttribute('fill-opacity', solo ? 1 : .45);
+    p.setAttribute('stroke', solo ? '#5b87ab' : '#ff8c1a');
+  }
+  for (const p of gIsl.children) p.setAttribute('stroke', solo ? '#5b87ab' : '#ffb300');
+  for (const p of gRiv.children) p.setAttribute('stroke', solo ? ink : '#e11d48');
+};
+</script>

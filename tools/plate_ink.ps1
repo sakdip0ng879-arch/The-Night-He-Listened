@@ -46,7 +46,7 @@ using System.Text;
 public static class PlateInk {
   public const byte PAPER=0, WATER=1, RELIEF=2, DARK=3;
 
-  public static string Run(string src, string outPng, string waterRle, string reliefRle){
+  public static string Run(string src, string outPng, string waterRle, string reliefRle, string darkRle){
     Bitmap bmp = (Bitmap)Bitmap.FromFile(src);
     int W = bmp.Width, H = bmp.Height;
     BitmapData bd = bmp.LockBits(new Rectangle(0,0,W,H), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
@@ -150,6 +150,7 @@ public static class PlateInk {
 
     WriteRle(waterRle,  cls, WATER,  W, H);
     WriteRle(reliefRle, cls, RELIEF, W, H);
+    WriteRle(darkRle,   cls, DARK,   W, H);
 
     // ── รายงาน ──
     StringBuilder s = new StringBuilder();
@@ -205,7 +206,8 @@ Add-Type -TypeDefinition $code -ReferencedAssemblies System.Drawing
 
 $wr = Join-Path $Rle '_plate_water.rle'
 $rr = Join-Path $Rle '_plate_relief.rle'
-$report = [PlateInk]::Run($src, $Out, $wr, $rr)
+$dr = Join-Path $Rle '_plate_dark.rle'
+$report = [PlateInk]::Run($src, $Out, $wr, $rr, $dr)
 Write-Output $report
 Write-Output ''
 Write-Output ("ภาพ false-colour : " + $Out)

@@ -64,9 +64,16 @@ TK.map = (function(){
     /* (marker #ahead ของเดิมถูกถอด 2026-08-25 — หัวลูกศรตอนนี้เป็น path ของเราเอง
        ที่โผล่ตอนเดินถึง (.mk-head ใน setMarkers) ตามแบบ ข ที่เจ้าของเคาะ) */
     svg.append(mk('image',{href:'assets/map.jpg', x:0, y:0, width:W, height:H, id:'basemap'}));
+    /* ★★ แผ่นพื้นที่เราวาดเอง — อยู่ตรงที่เดียวกับ map.jpg เป๊ะ (DECISIONS §14 เฟส 4)
+       เปิดทีละแผ่นด้วย setPlate() · ทั้งสองใช้กรอบพิกัด 1650×1950 ชุดเดียวกัน (กฎ 4) */
+    svg.append(layers.plate = mk('g',{id:'L-plate'}));
     /* ชั้น roads อยู่ใต้ routes เสมอ — กราฟถนนเป็นฉากหลัง การเดินทัพของฉากต้องอยู่ทับ
-       (DECISIONS §15 "โหมดถนน · มาฟรีกับ §4" — ข้อมูลมาจาก TK.edges ไม่มีของใหม่) */
-    for (const name of ['regions','works','focus','roads','routes','markers','pins','labels'])
+       (DECISIONS §15 "โหมดถนน · มาฟรีกับ §4" — ข้อมูลมาจาก TK.edges ไม่มีของใหม่)
+
+       ★★★ `water` อยู่ **หลัง** `regions` โดยตั้งใจ — หมึกน้ำต้องทับสีเขต ไม่ใช่จมอยู่ใต้
+       ปี 221 แผ่นดินมีเจ้าของครบทุกตารางนิ้ว ชั้นเขตจึงคลุมบกทั้งผืน · ถ้าน้ำอยู่ข้างใต้
+       ทุกครั้งที่เพิ่มความทึบของเขตให้สีฝ่ายชัด แม่น้ำจะจมหายไปพร้อมกัน (DECISIONS §14 เฟส 2) */
+    for (const name of ['regions','water','works','focus','roads','routes','markers','pins','labels'])
       svg.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
@@ -91,6 +98,7 @@ TK.map = (function(){
         mask.append(mk('rect',{x,y,width:w,height:h, fill:'#eef1f4', opacity:op})));
     svg.insertBefore(mask, layers.regions);
 
+    buildPlate();
     buildRegions();
     buildWorks();
     buildPins();
@@ -100,6 +108,56 @@ TK.map = (function(){
     relayout();
     return api;
   }
+
+  /* ══ ★★ แผ่นพื้นของเราเอง (DECISIONS §14 · เจ้าของเคาะสไตล์ "กลางคืน" 2026-09-05) ══
+     ข้อมูลมาจาก data/plate_water.js ซึ่งลอกจาก **หมึกของ map.jpg เอง** ไม่ใช่ Natural Earth
+     → ความคลาดจากถนน 98 เส้นและหมุด 73 จุดที่ปักไว้แล้ว = ศูนย์โดยนิยาม
+
+     สีทั้งหมดอยู่ที่ css/style.css (`.pl-*`) ที่เดียว — ห้ามใส่สีตรงนี้
+     ⚠ ทุกความหนาที่นี่เป็น **หน่วยแผ่น ไม่ใช่หน่วยจอ** เพราะมันคือแผ่นดิน
+       ต้องโตตามแผ่นเหมือนแม่น้ำกับกำแพง (§3) · relayout จึงไม่ต้องแตะชั้นนี้เลย  */
+  function buildPlate(){
+    const PW = TK.plateWater;
+    if (!PW){ layers.plate.remove(); return; }
+    const ring = f => { let d = ''; for (let i = 0; i < f.length; i += 2)
+      d += (i ? 'L' : 'M') + f[i] + ' ' + f[i+1]; return d + 'Z'; };
+
+    layers.plate.append(mk('rect',{x:0, y:0, width:W, height:H, class:'pl-ground'}));
+
+    /* น้ำตื้นริมฝั่ง — เส้นหนาจาง ๆ ตามขอบ ทำให้ชายฝั่งอ่านเป็น "ฝั่ง" ไม่ใช่ "รอยตัด"
+       ⚠ ต้อง clip ไว้ในทะเล ไม่งั้นครึ่งนอกของเส้นจะล้นขึ้นบกเป็นหาดทรายจาง ๆ */
+    const defs = mk('defs');
+    layers.plate.append(defs);
+    PW.sea.forEach((f, i) => {
+      const d = ring(f), id = 'pl-clip-' + i;
+      const cp = mk('clipPath',{id});
+      cp.append(mk('path',{d}));
+      defs.append(cp);
+      layers.plate.append(mk('path',{d, class:'pl-sea'}));
+      layers.plate.append(mk('path',{d, class:'pl-shelf', 'clip-path':`url(#${id})`}));
+    });
+    for (const f of PW.islands) layers.plate.append(mk('path',{d:ring(f), class:'pl-isl'}));
+    for (const f of PW.lakes)   layers.plate.append(mk('path',{d:ring(f), class:'pl-lake'}));
+
+    /* หมึกน้ำ — วาดทีละท่อนเพราะความกว้างเปลี่ยนไปตามจุด
+       `w` คือครึ่งความกว้างของหมึกจริงบนแผ่น จึงเรียวปลายเองโดยไม่ต้องเดา */
+    for (const r of PW.rivers)
+      for (let i = 0; i + 3 < r.p.length; i += 2){
+        const hw = (r.w[i/2] + r.w[i/2 + 1]) / 2;
+        layers.water.append(mk('line',{
+          x1:r.p[i], y1:r.p[i+1], x2:r.p[i+2], y2:r.p[i+3],
+          class:'pl-river', 'stroke-width':Math.max(1.4, hw * 2 * 0.90).toFixed(2) }));
+      }
+  }
+
+  /* สลับแผ่น — คลาสเดียวคุมทั้ง: ซ่อน jpg · ซ่อนกรอบปิด WEI/SHU/WU · ดันความทึบของเขต
+     (บนพื้นมืด .38 ทำให้เขียว/น้ำเงิน/แดงแยกกันยาก — DECISIONS §14 เฟส 2) */
+  function setPlate(useNew){
+    plateNew = !!useNew && !!TK.plateWater;
+    document.getElementById('stage').classList.toggle('plate-new', plateNew);
+    return plateNew;
+  }
+  let plateNew = false;
 
   function buildRegions(){
     for (const id in TK.regions){
@@ -1487,6 +1545,7 @@ TK.map = (function(){
   /* ★ เปิดตาราง GLYPH ให้ ui.js เอาไปทำปุ่มสัญลักษณ์ — **อ่านอย่างเดียว**
      ห้ามให้ที่อื่นแก้ ไม่งั้นตารางสัญลักษณ์จะมีสองแหล่ง (§14) */
   const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads, setYear,
+                setPlate, get plateNew(){ return plateNew; }, get hasPlate(){ return !!TK.plateWater; },
                 get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };

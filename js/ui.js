@@ -591,8 +591,15 @@ TK.ui = (function(){
        ต้องหนีบเสมอ ห้ามเชื่อค่าที่เก็บไว้ว่ายังอยู่ในช่วง — และ check_click ก็จับไม่ได้
        เพราะมันเปิด Chrome ด้วยโปรไฟล์ใหม่ทุกครั้ง จึงไม่เคยเห็นสภาพของคนที่กลับมาอ่านซ้ำ */
     let mi = MODES.length - 1;                       // ค่าเริ่มต้น = rich
+    /* ⚠⚠ บั๊กเก่าที่เพิ่งจับได้ 2026-09-05 (ตอนทำเฟส 4) — **`+null` เท่ากับ `0`**
+       โค้ดเดิมเขียน `const v = +localStorage.getItem(...)` แล้วเช็ค `Number.isInteger(v)`
+       คนอ่านหน้าใหม่ที่ยังไม่มีคีย์นี้จะได้ `getItem` คืน null → `+null` = 0 → ผ่านทุกเงื่อนไข
+       → `mi = 0` = "ปกติ" **ค่าเริ่มต้น "เข้ม" ที่ตั้งใจไว้จึงไม่เคยทำงานกับใครเลย**
+       (เจ้าของเขียนไว้เองข้างบนว่า "ส่วนตัวกดแต่ Rich" — แต่คนอ่านใหม่ไม่เคยได้เห็น)
+       ต้องแยก "ไม่มีค่า" ออกจาก "มีค่าเป็นศูนย์" ก่อนแปลงเป็นตัวเลขเสมอ */
     try {
-      const v = +localStorage.getItem('tk-mapmode');
+      const raw = localStorage.getItem('tk-mapmode');
+      const v = (raw === null || raw === '') ? NaN : +raw;
       if (Number.isInteger(v) && v >= 0 && v < MODES.length) mi = v;
     } catch {}
     const applyMode = () => {
@@ -605,6 +612,22 @@ TK.ui = (function(){
     };
     tap('#mapmode', () => { mi = (mi + 1) % MODES.length; applyMode(); });
     applyMode();
+
+    /* ── ★★ ปุ่มสลับแผ่น (DECISIONS §14 เฟส 4 · 2026-09-05) ──────────────
+       แผ่นที่เราวาดเองเป็นค่าเริ่มต้น · แผ่นแฟนเมดต้นฉบับยังเปิดดูได้ตลอดเพื่อเทียบ
+       ⚠ **คีย์ localStorage แยกจาก tk-mapmode โดยตั้งใจ** — tk-mapmode เก็บ
+       *ดัชนีของอาร์เรย์* ซึ่งเคยพังทั้งหน้ามาแล้วตอนความยาวอาร์เรย์เปลี่ยน (ดูหมายเหตุข้างบน)
+       ค่าที่นี่เก็บเป็นคำที่มีความหมายในตัว ไม่ผูกกับความยาวของอะไรทั้งสิ้น */
+    let plateNew = true;
+    try { if (localStorage.getItem('tk-plate') === 'old') plateNew = false; } catch {}
+    const applyPlate = () => {
+      if (!TK.map.hasPlate){ $('#btnPlate').style.display = 'none'; return; }
+      TK.map.setPlate(plateNew);
+      $('#btnPlate').textContent = 'แผ่น: ' + (plateNew ? 'กลางคืน' : 'เดิม');
+      try { localStorage.setItem('tk-plate', plateNew ? 'new' : 'old'); } catch {}
+    };
+    tap('#btnPlate', () => { plateNew = !plateNew; applyPlate(); });
+    applyPlate();
 
     document.addEventListener('keydown', e => {
       if (e.target.closest('#reader') && ['ArrowUp','ArrowDown','PageUp','PageDown'].includes(e.key))

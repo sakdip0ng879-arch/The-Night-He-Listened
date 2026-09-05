@@ -461,6 +461,93 @@ if (require.main === module){
   }
   console.log(`  ทิ้งตัวเชื่อมจุดแยกที่สั้นกว่า 3 หน่วย ${stub} ชิ้น · เศษเดี่ยวสั้น ${orphan} ชิ้น`);
 
+  /* ── ★★★ ต่อแม่น้ำที่ขาด (เจ้าของทัก 2026-09-05 "ระวังพวกแม่น้ำขาดด้วยนะ") ────
+     แม่น้ำบนแผ่นขาดเพราะ **ป้ายชื่อที่พิมพ์ทับมัน** — ตรงที่ป้ายพาด หมึกเป็นสีดำ
+     ไม่ใช่สีน้ำเงิน mask น้ำจึงมีรู · ไม่ใช่เพราะแม่น้ำมันจบตรงนั้นจริง
+
+     ⚠ **ห้ามเดาว่าคู่ไหนควรต่อ** — ให้แผ่นเป็นคนตอบ: เชื่อมได้ก็ต่อเมื่อ
+     **ช่องว่างนั้นถูกหมึกดำของแผ่นทับอยู่จริง** (คือมีป้ายพาดตรงนั้นให้เห็น)
+     นี่คือการทดสอบ *สาเหตุ* ไม่ใช่การทดสอบ *ระยะ* — ปลายสองอันที่บังเอิญอยู่ใกล้กัน
+     แต่ไม่มีป้ายคั่น แปลว่ามันคนละสาย ห้ามต่อ
+
+     ช่องว่างที่สั้นกว่า 6 หน่วยยกเว้นให้ — นั่นคือรอยที่ thinning/ตัดหนวดทำเอง ไม่ใช่ป้าย */
+  const DARK_SRC = path.join(__dirname, '_plate_dark.rle');
+  let dark = null;
+  if (fs.existsSync(DARK_SRC)) dark = readRle(DARK_SRC).m;
+  else console.log('  ⚠ ไม่เจอ _plate_dark.rle — ข้ามการต่อแม่น้ำ (รัน plate_ink.ps1 ใหม่)');
+
+  const bridges = [];
+  if (dark){
+    const key = (x, y) => x + ',' + y;
+    const deg = new Map();
+    for (const r of rivers){
+      const n = r.p.length;
+      for (const k of [key(r.p[0], r.p[1]), key(r.p[n-2], r.p[n-1])])
+        deg.set(k, (deg.get(k) || 0) + 1);
+    }
+    const ends = [];
+    rivers.forEach((r, i) => {
+      const n = r.p.length;
+      const mkEnd = (x, y, px, py, w) => {
+        const L = Math.hypot(x - px, y - py) || 1;
+        return { i, x, y, ux:(x - px) / L, uy:(y - py) / L, w };
+      };
+      const cands = [ mkEnd(r.p[0], r.p[1], r.p[2], r.p[3], r.w[0]),
+                      mkEnd(r.p[n-2], r.p[n-1], r.p[n-4], r.p[n-3], r.w[r.w.length-1]) ];
+      for (const e of cands) if (deg.get(key(e.x, e.y)) === 1) ends.push(e);
+    });
+
+    /* สัดส่วนของช่องว่างที่ถูกหมึกดำ (หรือน้ำ) ทับอยู่ */
+    const covered = (A, B) => {
+      const steps = Math.max(4, Math.ceil(Math.hypot(B.x-A.x, B.y-A.y)));
+      let hitN = 0, tot = 0;
+      for (let s = 1; s < steps; s++){
+        const t = s / steps;
+        const x = Math.round(A.x + (B.x-A.x)*t), y = Math.round(A.y + (B.y-A.y)*t);
+        let near = 0;
+        for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
+          const nx = x+dx, ny = y+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          if (dark[ny*W+nx] || m[ny*W+nx]) near = 1;
+        }
+        hitN += near; tot++;
+      }
+      return tot ? hitN / tot : 0;
+    };
+
+    const used = new Set();
+    const pairs = [];
+    for (let a = 0; a < ends.length; a++) for (let b = a+1; b < ends.length; b++){
+      const A = ends[a], B = ends[b];
+      if (A.i === B.i) continue;
+      const dx = B.x-A.x, dy = B.y-A.y, d = Math.hypot(dx, dy);
+      if (d > 45 || d < 0.5) continue;
+      const nx = dx/d, ny = dy/d;
+      if (A.ux*nx + A.uy*ny < 0.5) continue;          /* A ต้องชี้ไปหา B */
+      if (B.ux*-nx + B.uy*-ny < 0.5) continue;        /* และ B ต้องชี้กลับมาหา A */
+      const wr = Math.max(A.w, B.w) / Math.max(0.1, Math.min(A.w, B.w));
+      if (wr > 3) continue;                            /* สายใหญ่ไม่ต่อกับสายจิ๋ว */
+      pairs.push({ a, b, d, A, B });
+    }
+    pairs.sort((p, q) => p.d - q.d);                   /* ใกล้ที่สุดได้จับคู่ก่อน */
+    for (const p of pairs){
+      if (used.has(p.a) || used.has(p.b)) continue;
+      let why = 'ช่องสั้นกว่า 6 หน่วย';
+      if (p.d >= 6){
+        const cov = covered(p.A, p.B);
+        if (cov < 0.55) continue;                      /* ไม่มีป้ายคั่น = คนละสาย */
+        why = `หมึกดำคลุม ${(cov*100).toFixed(0)}%`;
+      }
+      used.add(p.a); used.add(p.b);
+      const w = +((p.A.w + p.B.w) / 2).toFixed(1);
+      rivers.push({ p:[p.A.x, p.A.y, p.B.x, p.B.y], w:[w, w] });
+      bridges.push({ d:p.d, x:p.A.x, y:p.A.y, x2:p.B.x, y2:p.B.y, why });
+    }
+    console.log(`  ★ ต่อแม่น้ำที่ขาด ${bridges.length} จุด (จากคู่ที่เข้าเกณฑ์ทิศ+ความกว้าง ${pairs.length} คู่)`);
+    for (const b of bridges.sort((x, y) => y.d - x.d).slice(0, 12))
+      console.log(`      ${b.d.toFixed(0).padStart(3)} หน่วย  ${b.x},${b.y} → ${b.x2},${b.y2}   ${b.why}`);
+  }
+
   /* ── เขียนไฟล์ ──────────────────────────────────────────────────────── */
   const flat = r => '[' + r.map(([x,y]) => x + ',' + y).join(',') + ']';
   const vtx  = rivers.reduce((s, r) => s + r.w.length, 0);

@@ -33,6 +33,7 @@ const CONTROLS = [
   ['btnPlay',   `document.getElementById('btnPlay').textContent`],
   ['btnLegend', `document.getElementById('legend').hidden`],
   ['mapmode',   `document.getElementById('mapmode').textContent`],
+  ['btnPlate',  `document.getElementById('stage').className`],
   ['btnNext',   `TK.engine.index`],
   ['btnPrev',   `TK.engine.index`],
   ['btnReset',  `Math.round(TK.map.viewBox.w)`]

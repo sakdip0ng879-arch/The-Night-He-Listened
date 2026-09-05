@@ -38,6 +38,41 @@ body{
    ที่ถูกคือให้ป้ายมีฮาโลของตัวเองแล้วคืนสีภูมิประเทศให้เห็นแม่น้ำกับภูเขา
    กดปุ่มมุมขวาบนสลับได้สามระดับ */
 #basemap{filter:saturate(.45) brightness(1.04) contrast(.9); transition:filter .3s ease}
+
+/* ══ ★★ แผ่นพื้นที่เราวาดเอง — สไตล์ "กลางคืน" ═══════════════════════════
+   เจ้าของเคาะ 2026-09-05 · จานสีเต็มอยู่ที่ DECISIONS §14 เฟส 2
+   ข้อมูล data/plate_water.js ลอกจากหมึกของ map.jpg เอง (ไม่ใช่ Natural Earth)
+
+   ⚠ ความหนาทุกค่าที่นี่เป็น **หน่วยแผ่น ไม่ใช่หน่วยจอ** — มันคือแผ่นดิน ต้องโตตามแผ่น
+     (ต่างจาก .road / .mk-route ที่ relayout คอยคูณ mu ให้คงที่บนจอ)                */
+#L-plate .pl-ground{fill:#1C2129}
+#L-plate .pl-sea{fill:#26323D; stroke:#4A5C6A; stroke-width:2}
+#L-plate .pl-shelf{fill:none; stroke:#27343F; stroke-width:22; stroke-opacity:.55}
+#L-plate .pl-isl{fill:#1C2129; stroke:#4A5C6A; stroke-width:2}
+#L-plate .pl-lake{fill:#26323D; stroke:#4A5C6A; stroke-width:1.6}
+/* หมึกน้ำอยู่คนละชั้น (#L-water) เพราะมันต้องอยู่ *บน* สีเขต ไม่ใช่ใต้ — §14 เฟส 2 */
+#L-water .pl-river{stroke:#5F8299; stroke-linecap:round; fill:none}
+
+/* สลับแผ่น: คลาสเดียวคุมทั้งสี่อย่าง */
+#stage.plate-new #basemap{display:none}
+/* กรอบปิดตัวอักษร WEI/SHU/WU ไม่ต้องมีอีก — แผ่นใหม่ไม่ได้พิมพ์ชื่อฝ่ายไว้ */
+#stage.plate-new #L-mask{display:none}
+/* ★ .38 ตั้งไว้สำหรับแผ่นสว่าง · บนพื้นมืดสีโปร่งจะทั้งมืดลงและซีดลงพร้อมกัน
+   วัดด้วยตาแล้ว: ที่ .38 เขียว/น้ำเงิน/แดงเริ่มแยกกันยาก · ที่ .55 สีเขตเริ่มกลบ
+   **ลูกศรสีเดียวกันของตัวเอง** (ลูกศรวุ่ยในแผ่นดินวุ่ย) · .45 อยู่กลางพอดี */
+#stage.plate-new #L-regions{opacity:.45}
+/* ★ ปุ่ม "ความเข้มของแผนที่พื้น" ต้องมีความหมายกับแผ่นใหม่ด้วย ห้ามซ่อนทิ้ง
+   ⚠ เคยเขียนเป็น `#stage.plate-new #mapmode{display:none}` แล้ว **check_click จับได้ทันที**
+     ว่ามีปุ่มที่เมาส์จริงกดไม่โดน — การซ่อนปุ่มไม่ใช่การแก้ปัญหา มันคือการซ่อนปัญหา
+   ค่าที่เจ้าของเคาะคือชุด "เข้ม" ซึ่งเป็นค่าเริ่มต้นอยู่แล้ว · ชุด "ปกติ" คือแบบที่อ่อนลงหนึ่งขั้น */
+#stage.map-rich #L-plate .pl-ground{fill:#171A20}
+#stage.map-rich #L-plate .pl-isl   {fill:#171A20}
+#stage.map-rich #L-plate .pl-sea,
+#stage.map-rich #L-plate .pl-lake  {fill:#202B36}
+#stage.map-rich #L-water .pl-river {stroke:#6E93AA}
+#stage:not(.plate-new) #L-plate,
+#stage:not(.plate-new) #L-water{display:none}
+
 #stage.map-faint #basemap{filter:saturate(.18) brightness(1.30) contrast(.72)}
 #stage.map-rich  #basemap{filter:saturate(.85) brightness(.96) contrast(1)}
 

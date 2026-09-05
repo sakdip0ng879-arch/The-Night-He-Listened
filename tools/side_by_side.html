@@ -78,14 +78,15 @@ function sync(){
   const vbAttr = svg.getAttribute('viewBox'); if (!vbAttr) return;
   const [vx, vy, vw, vh] = vbAttr.split(/[ ,]+/).map(Number);
   const r = svg.getBoundingClientRect();
+  const host = stageWrap.getBoundingClientRect();   /* ★ อ้างกล่องจริง ห้ามฮาร์ดโค้ดความสูงแถบบน */
   const pw = r.width, ph = r.height;
   if (!pw || !ph) return;
   const k = Math.min(pw/vw, ph/vh);
-  const ox = r.left + (pw - vw*k)/2 - vx*k;
-  const oy = r.top  + (ph - vh*k)/2 - vy*k;
+  const ox = (r.left - host.left) + (pw - vw*k)/2 - vx*k;
+  const oy = (r.top  - host.top ) + (ph - vh*k)/2 - vy*k;
   img.style.width  = (MW*k) + 'px';
   img.style.height = (MH*k) + 'px';
-  img.style.transform = `translate(${ox}px, ${oy - 37}px)`;
+  img.style.transform = `translate(${ox}px, ${oy}px)`;
   vb.textContent = `viewBox ${vx|0} ${vy|0} ${vw|0}×${vh|0}  ·  ${k.toFixed(3)}×`;
 }
 setInterval(sync, 120);

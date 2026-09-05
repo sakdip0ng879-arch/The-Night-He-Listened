@@ -358,6 +358,51 @@ if (require.main === module){
      เก็บหลังลบกรอบ WEI เพราะกรอบนั้น §3 วัดแล้วว่าไม่กินน้ำจริงสักหน่วย */
   const m0 = Uint8Array.from(m);
 
+  /* ══ ★★★ ห้ามลบหมึกที่อยู่ *ลึกในผืนน้ำ* ═══════════════════════════════
+     เจ้าของชี้ด้วยวงเขียว (2026-09-05): ทะเลสาบหลายลูกแหว่งเป็นรูสี่เหลี่ยม
+     — ต้นตอคือแผ่นเขียนชื่อทะเลสาบ (Lake Kun Ba · Lake Dong Ting · Lake Tai Hu)
+     **ทับลงบนตัวทะเลสาบเอง** พอเราลบกล่องคำ ก็ลบเนื้อทะเลสาบไปด้วยเป็นสี่เหลี่ยม
+
+     ★ กติกา: ตัวอักษรเป็นเส้นบาง (หนา 2–3 px) · เนื้อผืนน้ำหนา
+       ถ้าพิกเซลอยู่ห่างจากขอบน้ำเกิน 4 px แปลว่ามันอยู่ *กลางผืนน้ำ* — ลบไม่ได้
+       และไม่จำเป็นต้องลบด้วย เพราะตัวอักษรบนทะเลสาบมีสีเดียวกับทะเลสาบอยู่แล้ว
+       ลบหรือไม่ลบก็เห็นเหมือนกัน แต่ลบแล้ว **เจาะรู** */
+  const D0 = dt(W, H, m0);
+  /* ★ ผืนน้ำเปิดของแผ่น คิดจาก m0 **ก่อน** ตัวกรองตัวหนังสือทุกตัว
+     ทะเลสาบคือน้ำ จบ — ห้ามตัวกรองไหนแตะ ไม่ว่ารูปร่างหลังโดนป้ายทับจะออกมาเป็นอะไร */
+  const { open: OPEN0 } = splitOpen(W, H, m0, D0);
+  const DEEP = 4;
+
+  /* ══ ★★★ "แขนของทะเลสาบ" — น้ำที่งอกออกจากผืนน้ำเปิด ═══════════════════
+     เจ้าของชี้ด้วยวงเขียว (2026-09-05): ทะเลสาบคุนหมิง/หงเจ๋อ เหลือแต่ก้อนกลาง
+     แขนที่ยื่นออกมาหายหมด เพราะแขนกว้างราว 10 px → นับเป็น "น้ำบาง" → เป็นสายน้ำ
+     แล้วกติกาเครือข่ายตัดมันทิ้งในฐานะ "หนวดสั้นกว่า 30"
+
+     ★ เดินจากผืนน้ำเปิดออกไปตามหมึกน้ำจริง 25 px — ได้เท่าไรคือเนื้อของแหล่งน้ำนั้น
+       **ห้ามตัวกรองไหนตัดทิ้ง** · ตัวอักษรที่วางข้าง ๆ ไม่ติดกันจึงเดินไปไม่ถึง */
+  const NEARLAKE = new Uint8Array(W*H);
+  {
+    const dist = new Int16Array(W*H).fill(-1);
+    let q = [];
+    for (let i = 0; i < W*H; i++) if (OPEN0[i]){ dist[i] = 0; NEARLAKE[i] = 1; q.push(i); }
+    const LIM = 25;
+    while (q.length){
+      const nq = [];
+      for (const i of q){
+        if (dist[i] >= LIM) continue;
+        const x = i % W, y = (i / W) | 0;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++){
+          const nx = x+dx, ny = y+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          const j = ny*W + nx;
+          if (dist[j] >= 0 || !m0[j]) continue;
+          dist[j] = dist[i] + 1; NEARLAKE[j] = 1; nq.push(j);
+        }
+      }
+      q = nq;
+    }
+  }
+
   /* รายงานสำหรับ tools\cut_sheet.html — แผ่นตรวจด้วยตา (ดู DECISIONS §14 เฟส 4.5) */
   const REPORT = { cut: [], orphan: [] };
   let BRIDGES = [];   /* สะพานที่เย็บไว้ตอนต่อเส้น — กติกาเครือข่ายข้างล่างต้องเห็นด้วย */
@@ -411,6 +456,31 @@ if (require.main === module){
     const { thin: t0 } = splitOpen(W, H, m, D0);
     const C0 = components(W, H, t0);
     classifyThin(W, H, C0.comps, D0);
+    /* ══ ★★★ ชิ้นน้ำบาง ๆ ที่ **ติดผืนน้ำเปิด** ไม่ใช่ตัวอักษร ═══════════════
+       เจ้าของชี้ด้วยวงเขียว (2026-09-05): ทะเลสาบคุนหมิง/หงเจ๋อ หายไปเกือบทั้งลูก
+       แขนบนของทะเลสาบกว้างราว 10 px → splitOpen เรียกว่า "น้ำบาง"
+       แล้วรูปร่างมันสั้นป้อม เข้าเกณฑ์ "ตัวอักษร" พอดี (maxD<5 · fill>=.30 · ด้าน<=90)
+       → เราลบแขนของทะเลสาบทิ้ง แล้วเหลือแต่ก้อนกลาง
+       ★ ตัวอักษรไม่เคย *ต่อเนื่อง* กับผืนน้ำเปิด (ป้ายวางข้าง ๆ ไม่ได้งอกออกมา)
+         อะไรที่งอกจากทะเลสาบ คือทะเลสาบ */
+    {
+      let saved = 0;
+      for (const c of C0.comps){
+        if (c.kind !== 'text' && c.kind !== 'labelbox') continue;
+        let touch = 0;
+        for (const q of c.px){
+          const x = q % W, y = (q / W) | 0;
+          for (let dy = -1; dy <= 1 && !touch; dy++) for (let dx = -1; dx <= 1 && !touch; dx++){
+            const nx = x+dx, ny = y+dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+            if (OPEN0[ny*W+nx]) touch = 1;
+          }
+          if (touch) break;
+        }
+        if (touch){ c.kind = 'river'; saved++; }
+      }
+      if (saved) console.log(`  ★ ชิ้นที่ติดผืนน้ำเปิด ไม่นับเป็นตัวอักษร ${saved} ชิ้น (แขนของทะเลสาบ)`);
+    }
     const letters = C0.comps.filter(c => c.kind === 'text');
     /* รวมตัวอักษรที่อยู่ใกล้กันเป็นคำ (ระยะกล่องถึงกล่อง <= GAP) */
     const GAP = 10;
@@ -435,14 +505,25 @@ if (require.main === module){
       const x0 = Math.min(...mem.map(c => c.x0)) - 2, x1 = Math.max(...mem.map(c => c.x1)) + 2;
       const y0 = Math.min(...mem.map(c => c.y0)) - 2, y1 = Math.max(...mem.map(c => c.y1)) + 2;
       if (Math.max(x1-x0, y1-y0) > 190) continue;         /* กว้างเกินคำ */
-      words.push([x0, y0, x1, y1, mem.length]);
+      words.push([x0, y0, x1, y1, mem.length, mem]);
     }
+    /* ══ ★★★ ลบ **ตัวอักษรจริง ๆ** ไม่ใช่ลบทั้งกล่อง ═════════════════════
+       เจ้าของ: *"ลบเกินได้ แต่ใส่เส้นแม่น้ำกลับไป มันแค่นี้เอง"*
+       การลบทั้งกล่องสี่เหลี่ยมคือการลบเกินแบบที่ *ไม่รู้ว่าลบอะไรไปบ้าง*
+       — ทะเลสาบคุนหมิงโดนเจาะเป็นสี่เหลี่ยมเพราะแบบนี้
+       ★ ลบเฉพาะพิกเซลของตัวอักษรเอง (พองออก 1 px กันขอบหยัก)
+         สิ่งที่อยู่ในกล่องแต่ไม่ใช่ตัวอักษร = ของคนอื่น ห้ามแตะ */
     let wiped = 0;
-    for (const [x0, y0, x1, y1] of words)
-      for (let y = Math.max(0, y0); y <= Math.min(H-1, y1); y++)
-        for (let x = Math.max(0, x0); x <= Math.min(W-1, x1); x++){
-          const i = y*W + x;
-          if (m[i]){ m[i] = 0; WHY[i] = 1; wiped++; }
+    for (const w of words)
+      for (const c of w[5])
+        for (const q of c.px){
+          const x = q % W, y = (q / W) | 0;
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++){
+            const nx = x+dx, ny = y+dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+            const i = ny*W + nx;
+            if (m[i] && !OPEN0[i] && D0[i] < DEEP){ m[i] = 0; WHY[i] = 1; wiped++; }
+          }
         }
 
     /* ══ ★★★ ลำน้ำ "ลอดใต้ป้าย" — ต่อคืนหลังลบกล่องคำ ═════════════════════
@@ -764,6 +845,16 @@ if (require.main === module){
      ลากผ่านที่โล่งจากเจียงหลิงขึ้นไปจิงโจว **ซึ่งแผ่นไม่ได้วาดไว้เลย**
      ★ ป้าย/ไอคอนที่บังลำน้ำจริงกว้างราว 20–35 หน่วย ไม่ใช่ 65
        → 40 หน่วย · หมึกทับ 85% · ทิศต่างกันไม่เกิน ~53° */
+  /* ══ ★★★ บั๊กที่ทำให้ "ลบเกินแล้วไม่ใส่กลับ" (เจ้าของชี้ด้วยวงเขียว 2026-09-05) ═══
+     เจ้าของ: *"ลบเกินได้ แต่ใส่เส้นแม่น้ำกลับไป มันแค่นี้เอง"*
+
+     ต้นตอ: ตัวตรวจว่า "ช่องนี้เคยมีอะไรทับอยู่ไหม" อ่านจาก `m` ซึ่งเป็น **สำเนาที่ลบ
+     ตัวหนังสือไปแล้ว** · ป้ายชื่อบนแผ่นเป็นหมึก *น้ำเงิน* (เข้า mask น้ำ ไม่เข้า _plate_dark)
+     พอเราลบกล่องคำ หลักฐานว่าเคยมีลำน้ำตรงนั้นก็หายไปพร้อมกัน
+     → สะพานไม่ผ่านเกณฑ์ → แม่น้ำขาดตรงที่เราลบพอดี ทุกจุดที่เจ้าของวงเขียว
+
+     ★ กติกา: **หลักฐานต้องมาจากแผ่น (m0) ไม่ใช่จากสำเนาที่เราแก้แล้ว (m)**
+       ตัวกรองของเราลบอะไรไป ไม่ใช่ธุระของตัวตรวจหลักฐาน */
   const MAXGAP = 40, COS = 0.6, WRATIO = 3.2, COVER = 0.85;
   const bridges = [];
   if (ink){
@@ -779,7 +870,7 @@ if (require.main === module){
         for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
           const nx = x+dx, ny = y+dy;
           if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-          if (ink[ny*W+nx] || m[ny*W+nx]) near = 1;
+          if (ink[ny*W+nx] || m0[ny*W+nx]) near = 1;   /* ★ m0 = หมึกของแผ่นจริง ไม่ใช่ m ที่เราลบแล้ว */
         }
         hit += near; tot++;
       }
@@ -1085,6 +1176,13 @@ if (require.main === module){
           if (riv[j]) sten[j] = 1;
         }
       }
+      /* ★ แขนของทะเลสาบใส่กลับเสมอ — กติกาเครือข่ายไม่มีสิทธิ์ตัดเนื้อของแหล่งน้ำ */
+      let armed = 0;
+      for (let i = 0; i < W*H; i++)
+        /* เฉพาะ *แขน* (น้ำบาง) — ตัวผืนน้ำเปิดเองยังเป็นรูปปิดเวกเตอร์เหมือนเดิม */
+        if (m0[i] && NEARLAKE[i] && !OPEN0[i] && !sten[i]){ sten[i] = 1; armed++; }
+      if (armed) console.log(`  ★ ใส่แขนของแหล่งน้ำกลับ ${armed.toLocaleString()} px`);
+
       let a = 0, b = 0;
       for (let i = 0; i < W*H; i++){ if (riv[i]){ a++; if (!sten[i]) WHY[i] = 2; } if (sten[i]) b++; }
       console.log(`  ★ กรองด้วยเครือข่าย: หมึกสายน้ำ ${a.toLocaleString()} → ${b.toLocaleString()} px (ตัดหนวด <${SPUR} · ทิ้งเครือข่ายสั้น ${dropNet} ก้อน)`);
@@ -1172,7 +1270,7 @@ if (require.main === module){
               for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
                 const nx = x+dx, ny = y+dy;
                 if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-                if (inkAll[ny*W+nx] || m[ny*W+nx]) near = 1;
+                if (inkAll[ny*W+nx] || m0[ny*W+nx]) near = 1;   /* ★ เหมือนกัน — ดูจากแผ่นจริง */
               }
               hit += near; tot++;
             }
@@ -1230,7 +1328,7 @@ if (require.main === module){
       const L = components(W, H, lost);
       const big = L.comps.filter(c => c.n >= 120).sort((a, b) => b.n - a.n);
       console.log(`  ★ หมึกของแผ่นที่ไม่ได้เข้าลายฉลุ: ${L.comps.length} ก้อน · ที่ใหญ่กว่า 120 px: ${big.length} ก้อน`);
-      for (const c of big.slice(0, 14)){
+      for (const c of big.slice(0, 44)){
         const tally = {};
         for (const q of c.px){ const k = why.get(q) || 'ไม่ทราบ'; tally[k] = (tally[k] || 0) + 1; }
         const top = Object.entries(tally).sort((a, b) => b[1]-a[1])
@@ -1426,6 +1524,23 @@ if (require.main === module){
     console.log(`
 ★ น้ำของแผ่นที่เราไม่ได้วาด ${nm.toLocaleString()} px (${(nm/tot0*100).toFixed(1)}% ของหมึกน้ำทั้งแผ่น)`);
     console.log('      → ดูเป็นภาพที่ tools/_missing.png · หน้าเทียบ tools/side_by_side.html');
+    { const MC = components(W, H, missing);
+      const big2 = MC.comps.filter(c => c.n >= 100).sort((x,y)=>y.n-x.n);
+      console.log('      ก้อนที่ใหญ่ที่สุด (>=100 px): ' + big2.length + ' ก้อน');
+      REPORT.miss = big2.slice(0, 40).map(c => {
+        const t = {};
+        for (const q of c.px){ const w = WHYNAME[WHY[q]]; t[w] = (t[w]||0)+1; }
+        const why = Object.entries(t).sort((a2,b2)=>b2[1]-a2[1])
+          .map(([k,n])=>k+' '+Math.round(n/c.n*100)+'%').slice(0,2).join(' · ');
+        return { n:c.n, x0:c.x0, y0:c.y0, x1:c.x1, y1:c.y1, why };
+      });
+      for (const c of big2.slice(0, 22)){
+        const t = {};
+        for (const q of c.px){ const w = WHYNAME[WHY[q]]; t[w] = (t[w]||0)+1; }
+        const top = Object.entries(t).sort((a2,b2)=>b2[1]-a2[1])
+          .map(([k,n])=>k+' '+Math.round(n/c.n*100)+'%').slice(0,2).join(' · ');
+        console.log('        ' + String(c.n).padStart(5) + ' px  ' + c.x0+','+c.y0+'-'+c.x1+','+c.y1 + '   ' + top);
+      } }
     REPORT.missing = nm;
   }
 

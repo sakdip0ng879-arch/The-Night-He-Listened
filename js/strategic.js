@@ -73,7 +73,7 @@ TK.map = (function(){
        ★★★ `water` อยู่ **หลัง** `regions` โดยตั้งใจ — หมึกน้ำต้องทับสีเขต ไม่ใช่จมอยู่ใต้
        ปี 221 แผ่นดินมีเจ้าของครบทุกตารางนิ้ว ชั้นเขตจึงคลุมบกทั้งผืน · ถ้าน้ำอยู่ข้างใต้
        ทุกครั้งที่เพิ่มความทึบของเขตให้สีฝ่ายชัด แม่น้ำจะจมหายไปพร้อมกัน (DECISIONS §14 เฟส 2) */
-    for (const name of ['regions','water','works','focus','roads','routes','markers','pins','labels'])
+    for (const name of ['regions','water','wall','works','focus','roads','routes','markers','pins','labels'])
       svg.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
@@ -148,6 +148,38 @@ TK.map = (function(){
           x1:r.p[i], y1:r.p[i+1], x2:r.p[i+2], y2:r.p[i+3],
           class:'pl-river', 'stroke-width':Math.max(1.4, hw * 2 * 0.90).toFixed(2) }));
       }
+
+    /* ── ★ กำแพงเมืองจีน (เจ้าของสั่ง 2026-09-05 "ในเมื่อวาดใหม่เองแล้ว ต้องวาดกำแพงด้วย") ──
+       ข้อมูล data/wall.js ลอกจาก **หมึกเทาของแผ่นเอง** (bordermask ค่า '2') ชุดเดียวกับ
+       ที่ build_geo ใช้เป็นกำแพงกั้นสีมาตั้งแต่ 2026-08-26 — ไม่มีข้อมูลใหม่แม้แต่จุดเดียว
+
+       อยู่เหนือชั้นเขตเหมือนหมึกน้ำ เพราะมันคือเส้นที่เรื่องอ้างถึงตลอด (แนวชายแดนเหนือ)
+       ★ วาดเป็นเส้น + **ฟันเสมา** ห้อยด้านใต้ — เพื่อให้อ่านออกทันทีว่าเป็นสิ่งที่ *คนสร้าง*
+         ไม่ใช่แม่น้ำอีกสาย · ฟันหันลงใต้เสมอ เพราะกำแพงกันของที่มาจากทางเหนือ  */
+    if (TK.wall){
+      const TEETH = 9, TOOTH = 3.4;
+      for (const line of TK.wall){
+        let d = '';
+        for (let i = 0; i < line.length; i++) d += (i ? 'L' : 'M') + line[i][0] + ' ' + line[i][1];
+        layers.wall.append(mk('path',{ d, class:'pl-wall' }));
+        let carry = 0;
+        for (let i = 0; i + 1 < line.length; i++){
+          const [ax, ay] = line[i], [bx, by] = line[i+1];
+          const len = Math.hypot(bx-ax, by-ay);
+          if (len < 0.01) continue;
+          const ux = (bx-ax)/len, uy = (by-ay)/len;
+          /* ตั้งฉากที่ชี้ลงใต้เสมอ */
+          let nx = -uy, ny = ux;
+          if (ny < 0){ nx = -nx; ny = -ny; }
+          for (let s = TEETH - carry; s < len; s += TEETH){
+            const px = ax + ux*s, py = ay + uy*s;
+            layers.wall.append(mk('line',{ x1:px.toFixed(1), y1:py.toFixed(1),
+              x2:(px + nx*TOOTH).toFixed(1), y2:(py + ny*TOOTH).toFixed(1), class:'pl-tooth' }));
+          }
+          carry = (carry + len) % TEETH;
+        }
+      }
+    }
   }
 
   /* สลับแผ่น — คลาสเดียวคุมทั้ง: ซ่อน jpg · ซ่อนกรอบปิด WEI/SHU/WU · ดันความทึบของเขต

@@ -352,6 +352,15 @@ if (require.main === module){
     }
   if (erased) console.log(`ลบหมึกตัวอักษร WEI ออก ${erased.toLocaleString()} px (กรอบของ §3)`);
 
+  /* ⚠⚠ **ทางที่ลองแล้วไม่ได้ผล — อย่าลองซ้ำ** (2026-09-05)
+     เจ้าของทักว่ายังมีแม่น้ำขาดเพราะไอคอน/ป้ายชื่อเมืองบัง ผมลองอุดที่ *ระดับ mask*
+     ก่อน thinning สองแบบ คิดว่าจะได้เส้นที่ไหลต่อเองและ smooth กว่าเอาท่อนไปปะ:
+       (ก) closing R=9 รับทุกพิกเซลที่มีหมึกอื่นทับ → เติมคืน 30,167 px · ช่วงดิบ 387 → 1,773
+       (ข) เพิ่มเงื่อนไข "ต้องอยู่ระหว่างน้ำสองฝั่ง" (ยิงรังสีสี่แกน) → 12,911 px · ช่วงดิบ 1,253
+     **ทั้งสองแบบแย่กว่าไม่ทำ** เพราะป้ายเป็นก้อนทึบ พอถูกดูดเข้ามาเป็นน้ำ โครงกระดูก
+     ของก้อนทึบคือใยแมงมุม ไม่ใช่เส้นเดียว · ยิ่งอุดยิ่งได้หนวดเพิ่ม
+     ★ บทเรียน: **การเติมพื้นที่ให้ของที่เป็นเส้น ไม่ได้ทำให้เส้นยาวขึ้น มันทำให้เส้นแตก**
+     จึงกลับมาต่อที่ระดับ *เส้น* เหมือนเดิม แต่ทำให้สะพานโค้งตามทิศของลำน้ำ (ดูข้างล่าง) */
   let wet = 0; for (let i = 0; i < W*H; i++) if (m[i]) wet++;
   console.log(`mask ${W}×${H} · พิกเซลน้ำ ${wet.toLocaleString()}`);
 
@@ -461,46 +470,38 @@ if (require.main === module){
   }
   console.log(`  ทิ้งตัวเชื่อมจุดแยกที่สั้นกว่า 3 หน่วย ${stub} ชิ้น · เศษเดี่ยวสั้น ${orphan} ชิ้น`);
 
-  /* ── ★★★ ต่อแม่น้ำที่ขาด (เจ้าของทัก 2026-09-05 "ระวังพวกแม่น้ำขาดด้วยนะ") ────
-     แม่น้ำบนแผ่นขาดเพราะ **ป้ายชื่อที่พิมพ์ทับมัน** — ตรงที่ป้ายพาด หมึกเป็นสีดำ
-     ไม่ใช่สีน้ำเงิน mask น้ำจึงมีรู · ไม่ใช่เพราะแม่น้ำมันจบตรงนั้นจริง
+  /* ══ ★★★ ต่อแม่น้ำที่ป้าย/ไอคอนของแผ่นตัดขาด ════════════════════════════
+     เจ้าของทักสองรอบ · รอบสอง: *"ตรงที่สแกนมามันไม่ติดลายแม่น้ำ เพราะมันมี icon
+     หรือป้ายชื่อเมืองบัง ... มันจะมีส่วนที่ลอย มันไม่ smooth แบบรูปต้นฉบับ"*
 
-     ⚠ **ห้ามเดาว่าคู่ไหนควรต่อ** — ให้แผ่นเป็นคนตอบ: เชื่อมได้ก็ต่อเมื่อ
-     **ช่องว่างนั้นถูกหมึกดำของแผ่นทับอยู่จริง** (คือมีป้ายพาดตรงนั้นให้เห็น)
-     นี่คือการทดสอบ *สาเหตุ* ไม่ใช่การทดสอบ *ระยะ* — ปลายสองอันที่บังเอิญอยู่ใกล้กัน
-     แต่ไม่มีป้ายคั่น แปลว่ามันคนละสาย ห้ามต่อ
+     ⚠ **ห้ามเดาว่าคู่ไหนควรต่อ** — ให้แผ่นเป็นคนตอบ: ต่อก็ต่อเมื่อ **ช่องว่างนั้น
+     ถูกหมึกอื่นของแผ่นทับอยู่จริง** (ป้าย ไอคอน หรือหมึกภูเขา) คือมีของมาบังให้เห็น
+     นี่คือการทดสอบ *สาเหตุ* ไม่ใช่ *ระยะ* — ปลายสองอันที่บังเอิญอยู่ใกล้กันบนกระดาษเปล่า
+     แปลว่ามันคนละสาย ห้ามต่อ
 
-     ช่องว่างที่สั้นกว่า 6 หน่วยยกเว้นให้ — นั่นคือรอยที่ thinning/ตัดหนวดทำเอง ไม่ใช่ป้าย */
-  const DARK_SRC = path.join(__dirname, '_plate_dark.rle');
-  let dark = null;
-  if (fs.existsSync(DARK_SRC)) dark = readRle(DARK_SRC).m;
-  else console.log('  ⚠ ไม่เจอ _plate_dark.rle — ข้ามการต่อแม่น้ำ (รัน plate_ink.ps1 ใหม่)');
+     สามอย่างที่ทำให้มันไม่ "ลอย" และไม่ "ไม่ smooth":
+       1. **สะพานโค้ง ไม่ใช่ท่อนตรง** — Bezier ที่ออกจากปลายตามทิศของลำน้ำทั้งสองข้าง
+          (รอบแรกใช้ท่อนตรงสองจุด อ่านออกทันทีว่าเป็นของปะ)
+       2. **วนซ้ำ** — ป้ายใหญ่ตัดลำน้ำเป็นสามสี่ท่อน ต้องเย็บทีละช่องจนหมด
+       3. ความกว้างที่จุดต่อไล่จากปลายหนึ่งไปอีกปลาย ไม่ใช่ค่าเฉลี่ยค่าเดียวทั้งสะพาน
 
+     ⚠⚠ ทางที่ลองแล้วไม่ได้ผลอยู่ในหมายเหตุด้านบน (อุดที่ระดับ mask) — อย่าลองซ้ำ */
+  const inkPaths = ['_plate_dark.rle', '_plate_relief.rle']
+    .map(f => path.join(__dirname, f)).filter(fs.existsSync);
+  let ink = null;
+  if (inkPaths.length){
+    ink = new Uint8Array(W*H);
+    for (const f of inkPaths){ const k = readRle(f).m; for (let i = 0; i < W*H; i++) if (k[i]) ink[i] = 1; }
+  } else console.log('  ⚠ ไม่เจอ _plate_dark.rle — ข้ามการต่อแม่น้ำ (รัน plate_ink.ps1 ใหม่)');
+
+  const MAXGAP = 70, COS = 0.4, WRATIO = 3.2, COVER = 0.6;
   const bridges = [];
-  if (dark){
-    const key = (x, y) => x + ',' + y;
-    const deg = new Map();
-    for (const r of rivers){
-      const n = r.p.length;
-      for (const k of [key(r.p[0], r.p[1]), key(r.p[n-2], r.p[n-1])])
-        deg.set(k, (deg.get(k) || 0) + 1);
-    }
-    const ends = [];
-    rivers.forEach((r, i) => {
-      const n = r.p.length;
-      const mkEnd = (x, y, px, py, w) => {
-        const L = Math.hypot(x - px, y - py) || 1;
-        return { i, x, y, ux:(x - px) / L, uy:(y - py) / L, w };
-      };
-      const cands = [ mkEnd(r.p[0], r.p[1], r.p[2], r.p[3], r.w[0]),
-                      mkEnd(r.p[n-2], r.p[n-1], r.p[n-4], r.p[n-3], r.w[r.w.length-1]) ];
-      for (const e of cands) if (deg.get(key(e.x, e.y)) === 1) ends.push(e);
-    });
-
-    /* สัดส่วนของช่องว่างที่ถูกหมึกดำ (หรือน้ำ) ทับอยู่ */
+  if (ink){
+    const kk = (x, y) => x + ',' + y;
+    /* สัดส่วนของช่องว่างที่มีหมึกอื่น (หรือน้ำ) ทับอยู่ */
     const covered = (A, B) => {
       const steps = Math.max(4, Math.ceil(Math.hypot(B.x-A.x, B.y-A.y)));
-      let hitN = 0, tot = 0;
+      let hit = 0, tot = 0;
       for (let s = 1; s < steps; s++){
         const t = s / steps;
         const x = Math.round(A.x + (B.x-A.x)*t), y = Math.round(A.y + (B.y-A.y)*t);
@@ -508,43 +509,141 @@ if (require.main === module){
         for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
           const nx = x+dx, ny = y+dy;
           if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-          if (dark[ny*W+nx] || m[ny*W+nx]) near = 1;
+          if (ink[ny*W+nx] || m[ny*W+nx]) near = 1;
         }
-        hitN += near; tot++;
+        hit += near; tot++;
       }
-      return tot ? hitN / tot : 0;
+      return tot ? hit / tot : 0;
+    };
+    /* สะพานโค้ง — ออกจาก A ตามทิศของ A และเข้า B ตามทิศของ B */
+    const curve = (A, B, d) => {
+      const k = d / 3;
+      const P0 = [A.x, A.y], P1 = [A.x + A.ux*k, A.y + A.uy*k];
+      const P2 = [B.x + B.ux*k, B.y + B.uy*k], P3 = [B.x, B.y];
+      const out = [];
+      const N = Math.max(4, Math.min(9, Math.round(d / 7)));
+      for (let s = 1; s < N; s++){
+        const t = s / N, u = 1 - t;
+        out.push([
+          +(u*u*u*P0[0] + 3*u*u*t*P1[0] + 3*u*t*t*P2[0] + t*t*t*P3[0]).toFixed(1),
+          +(u*u*u*P0[1] + 3*u*u*t*P1[1] + 3*u*t*t*P2[1] + t*t*t*P3[1]).toFixed(1)
+        ]);
+      }
+      return out;
     };
 
-    const used = new Set();
-    const pairs = [];
-    for (let a = 0; a < ends.length; a++) for (let b = a+1; b < ends.length; b++){
-      const A = ends[a], B = ends[b];
-      if (A.i === B.i) continue;
-      const dx = B.x-A.x, dy = B.y-A.y, d = Math.hypot(dx, dy);
-      if (d > 45 || d < 0.5) continue;
-      const nx = dx/d, ny = dy/d;
-      if (A.ux*nx + A.uy*ny < 0.5) continue;          /* A ต้องชี้ไปหา B */
-      if (B.ux*-nx + B.uy*-ny < 0.5) continue;        /* และ B ต้องชี้กลับมาหา A */
-      const wr = Math.max(A.w, B.w) / Math.max(0.1, Math.min(A.w, B.w));
-      if (wr > 3) continue;                            /* สายใหญ่ไม่ต่อกับสายจิ๋ว */
-      pairs.push({ a, b, d, A, B });
-    }
-    pairs.sort((p, q) => p.d - q.d);                   /* ใกล้ที่สุดได้จับคู่ก่อน */
-    for (const p of pairs){
-      if (used.has(p.a) || used.has(p.b)) continue;
-      let why = 'ช่องสั้นกว่า 6 หน่วย';
-      if (p.d >= 6){
-        const cov = covered(p.A, p.B);
-        if (cov < 0.55) continue;                      /* ไม่มีป้ายคั่น = คนละสาย */
-        why = `หมึกดำคลุม ${(cov*100).toFixed(0)}%`;
+    for (let round = 0; round < 4; round++){
+      const deg = new Map();
+      for (const r of rivers){
+        const n = r.p.length;
+        for (const k of [kk(r.p[0], r.p[1]), kk(r.p[n-2], r.p[n-1])]) deg.set(k, (deg.get(k) || 0) + 1);
       }
-      used.add(p.a); used.add(p.b);
-      const w = +((p.A.w + p.B.w) / 2).toFixed(1);
-      rivers.push({ p:[p.A.x, p.A.y, p.B.x, p.B.y], w:[w, w] });
-      bridges.push({ d:p.d, x:p.A.x, y:p.A.y, x2:p.B.x, y2:p.B.y, why });
+      const ends = [];
+      rivers.forEach((r, i) => {
+        const n = r.p.length;
+        const mkEnd = (x, y, px, py, w) => {
+          const Ln = Math.hypot(x - px, y - py) || 1;
+          return { i, x, y, ux:(x - px) / Ln, uy:(y - py) / Ln, w };
+        };
+        for (const e of [ mkEnd(r.p[0], r.p[1], r.p[2], r.p[3], r.w[0]),
+                          mkEnd(r.p[n-2], r.p[n-1], r.p[n-4], r.p[n-3], r.w[r.w.length-1]) ])
+          if (deg.get(kk(e.x, e.y)) === 1) ends.push(e);
+      });
+
+      const pairs = [];
+      for (let x1 = 0; x1 < ends.length; x1++) for (let x2 = x1+1; x2 < ends.length; x2++){
+        const A = ends[x1], B = ends[x2];
+        if (A.i === B.i) continue;
+        const dx = B.x-A.x, dy = B.y-A.y, d = Math.hypot(dx, dy);
+        if (d > MAXGAP || d < 0.5) continue;
+        const nx = dx/d, ny = dy/d;
+        if (A.ux*nx + A.uy*ny < COS) continue;
+        if (B.ux*-nx + B.uy*-ny < COS) continue;
+        if (Math.max(A.w, B.w) / Math.max(0.1, Math.min(A.w, B.w)) > WRATIO) continue;
+        pairs.push({ a:x1, b:x2, d, A, B });
+      }
+      pairs.sort((u, v) => u.d - v.d);
+      const used = new Set();
+      let made = 0;
+      for (const q of pairs){
+        if (used.has(q.a) || used.has(q.b)) continue;
+        let why = 'ช่องสั้นกว่า 6 หน่วย';
+        if (q.d >= 6){
+          const cov = covered(q.A, q.B);
+          if (cov < COVER) continue;
+          why = `หมึกทับ ${(cov*100).toFixed(0)}%`;
+        }
+        used.add(q.a); used.add(q.b);
+        const mid = curve(q.A, q.B, q.d);
+        const pts = [[q.A.x, q.A.y], ...mid, [q.B.x, q.B.y]];
+        const ws = pts.map((_, k) => +(q.A.w + (q.B.w - q.A.w) * (k / (pts.length-1))).toFixed(1));
+        rivers.push({ p:pts.flat(), w:ws });
+        bridges.push({ d:q.d, x:q.A.x, y:q.A.y, x2:q.B.x, y2:q.B.y, why, round:round+1 });
+        made++;
+      }
+      if (!made) break;
     }
-    console.log(`  ★ ต่อแม่น้ำที่ขาด ${bridges.length} จุด (จากคู่ที่เข้าเกณฑ์ทิศ+ความกว้าง ${pairs.length} คู่)`);
-    for (const b of bridges.sort((x, y) => y.d - x.d).slice(0, 12))
+    /* ── ★ สะพานแบบที่สอง: ปลายห้อย → **กลางลำ** ของอีกสาย (จุดบรรจบรูปตัว T) ──
+       ลำน้ำสาขาที่ไหลมาบรรจบสายหลักตรงที่มีป้ายพาด จะไม่มี "ปลายคู่" ให้จับ
+       เพราะสายหลักวิ่งผ่านไปเฉย ๆ · ต้องหาจุดที่ใกล้ที่สุดบนเส้นอื่นแทน
+       เงื่อนไขหลักฐานเหมือนกันทุกข้อ: ต้องมีหมึกของแผ่นทับช่องว่างนั้นอยู่จริง        */
+    {
+      const kk2 = (x, y) => x + ',' + y;
+      const deg = new Map();
+      for (const r of rivers){
+        const n = r.p.length;
+        for (const k of [kk2(r.p[0], r.p[1]), kk2(r.p[n-2], r.p[n-1])]) deg.set(k, (deg.get(k) || 0) + 1);
+      }
+      const segs = [];
+      rivers.forEach((r, i) => {
+        for (let k = 0; k + 3 < r.p.length; k += 2)
+          segs.push({ i, ax:r.p[k], ay:r.p[k+1], bx:r.p[k+2], by:r.p[k+3], w:r.w[k/2] });
+      });
+      const tips = [];
+      rivers.forEach((r, i) => {
+        const n = r.p.length;
+        const mkT = (x, y, px, py, w) => {
+          const Ln = Math.hypot(x - px, y - py) || 1;
+          return { i, x, y, ux:(x - px) / Ln, uy:(y - py) / Ln, w };
+        };
+        for (const e of [ mkT(r.p[0], r.p[1], r.p[2], r.p[3], r.w[0]),
+                          mkT(r.p[n-2], r.p[n-1], r.p[n-4], r.p[n-3], r.w[r.w.length-1]) ])
+          if (deg.get(kk2(e.x, e.y)) === 1) tips.push(e);
+      });
+      let made = 0;
+      for (const A of tips){
+        let best = null;
+        for (const s of segs){
+          if (s.i === A.i) continue;
+          const dx = s.bx - s.ax, dy = s.by - s.ay, len2 = dx*dx + dy*dy || 1;
+          let t = ((A.x - s.ax)*dx + (A.y - s.ay)*dy) / len2;
+          t = t < 0 ? 0 : t > 1 ? 1 : t;
+          const px = s.ax + t*dx, py = s.ay + t*dy;
+          const d = Math.hypot(px - A.x, py - A.y);
+          if (d < 3 || d > MAXGAP) continue;
+          if (!best || d < best.d) best = { d, px, py, w:s.w };
+        }
+        if (!best) continue;
+        const nx = (best.px - A.x) / best.d, ny = (best.py - A.y) / best.d;
+        if (A.ux*nx + A.uy*ny < COS) continue;
+        if (Math.max(A.w, best.w) / Math.max(0.1, Math.min(A.w, best.w)) > WRATIO) continue;
+        const cov = covered(A, { x:best.px, y:best.py });
+        if (cov < COVER) continue;
+        const B = { x:best.px, y:best.py, ux:-nx, uy:-ny, w:best.w };
+        const mid = curve(A, B, best.d);
+        const pts = [[A.x, A.y], ...mid, [+best.px.toFixed(1), +best.py.toFixed(1)]];
+        const ws = pts.map((_, k) => +(A.w + (best.w - A.w) * (k / (pts.length-1))).toFixed(1));
+        rivers.push({ p:pts.flat(), w:ws });
+        bridges.push({ d:best.d, x:A.x, y:A.y, x2:Math.round(best.px), y2:Math.round(best.py),
+                       why:`บรรจบกลางลำ · หมึกทับ ${(cov*100).toFixed(0)}%`, round:9 });
+        made++;
+      }
+      if (made) console.log(`  ★ ต่อแบบบรรจบกลางลำอีก ${made} จุด`);
+    }
+
+    const rounds = bridges.length ? Math.max(...bridges.map(b => b.round)) : 0;
+    console.log(`  ★ ต่อแม่น้ำที่ขาด ${bridges.length} จุด (เย็บ ${rounds} รอบ · สะพานโค้งตามทิศของลำน้ำ)`);
+    for (const b of [...bridges].sort((x, y) => y.d - x.d).slice(0, 10))
       console.log(`      ${b.d.toFixed(0).padStart(3)} หน่วย  ${b.x},${b.y} → ${b.x2},${b.y2}   ${b.why}`);
   }
 

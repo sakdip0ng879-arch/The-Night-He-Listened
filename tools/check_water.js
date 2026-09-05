@@ -136,6 +136,65 @@ for (let p = 0; p < GW*GH; p++){
 }
 holes.sort((a, b) => b.n - a.n);
 
+/* ══ 4 · ★★ ปลายห้อยที่ "ยังไปต่อได้" — ตัวจับแม่น้ำขาด ═══════════════════
+   เจ้าของทักสองรอบว่ายังมีแม่น้ำขาดเพราะไอคอน/ป้ายชื่อเมืองบัง และถามว่า
+   *"มันมีวิธีที่น่าจะเช็คได้ไหม ไม่งั้นมันจะแก้แบบไม่รู้จบ"*
+
+   ★ วิธีเช็ค: ที่ปลายห้อยทุกอัน มองต่อไปตามทิศของลำน้ำอีก 6–30 หน่วย
+     ถ้า **landmask บอกว่าตรงนั้นยังเป็นน้ำ** แต่เราไม่ได้ลากไปถึง = เราหยุดก่อนเวลา
+   → ได้ตัวเลขที่นับได้ ไม่ใช่ความรู้สึก · ตัวเลขนี้ลดลงได้และห้ามเพิ่มขึ้นเงียบ ๆ
+
+   ⚠ ใช้ landmask ซึ่ง commit อยู่ในรีโปแล้ว จึงรันได้ทุกเครื่อง ไม่ต้องมี .rle
+     (mask หมึกที่ build ใช้เป็น gitignore เพราะมันคือสำเนาแผ่นทั้งใบ)          */
+const wetLM = (x, y) => {
+  const cx = Math.round(x / CELL), cy = Math.round(y / CELL);
+  return cx >= 0 && cy >= 0 && cx < GW && cy < GH && theirs[cy*GW + cx];
+};
+const drawn = (x, y) => {
+  const cx = Math.round(x / CELL), cy = Math.round(y / CELL);
+  return cx >= 0 && cy >= 0 && cx < GW && cy < GH && ours[cy*GW + cx];
+};
+const kEnd = (x, y) => x + ',' + y;
+const endDeg = new Map();
+for (const r of PW.rivers){
+  const n = r.p.length;
+  for (const k of [kEnd(r.p[0], r.p[1]), kEnd(r.p[n-2], r.p[n-1])])
+    endDeg.set(k, (endDeg.get(k) || 0) + 1);
+}
+let nEnds = 0;
+const cut = [];
+for (const r of PW.rivers){
+  const n = r.p.length;
+  const cand = [
+    { x:r.p[0],   y:r.p[1],   px:r.p[2],   py:r.p[3] },
+    { x:r.p[n-2], y:r.p[n-1], px:r.p[n-4], py:r.p[n-3] }
+  ];
+  for (const e of cand){
+    if (endDeg.get(kEnd(e.x, e.y)) !== 1) continue;
+    nEnds++;
+    const L = Math.hypot(e.x - e.px, e.y - e.py) || 1;
+    const ux = (e.x - e.px) / L, uy = (e.y - e.py) / L;
+    /* มองต่อไปข้างหน้า — ต้องเจอน้ำของ landmask ที่เรายังไม่ได้วาด ติดกันอย่างน้อยสองช่วง */
+    let run = 0, hit = 0;
+    for (let s = 6; s <= 30; s += 3){
+      const x = e.x + ux*s, y = e.y + uy*s;
+      if (wetLM(x, y) && !drawn(x, y)) { run++; if (run > hit) hit = run; }
+      else run = 0;
+    }
+    if (hit >= 2) cut.push({ x:e.x, y:e.y, ahead:hit });
+  }
+}
+console.log(`ปลายห้อย ${nEnds} จุด · **ยังไปต่อได้ ${cut.length} จุด** (มองไปข้างหน้าแล้วยังเจอน้ำที่เราไม่ได้วาด)`);
+for (const c of cut.sort((a, b) => b.ahead - a.ahead).slice(0, 12))
+  console.log(`   ที่ ${String(c.x).padStart(4)},${String(c.y).padStart(4)}  ยังมีน้ำต่อไปอีก ~${c.ahead*3} หน่วย`);
+console.log('');
+
+/* เพดานตั้งจากที่วัดได้จริงหลังเย็บรอบล่าสุด — **ห้ามให้เพิ่มขึ้นเงียบ ๆ**
+   ถ้าลดลงได้ ให้ลดเพดานตามด้วย เพื่อไม่ให้มันไหลกลับ */
+const CUT_MAX = 12;   /* วัดได้ 11 หลังเย็บรอบสอง (2026-09-05) — เผื่อไว้หนึ่ง */
+if (cut.length > CUT_MAX)
+  bad.push(`แม่น้ำขาดค้างอยู่ ${cut.length} จุด — เกินเพดาน ${CUT_MAX} · ดูรายการข้างบนแล้วไล่ทีละจุด`);
+
 /* ══ รายงาน ══════════════════════════════════════════════════════════════ */
 console.log(`ชั้นน้ำ: ทะเล ${PW.sea.length} · เกาะ ${PW.islands.length} · ทะเลสาบ ${PW.lakes.length} · ` +
             `สายน้ำ ${PW.rivers.length} เส้น (${PW.rivers.reduce((s,r)=>s+r.w.length,0)} จุด)`);

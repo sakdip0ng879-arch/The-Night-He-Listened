@@ -52,6 +52,14 @@ body{
 #L-plate .pl-lake{fill:#26323D; stroke:#4A5C6A; stroke-width:1.6}
 /* หมึกน้ำอยู่คนละชั้น (#L-water) เพราะมันต้องอยู่ *บน* สีเขต ไม่ใช่ใต้ — §14 เฟส 2 */
 #L-water .pl-river{stroke:#5F8299; stroke-linecap:round; fill:none}
+/* ★ กำแพงเมืองจีน — อยู่เหนือชั้นเขตเหมือนหมึกน้ำ เพราะเรื่องอ้างถึงมันตลอด
+   สีหินอุ่น ตัดกับหมึกน้ำที่เย็น → อ่านออกทันทีว่าอันไหนธรรมชาติ อันไหนคนสร้าง
+   ⚠ ฟันเสมาห้อยลงใต้เสมอ (ทำใน strategic.js) — กำแพงกันของที่มาจากทางเหนือ */
+#L-wall .pl-wall{stroke:#8C8375; stroke-width:2.6; fill:none; stroke-linejoin:round; stroke-linecap:round}
+#L-wall .pl-tooth{stroke:#8C8375; stroke-width:1.5; stroke-linecap:round}
+#stage.map-rich #L-wall .pl-wall,
+#stage.map-rich #L-wall .pl-tooth{stroke:#A2988A}
+#stage:not(.plate-new) #L-wall{display:none}
 
 /* สลับแผ่น: คลาสเดียวคุมทั้งสี่อย่าง */
 #stage.plate-new #basemap{display:none}

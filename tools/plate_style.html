@@ -7,6 +7,8 @@
        ?zoom=x,y,w,h   ดูระยะกล้องฉาก (กล้องของเล่มอยู่ราว ๆ vbw 940)
        ?bare           ถอดสีฝ่าย/ลูกศร/สัญลักษณ์ออก เหลือแต่แผ่น
        ?wide           เต็มความกว้างแล้วเลื่อนดู (ปริยายคือย่อให้เห็นทั้งแผ่น)
+       ?reg=0.55       ทดลองความทึบของชั้นเขต (ปริยาย .38 ตามที่ใช้อยู่จริง)
+       ?underriver     วางชั้นเขต *ทับ* แม่น้ำแบบเดิม (ปริยายคือแม่น้ำอยู่บนชั้นเขต)
 
      ★ ข้อสอบของหน้านี้ไม่ใช่ "แผ่นสวยไหม" แต่คือ **"แผ่นแย่งสายตากับสีฝ่ายหรือเปล่า"**
        สีฝ่ายต้องเด่นที่สุดบนจอเสมอ (§3) — แผ่นเป็นฉากหลัง ไม่ใช่ผู้แสดง
@@ -80,11 +82,11 @@ const STYLE = {
   },
   night: {
     label:'กลางคืน',
-    ground:'#191D24', sea:'#212C36', shelf:'#26333E',
-    coast:'#42525E', coastW:1.1,
-    river:'#587B90', riverK:1.05, lakeStroke:'#42525E',
+    ground:'#171A20', sea:'#202B36', shelf:'#27343F',
+    coast:'#4A5C6A', coastW:1.1,
+    river:'#6E93AA', riverK:0.90, lakeStroke:'#4A5C6A',
     ink:'#0C0E12', inkHalo:'#C8D2DC',
-    why:'เข้ากับ UI ธีมมืด · ⚠ สีฝ่ายที่ opacity .38 บนพื้นมืดจะจมไปกับพื้น เขียว/น้ำเงิน/แดงแยกกันยากขึ้น'
+    why:'เจ้าของเคาะแล้ว 2026-09-05 · หมึกน้ำอยู่บนชั้นเขต จึงไม่จมไปกับสีฝ่าย'
   }
 };
 
@@ -129,8 +131,22 @@ const U = VBW / APP_PX;                /* 1 พิกเซลบนจอ = ก
 const svg = mk('svg', { viewBox:VB.join(' '), preserveAspectRatio:'xMidYMid meet' });
 const gGround = mk('rect', { x:VB[0], y:VB[1], width:VB[2], height:VB[3] });
 const gSea = mk('g'), gShelf = mk('g'), gLake = mk('g'), gIsl = mk('g'), gRiv = mk('g');
-const gReg = mk('g', { opacity:.38 }), gRte = mk('g'), gSym = mk('g');
-svg.append(gGround, gSea, gShelf, gIsl, gLake, gRiv, gReg, gRte, gSym);
+/* ★ .38 คือค่าที่ใช้อยู่จริงกับ map.jpg (แผ่นสว่าง) · บนแผ่นมืดต้องขึ้นเป็น .45
+   เพราะสีโปร่งบนพื้นมืดจะทั้งมืดลงและซีดลงพร้อมกัน — วัดด้วยตาแล้วที่ .38 เขียว/น้ำเงิน/แดง
+   เริ่มแยกกันยาก ที่ .55 สีเขตเริ่มกลบลูกศรสีเดียวกันของตัวเอง · .45 อยู่กลางพอดี */
+const REG_OP = +(q.get('reg') || (q.get('style') === 'night' ? 0.45 : 0.38));
+const gReg = mk('g', { opacity:REG_OP });
+/* ⚠ เงาของจริงอยู่ที่ .mk-route ใน css/style.css — ถ้าไม่ใส่ ตัวอย่างจะโกหกว่า
+   ลูกศรแยกจากเขตสีเดียวกันไม่ออก ทั้งที่ในแอปมันแยกออกเพราะเงานี้ */
+const gRte = mk('g', { style:'filter:drop-shadow(0 0 4px rgba(0,0,0,.6))' });
+const gSym = mk('g');
+/* ★★ ลำดับชั้นใหม่ — **หมึกน้ำอยู่ *บน* ชั้นเขต ไม่ใช่ใต้**
+   เหตุผล: ปี 221 แผ่นดินมีเจ้าของครบทุกตารางนิ้ว ชั้นเขตจึงคลุมบกทั้งผืน
+   ถ้าน้ำอยู่ข้างใต้ พอเพิ่มความทึบของเขตเพื่อให้สีฝ่ายชัด แม่น้ำจะจมหายไปด้วย
+   พอย้ายหมึกน้ำขึ้นมาข้างบน สองอย่างนี้เลิกแย่งกัน — ปรับความทึบของเขตได้อิสระ
+   (แผนที่การเมืองของจริงก็พิมพ์ชั้นน้ำทับสีเขตด้วยเหตุผลเดียวกัน) */
+svg.append(gGround, gSea, gShelf, gIsl, gLake, gReg, gRiv, gRte, gSym);
+if (q.has('underriver')) svg.insertBefore(gRiv, gReg);
 
 /* ── น้ำ (หน่วยแผ่น — โตตามแผ่น เพราะมันคือแผ่นดิน) ────────────────────── */
 for (const r of PW.sea){
@@ -209,7 +225,7 @@ function paint(name){
   document.body.style.background = name === 'night' ? '#0b0d10' : '#14161a';
   for (const b of document.querySelectorAll('[data-s]')) b.classList.toggle('on', b.dataset.s === name);
   document.getElementById('note').textContent =
-    `${S.label} — ${S.why}   ·   สัญลักษณ์ ${nSym} รูป + จุด ${nDot}`;
+    `${S.label} — ${S.why}   ·   เขต ${REG_OP} · สัญลักษณ์ ${nSym} รูป + จุด ${nDot}`;
 }
 for (const b of document.querySelectorAll('[data-s]')) b.onclick = () => paint(b.dataset.s);
 

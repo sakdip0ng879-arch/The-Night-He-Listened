@@ -388,6 +388,19 @@ if (require.main === module){
       if (c.kind !== 'river') continue;
       if (c.w > 115 || c.h > 115) continue;
       if (c.n / (c.w * c.h) > 0.34) continue;                 /* ต้องกลวง */
+      /* ⚠⚠ **เงื่อนไขที่ขาดไม่ได้: หมึกต้องเกาะขอบกล่อง** —
+         กรอบป้ายคือสี่เหลี่ยม พิกเซลเกือบทั้งหมดจึงอยู่ริมกล่อง
+         ส่วนแม่น้ำที่บังเอิญพาดผ่านกล่องเล็ก ๆ จะมีพิกเซลอยู่กลางกล่องเป็นส่วนใหญ่
+         ★ ขาดข้อนี้ไปรอบแรก แล้ว **ตัวกรองกินแยงซีช่วงไป๋ตี้–เจียงหลิงทิ้งทั้งท่อน**
+           (ชิ้น 923px 104×67 fill 0.13 · รอบตัวมีชื่อเมืองเยอะ เลยเข้าเกณฑ์ทุกข้อ)
+           เจ้าของจับได้จากกติกาที่เครื่องไม่เคยรู้: **แม่น้ำต้องมีต้นน้ำ ลอยไม่ได้** */
+      const RIM = 3;
+      let rim = 0;
+      for (const q of c.px){
+        const qx = q % W, qy = (q / W) | 0;
+        if (qx - c.x0 < RIM || c.x1 - qx < RIM || qy - c.y0 < RIM || c.y1 - qy < RIM) rim++;
+      }
+      if (rim / c.n < 0.85) continue;                         /* ต้องเป็นกรอบ ไม่ใช่ของที่พาดผ่าน */
       let dark = 0;
       for (let y = c.y0; y <= c.y1; y++) for (let x = c.x0; x <= c.x1; x++)
         if (dk[y*W + x]) dark++;
@@ -813,10 +826,160 @@ if (require.main === module){
        ส่วนสายน้ำต้องเป็นลายฉลุ เพราะมันคือส่วนที่การถอดเป็นแกนกลางทำให้เพี้ยน */
     for (const c of pick(T, 'river')) for (const q of c.px) sten[q] = 1;
     let on = 0; for (let i = 0; i < W*H; i++) if (sten[i]) on++;
+    /* ══ ★★★ เย็บก้อนน้ำที่ไม่มีทางออกเข้ากับเครือข่าย ══════════════════════
+       กติกาที่เจ้าของให้มา (2026-09-05): *"แม่น้ำไม่สามารถลอยได้ ... นายรู้ว่ามันอยู่
+       ตรงไหน เท่ากับนายเชคได้ว่า source มีไหม ถ้ามันไม่มีเท่ากับแม่น้ำมันขาด"*
+
+       ★★ นี่คือกติกาที่ **หยุดได้** ต่างจากการไล่ดูด้วยตา:
+          ก้อนน้ำทุกก้อนต้องไปถึงทะเล ทะเลสาบ หรือขอบแผ่น · ก้อนที่ไปไม่ถึง = ขาด
+          เย็บจนเหลือศูนย์ = จบ · ไม่ใช่ "ไล่จนตาย"
+
+       เย็บที่ **ตัวลายฉลุ** ไม่ใช่ที่เวกเตอร์ เพราะลายฉลุคือสิ่งที่วาดจริง
+       และเย็บด้วยริบบิ้นกว้างเท่าลำน้ำตรงนั้น ไม่ใช่เส้นบาง — จะได้กลืนกับของเดิม
+       ⚠ ยังต้องมีหลักฐานเหมือนเดิม: ช่องว่างต้องมีหมึกอื่นของแผ่นทับอยู่ (ป้าย/ไอคอน) */
+    {
+      const reach = new Uint8Array(W*H);
+      for (const k of ['sea', 'lake']) for (const c of pick(O, k)) for (const q of c.px) reach[q] = 1;
+      const inkAll = new Uint8Array(W*H);
+      for (const f of ['_plate_dark.rle', '_plate_relief.rle']){
+        const fp = path.join(__dirname, f);
+        if (!fs.existsSync(fp)) continue;
+        const k = readRle(fp).m;
+        for (let i = 0; i < W*H; i++) if (k[i]) inkAll[i] = 1;
+      }
+      const MAXW = 75;
+      let welded = 0, rounds = 0;
+      for (; rounds < 12; rounds++){
+        const both = new Uint8Array(W*H);
+        for (let i = 0; i < W*H; i++) if (sten[i] || reach[i]) both[i] = 1;
+        const R = components(W, H, both);
+        const ok = new Uint8Array(W*H);
+        const orphans = [];
+        for (const c of R.comps){
+          const edge = c.x0 <= 8 || c.y0 <= 8 || c.x1 >= W-9 || c.y1 >= H-9;
+          let touches = edge;
+          if (!touches) for (const q of c.px) if (reach[q]){ touches = true; break; }
+          if (touches){ for (const q of c.px) ok[q] = 1; }
+          else if (c.n >= 120) orphans.push(c);
+        }
+        if (!orphans.length) break;
+        /* ระยะจากทุกจุดถึงเครือข่ายที่มีทางออก */
+        const inv = new Uint8Array(W*H);
+        for (let i = 0; i < W*H; i++) inv[i] = ok[i] ? 0 : 1;
+        const dOk = dt(W, H, inv);
+        let made = 0;
+        for (const c of orphans){
+          let best = null;
+          for (const q of c.px) if (!best || dOk[q] < dOk[best]) best = q;
+          if (best == null || dOk[best] > MAXW) continue;
+          const bx = best % W, by = (best / W) | 0;
+          /* หาจุดของเครือข่ายที่ใกล้ที่สุดจริง ๆ */
+          let tx = -1, ty = -1, td = 1e9;
+          const rr = Math.ceil(dOk[best]) + 3;
+          for (let dy = -rr; dy <= rr; dy++) for (let dx = -rr; dx <= rr; dx++){
+            const nx = bx+dx, ny = by+dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+            if (!ok[ny*W+nx]) continue;
+            const d2 = dx*dx + dy*dy;
+            if (d2 < td){ td = d2; tx = nx; ty = ny; }
+          }
+          if (tx < 0) continue;
+          const gap = Math.sqrt(td);
+          /* หลักฐาน: ช่องว่างต้องมีหมึกอื่นทับ (ป้าย/ไอคอน) หรือสั้นมาก */
+          /* ⚠ ข้อยกเว้น: ก้อนใหญ่ที่ห่างไม่มาก **เย็บโดยไม่ต้องมีหมึกคั่น**
+             เพราะ *กติกาทางออกเองคือหลักฐาน* — ระบบน้ำ 500+ px ที่ไม่มีทางออกเป็นไปไม่ได้
+             (เจอจริงที่เฉินหลิว: แผ่นเว้นช่องไว้ตรงที่ป้าย "Ding Tao" วางอยู่บนกระดาษเปล่า
+              หลักฐานหมึกจึงไม่ผ่าน ทั้งที่สายน้ำต่อกันแน่นอน) */
+          if (gap >= 6 && !(c.n >= 500 && gap <= 32)){
+            let hit = 0, tot = 0;
+            const steps = Math.max(3, Math.ceil(gap));
+            for (let t = 1; t < steps; t++){
+              const x = Math.round(bx + (tx-bx)*t/steps), y = Math.round(by + (ty-by)*t/steps);
+              let near = 0;
+              for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
+                const nx = x+dx, ny = y+dy;
+                if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+                if (inkAll[ny*W+nx] || m[ny*W+nx]) near = 1;
+              }
+              hit += near; tot++;
+            }
+            if (tot && hit/tot < 0.55) continue;
+          }
+          /* วาดริบบิ้นกว้างเท่าลำน้ำตรงนั้น */
+          const hw = Math.max(1.5, D[best]);
+          const steps = Math.max(2, Math.ceil(gap*2));
+          for (let t = 0; t <= steps; t++){
+            const x = bx + (tx-bx)*t/steps, y = by + (ty-by)*t/steps;
+            const r = Math.ceil(hw);
+            for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++){
+              if (dx*dx + dy*dy > hw*hw) continue;
+              const nx = Math.round(x)+dx, ny = Math.round(y)+dy;
+              if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+              sten[ny*W+nx] = 1;
+            }
+          }
+          welded++; made++;
+        }
+        if (!made) break;
+      }
+      let on2 = 0; for (let i = 0; i < W*H; i++) if (sten[i]) on2++;
+      console.log(`  ★ เย็บก้อนน้ำที่ไม่มีทางออกเข้ากับเครือข่าย ${welded} จุด (${rounds} รอบ) · หมึกเพิ่ม ${(on2-on).toLocaleString()} px`);
+      on = on2;
+    }
+
     const png = writePng1(W, H, sten);
     fs.writeFileSync(path.join(ROOT, 'assets', 'water_stencil.png'), png);
     console.log(`
 ลายฉลุน้ำ assets/water_stencil.png  ${(png.length/1024).toFixed(1)} KB · หมึก ${on.toLocaleString()} px`);
+
+    /* ══ ★★★ รายงาน "หมึกของแผ่นที่เราทิ้ง" — ตอบกติกาของเจ้าของ ═══════════
+       *"แม่น้ำไม่สามารถลอยได้ ... ถ้าเราต้องตรวจสอบแม่น้ำ นายรู้ว่ามันอยู่ตรงไหน
+        เท่ากับนายเชคได้ว่า source มีไหม ถ้ามันไม่มีเท่ากับแม่น้ำมันขาด"*
+
+       ★ นี่คือตัวตรวจที่ `check_water` ทำไม่ได้ — มันเทียบกับ landmask ซึ่งมีขยะ
+         ชุดเดียวกัน · ส่วนอันนี้เทียบ **สิ่งที่วาดจริง** กับ **หมึกของแผ่นเอง**
+         ทุกก้อนที่เราทิ้ง ต้องบอกได้ว่าทิ้งเพราะอะไร ไม่งั้นคือทิ้งแม่น้ำ
+
+       ⚠ ตัวกรอง "กรอบป้าย" รอบแรก **กินแยงซีช่วงไป๋ตี้–เจียงหลิงทิ้งทั้งท่อน**
+         และไม่มีตัวตรวจไหนฟ้อง — เจ้าของจับได้ด้วยตาจากกติกาที่เครื่องไม่รู้
+         รายงานนี้มีไว้ให้เครื่องรู้ */
+    {
+      const lost = new Uint8Array(W*H);
+      for (let i = 0; i < W*H; i++) if (m[i] && !sten[i]) lost[i] = 1;
+      const why = new Map();
+      for (const k of ['text', 'labelbox', 'noise'])
+        for (const c of T.comps.filter(x => x.kind === k)) for (const q of c.px) why.set(q, k);
+      for (const k of ['sea', 'lake', 'noise'])
+        for (const c of O.comps.filter(x => x.kind === k)) for (const q of c.px) why.set(q, k === "noise" ? "เศษน้ำเปิด" : "น้ำเปิด");
+      const L = components(W, H, lost);
+      const big = L.comps.filter(c => c.n >= 120).sort((a, b) => b.n - a.n);
+      console.log(`  ★ หมึกของแผ่นที่ไม่ได้เข้าลายฉลุ: ${L.comps.length} ก้อน · ที่ใหญ่กว่า 120 px: ${big.length} ก้อน`);
+      for (const c of big.slice(0, 14)){
+        const tally = {};
+        for (const q of c.px){ const k = why.get(q) || 'ไม่ทราบ'; tally[k] = (tally[k] || 0) + 1; }
+        const top = Object.entries(tally).sort((a, b) => b[1]-a[1])
+          .map(([k, n]) => k + ' ' + Math.round(n/c.n*100) + '%').slice(0, 2).join(' · ');
+        console.log(`      ${String(c.n).padStart(5)} px  ที่ ${c.x0},${c.y0}–${c.x1},${c.y1}   ${top}`);
+      }
+    }
+
+    /* ── ★ กติกา "แม่น้ำต้องมีทางออก" — ก้อนน้ำที่ไม่ต่อกับทะเล/ทะเลสาบ/ขอบแผ่น ── */
+    {
+      const reach = new Uint8Array(W*H);
+      for (const k of ['sea', 'lake']) for (const c of pick(O, k)) for (const q of c.px) reach[q] = 1;
+      const both = new Uint8Array(W*H);
+      for (let i = 0; i < W*H; i++) if (sten[i] || reach[i]) both[i] = 1;
+      const R = components(W, H, both);
+      const orphan = R.comps.filter(c => {
+        if (c.n < 150) return false;
+        if (c.x0 <= 8 || c.y0 <= 8 || c.x1 >= W-9 || c.y1 >= H-9) return false;   /* ออกขอบแผ่นได้ */
+        for (const q of c.px) if (reach[q]) return false;                          /* ถึงทะเล/ทะเลสาบ */
+        return true;
+      }).sort((a, b) => b.n - a.n);
+      console.log(`  ★ ก้อนน้ำที่ไม่มีทางออก (ไม่ถึงทะเล/ทะเลสาบ/ขอบแผ่น): ${orphan.length} ก้อน`);
+      for (const c of orphan.slice(0, 10))
+        console.log(`      ${String(c.n).padStart(5)} px  ที่ ${c.x0},${c.y0}–${c.x1},${c.y1}`);
+    }
   }
 
   /* ── เขียนไฟล์ ──────────────────────────────────────────────────────── */

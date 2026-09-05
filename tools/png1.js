@@ -52,3 +52,26 @@ function writePng1(W, H, mask){
   ]);
 }
 module.exports = { writePng1 };
+
+/* อ่านกลับ — ใช้ตรวจว่า "สิ่งที่วาดจริง" ตรงกับที่ตั้งใจไหม
+   รองรับเฉพาะรูปแบบที่ writePng1 เขียนเอง (greyscale 1 บิต · IDAT ก้อนเดียว) */
+function readPng1(buf){
+  let off = 8, W = 0, H = 0, idat = [];
+  while (off < buf.length){
+    const len = buf.readUInt32BE(off);
+    const type = buf.toString('ascii', off+4, off+8);
+    const data = buf.slice(off+8, off+8+len);
+    if (type === 'IHDR'){ W = data.readUInt32BE(0); H = data.readUInt32BE(4); }
+    else if (type === 'IDAT') idat.push(data);
+    off += 12 + len;
+  }
+  const raw = require('zlib').inflateSync(Buffer.concat(idat));
+  const rowBytes = (W + 7) >> 3, m = new Uint8Array(W*H);
+  for (let y = 0; y < H; y++){
+    const o = y*(rowBytes+1) + 1;
+    for (let x = 0; x < W; x++)
+      if (raw[o + (x >> 3)] & (0x80 >> (x & 7))) m[y*W + x] = 1;
+  }
+  return { W, H, m };
+}
+module.exports.readPng1 = readPng1;

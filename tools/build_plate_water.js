@@ -125,6 +125,10 @@ function splitOpen(W, H, m, D){
   const notCore = new Uint8Array(N);
   for (let i = 0; i < N; i++) notCore[i] = (m[i] && D[i] >= FAT) ? 0 : 1;
   const dCore = dt(W, H, notCore);              /* ระยะจากทุกจุดถึงแกนน้ำเปิดที่ใกล้สุด */
+  /* กัดเข้า FAT แล้วขยายกลับ FAT เท่ากันเป๊ะ = morphological opening ตามนิยาม
+     ⚠ เคยลองขยายกลับมากกว่า (FAT+3) เพราะนึกว่า "เส้นคู่" ที่ปากฮวงโหเป็นริมที่เหลือ
+       จากการเปิด — **เข้าใจผิด** เปิดภาพซูมดูแล้วพบว่าแผ่นวาดฮวงโหกับ Qi River
+       ขนานกันจริงตรงนั้น เราลอกถูกทั้งสองสาย · จึงถอนออก ไม่มีริมให้กลืน       */
   const open = new Uint8Array(N), thin_ = new Uint8Array(N);
   for (let i = 0; i < N; i++){
     if (!m[i]) continue;

@@ -99,4 +99,9 @@ document.getElementById('b-solo').onclick = e => {
   for (const p of gIsl.children) p.setAttribute('stroke', solo ? '#5b87ab' : '#ffb300');
   for (const p of gRiv.children) p.setAttribute('stroke', solo ? ink : '#e11d48');
 };
+/* ?solo  — เปิดโหมดแผ่นใหม่ตั้งแต่โหลด เพื่อให้ถ่ายภาพอัตโนมัติได้
+   ?fit   — ย่อให้พอดีความสูงจอ (ปริยายคือกว้างเต็มจอแล้วเลื่อนดู) */
+const q = new URLSearchParams(location.search);
+if (q.has('solo')) document.getElementById('b-solo').click();
+if (q.has('fit')){ svg.style.width = 'auto'; svg.style.height = 'calc(100vh - 46px)'; svg.style.margin = '0 auto'; }
 </script>

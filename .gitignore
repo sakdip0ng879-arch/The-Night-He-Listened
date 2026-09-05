@@ -31,6 +31,7 @@ tools/_board*.html
 #   ทั้งใบ ถ้า track มันจะถูกเผยแพร่ผ่าน GitHub Pages ซึ่งขัดกับนโยบายข้างบน
 tools/_*.png
 tools/_*.rle
+tools/_*.json   # รายงานที่ตัวสร้างเขียนใหม่ทุกครั้ง (เช่น _cuts.json ของ cut_sheet.html)
 
 # วัตถุดิบ Natural Earth — หลายเมกะไบต์ ใช้ตอน build เท่านั้น
 # ผลลัพธ์ที่ commit คือ data/rivers.js ที่เล็กกว่ามาก (ดู tools/build_rivers.js)

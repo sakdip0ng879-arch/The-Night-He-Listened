@@ -1,0 +1,72 @@
+<!doctype html><meta charset="utf-8"><title>แผ่นตรวจกิ่งขาด</title>
+<!--
+  cut_sheet.html — แผ่นตรวจด้วยตา สำหรับ "กิ่งขาด" ที่ build_plate_water.js ฟ้อง
+
+    node tools\build_plate_water.js      (เขียน tools\_cuts.json)
+    node tools\serve.js                  แล้วเปิด /tools/cut_sheet.html
+
+  ทำไมต้องมี (DECISIONS §14 เฟส 4.5): กติกา "แม่น้ำต้องมีทางออก" ตรวจทีละ *ก้อน*
+  ก้อนที่ถึงทะเลแล้วจะกลบกิ่งที่หายอยู่ข้างใน — เจ้าของหาจุดบอดนี้เจอเอง
+  ตัวตรวจกิ่งขาดเลื่อนลงมาตรวจทีละ *ปลายเส้น* จึงได้ **รายการที่จบได้**
+  ไม่ใช่การไล่ดูทั้งแผ่นไปเรื่อย ๆ · หน้านี้เอารายการนั้นมาวางเทียบให้ดูรอบเดียวจบ
+
+  ซ้าย = หมึกของแผ่นจริง · ขวา = สิ่งที่เราวาด (ส้ม) ทับแผ่นจาง ๆ
+-->
+<style>
+ body{margin:0;background:#12151a;color:#cfd6de;font:13px/1.5 system-ui,sans-serif}
+ h1{font-size:15px;margin:14px 16px 4px}
+ p.note{margin:0 16px 12px;color:#8b96a4}
+ .grid{display:flex;flex-wrap:wrap;gap:14px;padding:0 16px 24px}
+ .cell{background:#1a1f27;border:1px solid #2b323c;border-radius:6px;padding:8px}
+ .cap{font:11px/1.4 ui-monospace,monospace;color:#9fb0c2;margin:0 0 6px}
+ .cap b{color:#e8a34a}
+ .pair{display:flex;gap:6px}
+ .view{position:relative;overflow:hidden;width:330px;height:330px;background:#000}
+ .view img.plate{position:absolute;image-rendering:pixelated;transform-origin:0 0}
+ .view .ink{position:absolute;inset:0;background:#ff8a2b}
+ /* ลายฉลุเป็น PNG ขาวดำ 1 บิต ไม่มีชั้นอัลฟา — CSS mask ปกติอ่านอัลฟา จึงต้องสั่ง luminance */
+ .view .ink{-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+            mask-mode:luminance;-webkit-mask-source-type:luminance}
+ .lbl{font:10px ui-monospace,monospace;color:#6f7c8b;text-align:center;margin-top:3px}
+ .dim{opacity:.42}
+ .mark{position:absolute;width:11px;height:11px;border:2px solid #43e08a;border-radius:50%;
+       transform:translate(-50%,-50%);pointer-events:none}
+ .orph .cap b{color:#5ec8ff}
+</style>
+<h1>แผ่นตรวจกิ่งขาด — <span id="n"></span></h1>
+<p class="note">ซ้าย = หมึกของแผ่นเดิม · ขวา = ลายฉลุที่เราวาด (ส้ม) วงเขียว = ปลายเส้นที่ชี้เข้าไป
+ · ถ้าฝั่งซ้ายเป็น “ตัวหนังสือ/ไอคอน” แปลว่าเราตัดถูกแล้ว ถ้าเป็น “ลำน้ำ” แปลว่าเราตัดผิด</p>
+<div class="grid" id="g"></div>
+<script>
+const BOX = 330;
+fetch('_cuts.json').then(r=>r.json()).then(R=>{
+  const items = [...R.cut.map(c=>({...c,kind:'cut'})), ...R.orphan.map(c=>({...c,kind:'orph'}))];
+  document.getElementById('n').textContent =
+    `กิ่งขาด ${R.cut.length} กิ่ง · ก้อนไม่มีทางออก ${R.orphan.length} ก้อน`;
+  const g = document.getElementById('g');
+  items.forEach((c,i)=>{
+    const cw = Math.max(130, (c.x1-c.x0)+80, (c.y1-c.y0)+80);
+    const cx = (c.x0+c.x1)/2, cy = (c.y0+c.y1)/2;
+    const ox = cx - cw/2, oy = cy - cw/2, k = BOX/cw;
+    const view = (withInk) => `
+      <div>
+        <div class="view">
+          <img class="plate${withInk?' dim':''}" src="../assets/map.jpg"
+               style="transform:scale(${k}) translate(${-ox}px,${-oy}px)">
+          ${withInk?`<div class="ink" style="
+             -webkit-mask-image:url(../assets/water_stencil.png);mask-image:url(../assets/water_stencil.png);
+             -webkit-mask-position:${-ox*k}px ${-oy*k}px;mask-position:${-ox*k}px ${-oy*k}px;
+             -webkit-mask-size:${1650*k}px ${1950*k}px;mask-size:${1650*k}px ${1950*k}px"></div>
+           ${c.ex!==undefined?`<div class="mark" style="left:${(c.ex-ox)*k}px;top:${(c.ey-oy)*k}px"></div>`:''}`:''}
+        </div>
+        <div class="lbl">${withInk?'ที่เราวาด':'แผ่นเดิม'}</div>
+      </div>`;
+    g.insertAdjacentHTML('beforeend', `
+      <div class="cell ${c.kind}">
+        <p class="cap">${String(i+1).padStart(2,'0')} · <b>${c.kind==='cut'?'กิ่งขาด':'ไม่มีทางออก'}</b>
+           ${c.n} px · ${c.x0},${c.y0}–${c.x1},${c.y1}${c.d!==undefined?` · ห่าง ${c.d}`:''}<br><span style="color:#e8c07a">${c.why||""}</span></p>
+        <div class="pair">${view(false)}${view(true)}</div>
+      </div>`);
+  });
+});
+</script>

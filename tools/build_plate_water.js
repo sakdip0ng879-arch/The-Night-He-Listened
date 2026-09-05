@@ -352,6 +352,21 @@ if (require.main === module){
     }
   if (erased) console.log(`ลบหมึกตัวอักษร WEI ออก ${erased.toLocaleString()} px (กรอบของ §3)`);
 
+  /* ── ★ สำเนาหมึกดิบไว้ให้ "ตัวตรวจกิ่งขาด" ────────────────────────────────
+     m จะถูกลบทีหลังอีกหลายชั้น (กล่องคำ · ตัวอักษร · กรอบป้าย · กติกาเครือข่าย)
+     ตัวตรวจท้ายไฟล์ต้องเทียบกับ **หมึกที่แผ่นมีจริง** ไม่ใช่ของที่เรากรองแล้ว
+     เก็บหลังลบกรอบ WEI เพราะกรอบนั้น §3 วัดแล้วว่าไม่กินน้ำจริงสักหน่วย */
+  const m0 = Uint8Array.from(m);
+
+  /* รายงานสำหรับ tools\cut_sheet.html — แผ่นตรวจด้วยตา (ดู DECISIONS §14 เฟส 4.5) */
+  const REPORT = { cut: [], orphan: [] };
+  let BRIDGES = [];   /* สะพานที่เย็บไว้ตอนต่อเส้น — กติกาเครือข่ายข้างล่างต้องเห็นด้วย */
+
+  /* ★ ป้าย "ทิ้งเพราะอะไร" รายพิกเซล — ทุกตัวกรองต้องมาลงชื่อไว้ที่นี่
+     ถ้ามีตัวกรองไหนไม่ลงชื่อ รายงานท้ายไฟล์จะขึ้นว่า "ไม่ทราบ" = สัญญาณอันตราย */
+  const WHY = new Uint8Array(W*H);
+  const WHYNAME = ['ไม่ทราบ','กล่องคำ','กติกาเครือข่าย','ตัวอักษร','กรอบป้าย','เศษเล็ก','น้ำเปิด'];
+
   /* ⚠⚠ **ทางที่ลองแล้วไม่ได้ผล — อย่าลองซ้ำ** (2026-09-05)
      เจ้าของทักว่ายังมีแม่น้ำขาดเพราะไอคอน/ป้ายชื่อเมืองบัง ผมลองอุดที่ *ระดับ mask*
      ก่อน thinning สองแบบ คิดว่าจะได้เส้นที่ไหลต่อเองและ smooth กว่าเอาท่อนไปปะ:
@@ -363,6 +378,154 @@ if (require.main === module){
      จึงกลับมาต่อที่ระดับ *เส้น* เหมือนเดิม แต่ทำให้สะพานโค้งตามทิศของลำน้ำ (ดูข้างล่าง) */
   let wet = 0; for (let i = 0; i < W*H; i++) if (m[i]) wet++;
   console.log(`mask ${W}×${H} · พิกเซลน้ำ ${wet.toLocaleString()}`);
+
+  /* ══ ★★★ ลบ "คำ" ไม่ใช่ "ตัวอักษร" ══════════════════════════════════════
+     เจ้าของ (รอบสี่): *"สิ่งที่สแกนมาพวกตัวหนังสือ หรือไอคอนสี่เหลี่ยม
+      มันคิดว่ามันเป็นแม่น้ำหมดเลย"*
+
+     ★ ทำไมตัวกรองทุกแบบก่อนหน้านี้แพ้: **ตัวอักษรที่แตะแม่น้ำจะกลายเป็นชิ้นเดียวกับ
+       แม่น้ำ** → กรองระดับชิ้นส่วนไม่เห็น · ระดับเครือข่ายก็ไม่เห็น (มันอยู่บนเครือข่าย)
+       · ตัดหนวดก็ไม่ได้ เพราะคำยาว 50–90 หน่วย พอ ๆ กับลำน้ำสาขาจริง
+
+     ★★ ทางออก: **ตัวอักษรมาเป็นคำเสมอ** ในคำหนึ่งมีหลายตัว และส่วนใหญ่
+        *ไม่* แตะแม่น้ำ — จับตัวที่แยกอยู่ได้ก่อน แล้วรวมเป็น "คำ" แล้วลบทั้งกล่องคำ
+        ตัวที่แตะแม่น้ำอยู่ในกล่องเดียวกัน จึงหายไปด้วย
+     ⚠ ลำน้ำที่พาดผ่านกล่องคำจะถูกตัดขาดตรงนั้น — **กติกาทางออกจะเย็บกลับให้เอง**
+        (นี่คือเหตุผลที่ต้องมีกติกานั้นก่อน จึงจะกล้าลบแบบนี้ได้)               */
+  {
+    const D0 = dt(W, H, m);
+    const { thin: t0 } = splitOpen(W, H, m, D0);
+    const C0 = components(W, H, t0);
+    classifyThin(W, H, C0.comps, D0);
+    const letters = C0.comps.filter(c => c.kind === 'text');
+    /* รวมตัวอักษรที่อยู่ใกล้กันเป็นคำ (ระยะกล่องถึงกล่อง <= GAP) */
+    const GAP = 10;
+    const near = (a, b) =>
+      a.x0 - GAP <= b.x1 && b.x0 - GAP <= a.x1 && a.y0 - GAP <= b.y1 && b.y0 - GAP <= a.y1;
+    const grp = letters.map(() => -1);
+    let ng = 0;
+    for (let i = 0; i < letters.length; i++){
+      if (grp[i] >= 0) continue;
+      const q = [i]; grp[i] = ng;
+      while (q.length){
+        const a = q.pop();
+        for (let j = 0; j < letters.length; j++)
+          if (grp[j] < 0 && near(letters[a], letters[j])){ grp[j] = ng; q.push(j); }
+      }
+      ng++;
+    }
+    const words = [];
+    for (let g = 0; g < ng; g++){
+      const mem = letters.filter((_, i) => grp[i] === g);
+      if (mem.length < 2) continue;                       /* ตัวเดียวไม่ใช่คำ */
+      const x0 = Math.min(...mem.map(c => c.x0)) - 2, x1 = Math.max(...mem.map(c => c.x1)) + 2;
+      const y0 = Math.min(...mem.map(c => c.y0)) - 2, y1 = Math.max(...mem.map(c => c.y1)) + 2;
+      if (Math.max(x1-x0, y1-y0) > 190) continue;         /* กว้างเกินคำ */
+      words.push([x0, y0, x1, y1, mem.length]);
+    }
+    let wiped = 0;
+    for (const [x0, y0, x1, y1] of words)
+      for (let y = Math.max(0, y0); y <= Math.min(H-1, y1); y++)
+        for (let x = Math.max(0, x0); x <= Math.min(W-1, x1); x++){
+          const i = y*W + x;
+          if (m[i]){ m[i] = 0; WHY[i] = 1; wiped++; }
+        }
+
+    /* ══ ★★★ ลำน้ำ "ลอดใต้ป้าย" — ต่อคืนหลังลบกล่องคำ ═════════════════════
+       ⚠ **บั๊กที่ตัวตรวจกิ่งขาดจับได้ตัวที่สอง** (2026-09-05)
+       แผ่นพิมพ์ชื่อแม่น้ำ (Wei River · Si River · Yellow River) เป็นหมึกน้ำเงิน
+       **ทับลงบนลำน้ำที่มันเรียกชื่อ** — พอเราลบกล่องคำ ลำน้ำใต้ป้ายก็หายไปด้วย
+       (เว่ยหนาน/ผู่ปั้นที่เจ้าของบอกว่าหาย คือแม่น้ำเว่ยใต้ป้ายคำว่า "Wei River")
+
+       ★ กติกา: ที่ขอบกล่อง ถ้าหมึกน้ำ **เข้าฝั่งหนึ่งแล้วออกอีกฝั่ง** แปลว่าลำน้ำลอดใต้ป้าย
+         → วาดริบบิ้นกว้างเท่าปากทางเข้าเชื่อมสองปากนั้น
+         ถ้าเจอปากเดียว = ป้ายวางอยู่ปลายลำน้ำ ไม่ต่อ (การประดิษฐ์ไม่ปลอดภัย) */
+    let sewn = 0, sewnPx = 0;
+    for (const [x0, y0, x1, y1] of words){
+      const ports = [];                                   /* ปากทางที่ขอบกล่อง */
+      const scan = (pts, side) => {
+        let run = [];
+        const flush = () => {
+          if (run.length >= 2){
+            const cx = run.reduce((s2,p)=>s2+p[0],0)/run.length;
+            const cy = run.reduce((s2,p)=>s2+p[1],0)/run.length;
+            ports.push({ x:cx, y:cy, w:run.length, side });
+          }
+          run = [];
+        };
+        /* วงแหวนต้องหนา 3 px — ลำน้ำที่วิ่งเฉียงตัดคอลัมน์เดียวได้แค่จุดเดียว
+           (เจอจริงที่ป้าย "Wei River" x=359 มีหมึกแค่ y=593 แถวเดียว) */
+        for (const [px, py, dx, dy] of pts){
+          let hit = 0, hx = px, hy = py;
+          for (let k = 0; k < 3 && !hit; k++){
+            const qx = px + dx*k, qy = py + dy*k;
+            if (qx < 0 || qy < 0 || qx >= W || qy >= H) continue;
+            if (m0[qy*W+qx]){ hit = 1; hx = qx; hy = qy; }
+          }
+          if (hit) run.push([hx, hy]); else flush();
+        }
+        flush();
+      };
+      const L = [], R = [], Tp = [], B = [];
+      for (let y = y0; y <= y1; y++){ L.push([x0-2, y, -1, 0]); R.push([x1+2, y, 1, 0]); }
+      for (let x = x0; x <= x1; x++){ Tp.push([x, y0-2, 0, -1]); B.push([x, y1+2, 0, 1]); }
+      scan(L, 'L'); scan(R, 'R'); scan(Tp, 'T'); scan(B, 'B');
+      const OPP = { L:'R', R:'L', T:'B', B:'T' };
+      /* ★ หลักฐานว่าลำน้ำลอดใต้ป้ายจริง = **หมึกเดิมยังอยู่ใต้เส้นที่จะลาก**
+         (ตัวอักษรกับลำน้ำหลอมกันอยู่ใน m0 — ลำน้ำจึงยังทิ้งรอยไว้ให้เห็น)
+         ⚠ อย่าใช้ "ความกว้างปากทางต้องใกล้เคียงกัน" เป็นเกณฑ์ — ลำน้ำที่วิ่งเฉียง
+           เฉือนวงแหวนได้แค่ 2 px ทั้งที่เป็นสายเดียวกัน (ป้าย "Wei River" w9 ↔ w2) */
+      const evidence = (p, q) => {
+        const d = Math.hypot(p.x-q.x, p.y-q.y), n = Math.max(4, Math.ceil(d));
+        let hit = 0;
+        for (let t = 1; t < n; t++){
+          const cx = Math.round(p.x + (q.x-p.x)*t/n), cy = Math.round(p.y + (q.y-p.y)*t/n);
+          let near = 0;
+          for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2 && !near; dx++){
+            const nx = cx+dx, ny = cy+dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+            if (m0[ny*W+nx]) near = 1;
+          }
+          hit += near;
+        }
+        return hit / (n-1);
+      };
+      let best = null;
+      for (let i2 = 0; i2 < ports.length; i2++) for (let j2 = i2+1; j2 < ports.length; j2++){
+        const a = ports[i2], b = ports[j2];
+        /* ★ ข้ามมุมได้ด้วย ไม่ใช่แค่ฝั่งตรงข้าม — ป้ายมักวางคร่อม *ทางโค้ง* ของลำน้ำ
+           (ป้าย "Si River" ลำน้ำเข้าด้านบน ออกด้านซ้าย — คู่ฝั่งตรงข้ามจึงไม่มีวันเจอ)
+           กันคู่ปลอมด้วยหลักฐานหมึกอย่างเดียว ไม่ใช่ด้วยรูปทรงของกล่อง */
+        if (a.side === b.side) continue;
+        if (Math.hypot(a.x-b.x, a.y-b.y) < 10) continue;
+        const ev = evidence(a, b);
+        if (ev < 0.80) continue;                           /* ไม่มีรอยลำน้ำใต้ป้าย */
+        const d = Math.hypot(a.x-b.x, a.y-b.y);
+        const score = ev + d/2000;                         /* หลักฐานแน่นสุด แล้วค่อยยาวสุด */
+        if (!best || score > best.score) best = { a, b, score };
+      }
+      /* WORDDBG=1 node toolsuild_plate_water.js — ดูปากทางรอบกล่องคำทีละกล่อง */
+      if (process.env.WORDDBG) console.log(`    กล่อง ${x0},${y0}-${x1},${y1}  ปาก ` + (ports.map(p=>p.side+Math.round(p.x)+","+Math.round(p.y)+"w"+p.w).join(" ")||"-") + (best?"  → ต่อ":""));
+      if (!best) continue;
+      const hw = Math.max(1.5, Math.min(5, (best.a.w + best.b.w) / 4));
+      const { a, b } = best, dd = Math.hypot(a.x-b.x, a.y-b.y);
+      const steps = Math.max(2, Math.ceil(dd*2)), r = Math.ceil(hw);
+      for (let t = 0; t <= steps; t++){
+        const cx = a.x + (b.x-a.x)*t/steps, cy = a.y + (b.y-a.y)*t/steps;
+        for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++){
+          if (dx*dx + dy*dy > hw*hw) continue;
+          const nx = Math.round(cx)+dx, ny = Math.round(cy)+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          const i = ny*W + nx;
+          if (!m[i]){ m[i] = 1; WHY[i] = 0; sewnPx++; }
+        }
+      }
+      sewn++;
+    }
+
+    console.log(`ลบกล่องคำที่แผ่นพิมพ์ไว้ ${words.length} คำ (จากตัวอักษร ${letters.length} ตัว) · ${wiped.toLocaleString()} px`);
+    if (sewn) console.log(`  ★ ต่อลำน้ำที่ลอดใต้ป้าย ${sewn} ป้าย · ${sewnPx.toLocaleString()} px`);
+  }
 
   const D = dt(W, H, m);
   const { open, thin: thinMask } = splitOpen(W, H, m, D);
@@ -796,6 +959,7 @@ if (require.main === module){
       if (grown) console.log(`  ★ ยืดปลายเข้าไปกินน้ำที่เหลือ ${grown} ปลาย (รวม ~${unit} หน่วย)`);
     }
 
+    BRIDGES = bridges;
     const rounds = bridges.length ? Math.max(...bridges.map(b => b.round)) : 0;
     console.log(`  ★ ต่อแม่น้ำที่ขาด ${bridges.length} จุด (เย็บ ${rounds} รอบ · สะพานโค้งตามทิศของลำน้ำ)`);
     for (const b of [...bridges].sort((x, y) => y.d - x.d).slice(0, 10))
@@ -824,7 +988,78 @@ if (require.main === module){
     /* ⚠ ลายฉลุเก็บ **เฉพาะสายน้ำ** — ทะเลกับทะเลสาบยังเป็นรูปปิดเวกเตอร์เหมือนเดิม
        เพราะมันเป็นรูปใหญ่เรียบ ไม่มีปัญหาเรื่องเศษ และวาดเป็นเวกเตอร์แล้วคมทุกระดับซูม
        ส่วนสายน้ำต้องเป็นลายฉลุ เพราะมันคือส่วนที่การถอดเป็นแกนกลางทำให้เพี้ยน */
-    for (const c of pick(T, 'river')) for (const q of c.px) sten[q] = 1;
+    /* ══ ★★★ กติกาเดียวที่ฆ่าตัวหนังสือกับไอคอนพร้อมกัน ═══════════════════
+       เจ้าของ (รอบสี่): *"สิ่งที่สแกนมาพวกตัวหนังสือ หรือไอคอนสี่เหลี่ยม
+        มันคิดว่ามันเป็นแม่น้ำหมดเลย แม่น้ำเลยแปลกๆ"*
+
+       ไล่กรองทีละแบบ (ขนาด · ความทึบ · กรอบ · หมึกดำข้างใน) **ไม่มีวันจบ**
+       เพราะแต่ละแบบคือการเดาว่า "หมึกก้อนนี้แปลว่าอะไร"
+
+       ★ กติกาที่ใช้แทนทั้งหมด: **หมึกเป็นน้ำก็ต่อเมื่อมันอยู่บน *เครือข่ายลำน้ำ***
+         1. หาแกนกลางของหมึกน้ำทั้งหมด
+         2. **ตัดหนวด** — ตัวอักษรกับไอคอนที่ติดกับแม่น้ำเป็นหนวดสั้น ๆ เสมอ
+            (ตัวอักษรไม่ยาว 25 หน่วยในทิศเดียว · ลำน้ำสาขาที่สั้นกว่านั้นไม่มี)
+         3. ทิ้งเครือข่ายที่สั้นเกินทั้งก้อน — ตัวอักษรที่ไม่ติดใครเลย
+         4. **ระบายหมึกเดิมกลับ** เฉพาะในระยะครึ่งความกว้างจากแกนที่เหลือ
+       → รูปที่ได้ยังเป็นหมึกของแผ่นเป๊ะ (ข้อ 4) แต่เฉพาะส่วนที่เป็นลำน้ำจริง
+
+       ⚠ ตัวอักษรที่ *เชื่อมติด* กับแม่น้ำก็หายด้วย เพราะมันเป็นหนวดของแกน
+         — อันนี้คือสิ่งที่ตัวกรองระดับชิ้นส่วนทำไม่ได้โดยหลักการ */
+    {
+      const SPUR = 30, MINNET = 110;
+      const riv = new Uint8Array(W*H);
+      for (const c of pick(T, 'river')) for (const q of c.px) riv[q] = 1;
+
+      /* ══ ★★★ สะพานต้องอยู่ในภาพก่อนกรอง ไม่ใช่หลังกรอง ═══════════════════
+         ⚠ **บั๊กที่ตัวตรวจกิ่งขาดจับได้ตัวแรก** (2026-09-05)
+         ก่อนหน้านี้บล็อกนี้สร้าง riv ใหม่จากชิ้นส่วนดิบ → **สะพาน 42 จุดหายไปหมด**
+         ผลคือกติกาเครือข่ายมองเห็นแม่น้ำที่ถูกป้ายชื่อเมืองตัดเป็นท่อน ๆ
+         แต่ละท่อนสั้นกว่า MINNET → **ทิ้งทั้งสาย**
+         → ตัวกรองที่ตั้งใจฆ่าตัวหนังสือ กลับฆ่าแม่น้ำ *เพราะ* ตัวหนังสือตัดมันขาด
+         (เจอที่ลั่วหยาง 493 px · ที่ติงเฉิง 382 px · ใต้เจียงหลิง 393 px)
+         ★ บทเรียน: **เชื่อมให้ครบก่อน แล้วค่อยกรอง** ลำดับสองอย่างนี้สลับกันไม่ได้ */
+      for (const b of BRIDGES){
+        const hw = Math.max(1.5, D[b.y*W + b.x] || 1.5);
+        const steps = Math.max(2, Math.ceil(b.d*2));
+        for (let t = 0; t <= steps; t++){
+          const x = Math.round(b.x + (b.x2-b.x)*t/steps), y = Math.round(b.y + (b.y2-b.y)*t/steps);
+          const r = Math.ceil(hw);
+          for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++){
+            if (dx*dx + dy*dy > hw*hw) continue;
+            const nx = x+dx, ny = y+dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+            riv[ny*W+nx] = 1;
+          }
+        }
+      }
+
+      const sk = thin(W, H, riv);
+      const kept = prune(skeletonLines(W, H, sk), SPUR);
+
+      /* ทิ้งเครือข่ายย่อยที่สั้นเกินทั้งก้อน */
+      const skKeep = new Uint8Array(W*H);
+      for (const L2 of kept) for (const q of L2) skKeep[q] = 1;
+      const NET = components(W, H, skKeep);
+      let dropNet = 0;
+      for (const c of NET.comps) if (c.n < MINNET){ dropNet++; for (const q of c.px) skKeep[q] = 0; }
+
+      /* ระบายหมึกเดิมกลับ เฉพาะในระยะครึ่งความกว้างจากแกน */
+      for (let i = 0; i < W*H; i++){
+        if (!skKeep[i]) continue;
+        const x = i % W, y = (i / W) | 0;
+        const r = Math.ceil(D[i]) + 1;
+        for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++){
+          if (dx*dx + dy*dy > (D[i]+1)*(D[i]+1)) continue;
+          const nx = x+dx, ny = y+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          const j = ny*W + nx;
+          if (riv[j]) sten[j] = 1;
+        }
+      }
+      let a = 0, b = 0;
+      for (let i = 0; i < W*H; i++){ if (riv[i]){ a++; if (!sten[i]) WHY[i] = 2; } if (sten[i]) b++; }
+      console.log(`  ★ กรองด้วยเครือข่าย: หมึกสายน้ำ ${a.toLocaleString()} → ${b.toLocaleString()} px (ตัดหนวด <${SPUR} · ทิ้งเครือข่ายสั้น ${dropNet} ก้อน)`);
+    }
     let on = 0; for (let i = 0; i < W*H; i++) if (sten[i]) on++;
     /* ══ ★★★ เย็บก้อนน้ำที่ไม่มีทางออกเข้ากับเครือข่าย ══════════════════════
        กติกาที่เจ้าของให้มา (2026-09-05): *"แม่น้ำไม่สามารถลอยได้ ... นายรู้ว่ามันอยู่
@@ -871,7 +1106,12 @@ if (require.main === module){
         for (const c of orphans){
           let best = null;
           for (const q of c.px) if (!best || dOk[q] < dOk[best]) best = q;
-          if (best == null || dOk[best] > MAXW) continue;
+          /* ★ ระบบน้ำใหญ่ยอมข้ามช่องกว้างกว่าปกติ — ยิ่งใหญ่ยิ่งเป็นไปไม่ได้ที่จะลอย
+             (แม่น้ำเว่ยทั้งลุ่มกวานจง 3,016 px ขาดจากแม่น้ำเหลือง เพราะตัวอักษร WEI
+              ของแผ่นเองกินหมึกช่วงนั้นไปหมด — แผ่นไม่ได้วาดไว้ให้ต่อ)
+             ⚔ นี่คือ *การประดิษฐ์* ไม่ใช่การลอก จึงจำกัดไว้เฉพาะก้อนใหญ่จริง */
+          const cap = c.n >= 1500 ? 130 : MAXW;
+          if (best == null || dOk[best] > cap) continue;
           const bx = best % W, by = (best / W) | 0;
           /* หาจุดของเครือข่ายที่ใกล้ที่สุดจริง ๆ */
           let tx = -1, ty = -1, td = 1e9;
@@ -890,7 +1130,10 @@ if (require.main === module){
              เพราะ *กติกาทางออกเองคือหลักฐาน* — ระบบน้ำ 500+ px ที่ไม่มีทางออกเป็นไปไม่ได้
              (เจอจริงที่เฉินหลิว: แผ่นเว้นช่องไว้ตรงที่ป้าย "Ding Tao" วางอยู่บนกระดาษเปล่า
               หลักฐานหมึกจึงไม่ผ่าน ทั้งที่สายน้ำต่อกันแน่นอน) */
-          if (gap >= 6 && !(c.n >= 500 && gap <= 32)){
+          /* ★ ระบบใหญ่มาก = กติกาทางออกหนักแน่นพอจะเย็บข้ามที่ว่างเปล่า
+             (ลุ่มน้ำเว่ยทั้งกวานจง 3,016 px ห่างเครือข่าย 56 px เพราะแผ่นเอาตัวอักษร
+              ของฝ่ายเว่ยวางทับช่วงนั้น — บนกระดาษจึงไม่มีหมึกให้เป็นหลักฐานเลย) */
+          if (gap >= 6 && !(c.n >= 500 && gap <= 32) && !(c.n >= 1500 && gap <= 75)){
             let hit = 0, tot = 0;
             const steps = Math.max(3, Math.ceil(gap));
             for (let t = 1; t < steps; t++){
@@ -976,9 +1219,126 @@ if (require.main === module){
         for (const q of c.px) if (reach[q]) return false;                          /* ถึงทะเล/ทะเลสาบ */
         return true;
       }).sort((a, b) => b.n - a.n);
+      REPORT.orphan = orphan.map(c => ({ n:c.n, x0:c.x0, y0:c.y0, x1:c.x1, y1:c.y1 }));
       console.log(`  ★ ก้อนน้ำที่ไม่มีทางออก (ไม่ถึงทะเล/ทะเลสาบ/ขอบแผ่น): ${orphan.length} ก้อน`);
-      for (const c of orphan.slice(0, 10))
-        console.log(`      ${String(c.n).padStart(5)} px  ที่ ${c.x0},${c.y0}–${c.x1},${c.y1}`);
+      if (orphan.length){
+        /* บอกด้วยว่าห่างจากเครือข่ายที่มีทางออกเท่าไร — ไม่งั้นไม่รู้ว่าควรเย็บหรือควรปล่อย */
+        const okm = new Uint8Array(W*H);
+        for (const c of R.comps){
+          const edge = c.x0 <= 8 || c.y0 <= 8 || c.x1 >= W-9 || c.y1 >= H-9;
+          let t = edge; if (!t) for (const q of c.px) if (reach[q]){ t = true; break; }
+          if (t) for (const q of c.px) okm[q] = 1;
+        }
+        const inv = new Uint8Array(W*H); for (let i = 0; i < W*H; i++) inv[i] = okm[i] ? 0 : 1;
+        const dOk = dt(W, H, inv);
+        for (const c of orphan.slice(0, 10)){
+          let b2 = c.px[0]; for (const q of c.px) if (dOk[q] < dOk[b2]) b2 = q;
+          console.log(`      ${String(c.n).padStart(5)} px  ที่ ${c.x0},${c.y0}–${c.x1},${c.y1}`
+            + `   ใกล้เครือข่ายสุดที่ ${b2%W},${(b2/W)|0} ห่าง ${dOk[b2].toFixed(0)}`);
+        }
+      }
+    }
+
+    /* ══ ★★★ ตัวตรวจ "กิ่งขาด" — จุดบอดที่เจ้าของหาเจอเอง ═══════════════════
+       เจ้าของ (รอบห้า): *"วิธีที่เชค Source เจอจุดบอดคือ ถ้ามันไหลแล้วมีจุด
+        กลับมาที่เดิม แบบถ้ามันไหลลงทะเล หรือมีจุดที่วน มันจะเชคแล้วพลาดได้
+        ทำให้ขาดไป 1 สายที่มันไหลไป"*
+
+       ถูกทั้งหมด · กติกาทางออกข้างบนตรวจ **ทั้งก้อน** ถ้าก้อนนั้นถึงทะเลแล้ว
+       กิ่งที่หายอยู่ข้างในก้อนเดียวกันจะไม่มีใครฟ้อง — และถ้าระบบมีวง (loop)
+       ก็ยิ่งถึงทะเลง่ายขึ้นอีก · แยงซีช่วงไป๋ตี้ที่ผมทำหายไปทั้งท่อน
+       ก็รอดตัวตรวจทุกตัวด้วยเหตุนี้
+
+       ★ ตัวตรวจนี้เลื่อนลงมาอีกชั้น: ตรวจ **ปลายเส้นทีละปลาย** ไม่ใช่ทีละก้อน
+         ปลายของแม่น้ำจริงจบได้สามแบบเท่านั้น — ต้นน้ำ · ปากน้ำ · ขอบแผ่น
+         ถ้าปลายไหน "ชี้ตรงเข้าไปในหมึกน้ำของแผ่นที่เราไม่ได้วาด" แปลว่าเราตัดกิ่งทิ้ง
+         ไม่ว่าก้อนนั้นจะถึงทะเลอยู่แล้วหรือจะมีวงกี่วงก็ตาม */
+    {
+      const CODE = { text:3, labelbox:4, noise:5 };
+      for (const c of T.comps) if (CODE[c.kind]) for (const q of c.px) if (!WHY[q]) WHY[q] = CODE[c.kind];
+      for (const c of O.comps) for (const q of c.px) if (!WHY[q]) WHY[q] = 6;
+
+      const CONE = 0.62, LOOK = 44, BACK = 12, MINLOST = 60;
+      const sk2 = thin(W, H, sten);
+      const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? 0 : sk2[y*W + x];
+      /* หมึกที่แผ่นมี แต่เราไม่ได้วาด + ก้อนของมัน (ไว้บอกขนาดกิ่งที่หาย) */
+      const lost = new Uint8Array(W*H);
+      for (let i = 0; i < W*H; i++) if (m0[i] && !sten[i]) lost[i] = 1;
+      const LC = components(W, H, lost);
+      const lostId = new Int32Array(W*H).fill(-1);
+      LC.comps.forEach((c, k) => { for (const q of c.px) lostId[q] = k; });
+      /* ปากน้ำที่ถูกกติกา: ติดทะเล/ทะเลสาบ/ขอบแผ่น */
+      const open = new Uint8Array(W*H);
+      for (const k of ['sea', 'lake']) for (const c of pick(O, k)) for (const q of c.px) open[q] = 1;
+      const nearOpen = (x, y) => {
+        for (let dy = -12; dy <= 12; dy++) for (let dx = -12; dx <= 12; dx++){
+          const nx = x+dx, ny = y+dy;
+          if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+          if (open[ny*W+nx]) return 1;
+        }
+        return 0;
+      };
+      /* เดินถอยหลังตามแกนกลางเพื่อหาทิศของลำน้ำตรงปลายนั้น */
+      const walkBack = i => {
+        let cur = i, prev = -1;
+        for (let s = 0; s < BACK; s++){
+          const x = cur % W, y = (cur / W) | 0;
+          let nxt = -1;
+          for (const d of N8){
+            const j = (y+d[1])*W + (x+d[0]);
+            if (at(x+d[0], y+d[1]) && j !== prev && j !== cur){ nxt = j; break; }
+          }
+          if (nxt < 0) break;
+          prev = cur; cur = nxt;
+        }
+        return cur;
+      };
+      const cuts = new Map();
+      for (let i = 0; i < W*H; i++){
+        if (!sk2[i]) continue;
+        const x = i % W, y = (i / W) | 0;
+        let deg = 0; for (const d of N8) if (at(x+d[0], y+d[1])) deg++;
+        if (deg !== 1) continue;                                   /* เอาเฉพาะปลายอิสระ */
+        if (x <= 10 || y <= 10 || x >= W-11 || y >= H-11) continue; /* ออกขอบแผ่นได้ */
+        if (nearOpen(x, y)) continue;                               /* ปากน้ำ */
+        const b = walkBack(i), bxx = b % W, byy = (b / W) | 0;
+        let ux = x - bxx, uy = y - byy;
+        const len = Math.hypot(ux, uy); if (len < 3) continue;
+        ux /= len; uy /= len;
+        /* ยิงกรวยไปข้างหน้า — เจอหมึกที่เราไม่ได้วาดเมื่อไหร่คือกิ่งขาด */
+        let bestK = -1, bestD = 1e9;
+        for (let t = 3; t <= LOOK && bestK < 0; t++){
+          for (let a = -1; a <= 1; a++){
+            const px = Math.round(x + ux*t - uy*a*t*CONE*0.5);
+            const py = Math.round(y + uy*t + ux*a*t*CONE*0.5);
+            if (px < 0 || py < 0 || px >= W || py >= H) continue;
+            const k = lostId[py*W+px];
+            if (k >= 0 && LC.comps[k].n >= MINLOST && t < bestD){ bestK = k; bestD = t; }
+          }
+        }
+        if (bestK < 0) continue;
+        const rec = cuts.get(bestK) || { k: bestK, ends: [], d: 1e9 };
+        rec.ends.push([x, y]); rec.d = Math.min(rec.d, bestD);
+        cuts.set(bestK, rec);
+      }
+      const list = [...cuts.values()]
+        .map(r => {
+          const c = LC.comps[r.k], t = {};
+          for (const q of c.px){ const w = WHYNAME[WHY[q]]; t[w] = (t[w]||0) + 1; }
+          const why = Object.entries(t).sort((a,b)=>b[1]-a[1])
+            .map(([k,n]) => k + ' ' + Math.round(n/c.n*100) + '%').slice(0,2).join(' · ');
+          return { ...r, c, why };
+        })
+        .sort((a, b) => b.c.n - a.c.n);
+      const ends = list.reduce((s, r) => s + r.ends.length, 0);
+      REPORT.cut = list.map(r => ({ n:r.c.n, x0:r.c.x0, y0:r.c.y0, x1:r.c.x1, y1:r.c.y1,
+        ex:r.ends[0][0], ey:r.ends[0][1], d:r.d, ends:r.ends.length, why:r.why }));
+      console.log(`  ★ กิ่งขาด (ปลายเส้นที่ชี้เข้าหมึกน้ำของแผ่นที่เราไม่ได้วาด): ${list.length} กิ่ง · ${ends} ปลาย`);
+      for (const r of list.slice(0, 20)){
+        const [ex, ey] = r.ends[0];
+        console.log(`      ${String(r.c.n).padStart(5)} px  ${r.c.x0},${r.c.y0}–${r.c.x1},${r.c.y1}`
+          + `  ปลาย ${ex},${ey} ห่าง ${String(r.d).padStart(2)}   ${r.why}`);
+      }
     }
   }
 
@@ -1015,5 +1375,6 @@ if (require.main === module){
   console.log('\nเขียน data/plate_water.js  ' + (js.length/1024).toFixed(1) + ' KB');
   console.log(`  ทะเล ${sea.length} รูป · เกาะ ${islands.length} รูป · ทะเลสาบ ${lakes.length} รูป`);
   console.log(`  แม่น้ำ ${rivers.length} เส้น · ${vtx.toLocaleString()} จุด`);
+  fs.writeFileSync(path.join(__dirname, '_cuts.json'), JSON.stringify(REPORT));
   console.log(`  ใช้เวลา ${((Date.now()-t0)/1000).toFixed(1)} วินาที`);
 }

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>แผ่นใหม่ — สามสไตล์ให้เลือก (เฟส 2)</title>
+<!-- plate_style.html — ตัวอย่างสไตล์ของ "แผ่นที่เราวาดเอง" (DECISIONS §14 · เฟส 2)
+     เปิดผ่าน  node tools/serve.js  →  http://localhost:8778/tools/plate_style.html
+       ?style=paper|ink|night
+       ?zoom=x,y,w,h   ดูระยะกล้องฉาก (กล้องของเล่มอยู่ราว ๆ vbw 940)
+       ?bare           ถอดสีฝ่าย/ลูกศร/สัญลักษณ์ออก เหลือแต่แผ่น
+       ?wide           เต็มความกว้างแล้วเลื่อนดู (ปริยายคือย่อให้เห็นทั้งแผ่น)
+
+     ★ ข้อสอบของหน้านี้ไม่ใช่ "แผ่นสวยไหม" แต่คือ **"แผ่นแย่งสายตากับสีฝ่ายหรือเปล่า"**
+       สีฝ่ายต้องเด่นที่สุดบนจอเสมอ (§3) — แผ่นเป็นฉากหลัง ไม่ใช่ผู้แสดง
+       จึงต้องดูพร้อมของจริง: เขต 33 เขตปี 221 · เส้นทางเดินทัพจริงฝ่ายละหนึ่ง · สัญลักษณ์สถานที่
+
+     ⚠ หน้านี้ไม่ใช่โปรดักต์ และ **ไม่ใช่แหล่งความจริง** — อ่าน data/ ตัวจริงทุกไฟล์
+       ยกเว้น GLYPH สามรูปที่คัดลอกมา (ดูหมายเหตุตรงตัวแปร GLYPH) -->
+<style>
+  html,body{margin:0;background:#14161a;color:#e7e9ee;font:13px/1.5 system-ui,sans-serif}
+  #bar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;gap:6px;flex-wrap:wrap;
+       align-items:center;padding:8px 10px;background:rgba(14,16,21,.92);backdrop-filter:blur(8px)}
+  button{background:#232833;color:#e7e9ee;border:1px solid #39404f;border-radius:6px;
+         padding:5px 11px;cursor:pointer;font:inherit}
+  button.on{background:#c9a227;border-color:#c9a227;color:#14161a;font-weight:600}
+  /* ★ ให้เห็นทั้งแผ่นเสมอ — SVG กินเต็มกล่อง แล้วปล่อยให้ preserveAspectRatio จัดขอบเอง
+     (เคยลอง width:auto + height:calc มาก่อนแล้วไม่ได้ผล — SVG ที่มีแต่ viewBox ไม่มีขนาด
+      ในตัว CSS จึงถอยไปใช้ 100% แล้วภาพล้นจอ) */
+  #wrap{padding-top:44px;height:calc(100vh - 44px);box-sizing:border-box}
+  svg{display:block;width:100%;height:100%}
+  body.wide #wrap{height:auto}
+  body.wide svg{height:auto}
+  #note{opacity:.62;margin-left:auto;padding-right:4px;font-size:12px}
+  .sep{width:1px;height:22px;background:#39404f;margin:0 4px}
+</style>
+<div id="bar">
+  <button data-s="paper" class="on">กระดาษเก่า</button>
+  <button data-s="ink">หมึกจีน</button>
+  <button data-s="night">กลางคืน</button>
+  <span class="sep"></span>
+  <button id="b-reg" class="on">สีฝ่าย</button>
+  <button id="b-rte" class="on">เส้นทางเดินทัพ</button>
+  <button id="b-sym" class="on">สัญลักษณ์</button>
+  <span id="note"></span>
+</div>
+<div id="wrap"></div>
+
+<script src="../data/names.js"></script>
+<script src="../data/places.js"></script>
+<script src="../data/geo.js"></script>
+<script src="../data/geo_fill.js"></script>
+<script src="../data/roads.js"></script>
+<script src="../data/plate_water.js"></script>
+<script>
+const TK = window.TK, PW = TK.plateWater;
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (t, a) => { const e = document.createElementNS(NS, t);
+  for (const k in a) if (a[k] != null) e.setAttribute(k, a[k]); return e; };
+const ringD = f => { let d = ''; for (let i = 0; i < f.length; i += 2)
+  d += (i ? 'L' : 'M') + f[i] + ' ' + f[i+1]; return d + 'Z'; };
+const q = new URLSearchParams(location.search);
+
+/* ══ สามสไตล์ ═══════════════════════════════════════════════════════════
+   กติกาเดียวที่ทุกแบบต้องผ่าน: **ห้ามมีสีไหนบนแผ่นอิ่มตัวเท่าสีฝ่าย**
+   ฮั่น #2E9E5B · วุ่ย #2563A8 · ง่อ #C2413A — ทุกสีของแผ่นถูกกดความอิ่มลงหมด    */
+const STYLE = {
+  paper: {
+    label:'กระดาษเก่า',
+    ground:'#EFE4CE', sea:'#C3D2D8', shelf:'#D6E0E3',   /* shelf = น้ำตื้นริมฝั่ง */
+    coast:'#9DB0B7', coastW:1.1,
+    river:'#89A3B0', riverK:1.0, lakeStroke:'#9DB0B7',
+    ink:'#1B1F27', inkHalo:'#F3EBD9',
+    why:'ใกล้ของเดิมที่สุด · พื้นอุ่น น้ำเย็น อ่านออกทันทีว่าตรงไหนบกตรงไหนน้ำ'
+  },
+  ink: {
+    label:'หมึกจีน',
+    ground:'#F7F4EC', sea:'#DAD6C9', shelf:'#E8E5DB',
+    coast:'#5F5A50', coastW:1.0,
+    river:'#7C7669', riverK:0.82, lakeStroke:'#5F5A50',
+    ink:'#15181E', inkHalo:'#F7F4EC',
+    why:'แผ่นไม่มีสีเลย → สีฝ่ายเด่นที่สุดเท่าที่เป็นไปได้ · แลกกับบก/น้ำที่ต่างกันด้วยค่าเทาอย่างเดียว'
+  },
+  night: {
+    label:'กลางคืน',
+    ground:'#191D24', sea:'#212C36', shelf:'#26333E',
+    coast:'#42525E', coastW:1.1,
+    river:'#587B90', riverK:1.05, lakeStroke:'#42525E',
+    ink:'#0C0E12', inkHalo:'#C8D2DC',
+    why:'เข้ากับ UI ธีมมืด · ⚠ สีฝ่ายที่ opacity .38 บนพื้นมืดจะจมไปกับพื้น เขียว/น้ำเงิน/แดงแยกกันยากขึ้น'
+  }
+};
+
+/* ⚠⚠ สำเนา GLYPH สามรูปจาก js/strategic.js — **ใช้ทดสอบสไตล์เท่านั้น**
+   ตัวจริงอยู่ที่ strategic.js และนั่นคือแหล่งความจริงเดียว ห้ามแก้ที่นี่แล้วคิดว่าแก้แล้ว
+   จุดยึด = (12,22) กึ่งกลางฐานของกล่อง 24×24 · px = ความสูงบนจอ */
+const GLYPH = {
+  capital:{ px:34, fill:[
+    'M12,0.5 L14.2,3.2 L9.8,3.2 Z',
+    'M4.5,8.6 C6.2,8.2 6.6,5.6 8.4,4.6 H15.6 C17.4,5.6 17.8,8.2 19.5,8.6 Z',
+    'M8,8.6 H16 V12.2 H8 Z',
+    'M0.8,16.4 C3,15.9 3.4,13.2 5.4,12.2 H18.6 C20.6,13.2 21,15.9 23.2,16.4 Z',
+    'M2.6,16.4 H21.4 V22 H2.6 Z M10.4,18.2 H13.6 V22 H10.4 Z'] },
+  city:{ px:30, fill:[
+    'M3.2,10.2 C5.2,9.7 5.6,7.2 7.4,6.2 H16.6 C18.4,7.2 18.8,9.7 20.8,10.2 Z',
+    'M6.6,10.2 H17.4 V13.6 H6.6 Z',
+    'M3.4,13.6 H20.6 V22 H3.4 Z M10.4,17.4 H13.6 V22 H10.4 Z'] },
+  town:{ px:30, fill:[
+    'M4.6,13.4 C6.6,12.9 8.6,9.2 12,7.6 C15.4,9.2 17.4,12.9 19.4,13.4 Z',
+    'M6.8,13.4 H17.2 V22 H6.8 Z M10.6,17.2 H13.4 V22 H10.6 Z'] }
+};
+
+/* เส้นทางเดินทัพจริงจากเล่ม ฝ่ายละหนึ่งสาย (สายที่ยาวที่สุดของแต่ละฝ่าย)
+   ⚠ ไม่ใช่ฉากจริง — สามสายนี้มาจากคนละปี เอามาวางพร้อมกันเพื่อทดสอบสีเท่านั้น */
+const SAMPLE = [
+  ['liushan_north_262',  'han'],
+  ['simayi_tianshui_240','wei'],
+  ['wu_shouchun_257',    'wu']
+];
+
+/* ── กล้อง ─────────────────────────────────────────────────────────────
+   ★★ ของที่ "คงขนาดบนจอ" ต้องคิดสเกลจาก viewBox ปัจจุบัน ไม่ใช่จากทั้งแผ่น
+   ไม่งั้นพอซูมเข้า สัญลักษณ์กับลูกศรจะโตตามแผ่นไปด้วย ซึ่งผิดจากแอปทุกประการ
+   (เจอจริงตอนถ่ายภาพระยะฉากรอบแรก — รูปเมืองใหญ่จนกินครึ่งจอ)
+   กติกาของแอป §3: ขนาดบนจอ = px × (900/vb.w)^0.3 หนีบ [1, 1.6]                */
+const VB  = q.get('zoom') ? q.get('zoom').split(',').map(Number) : [0, 0, PW.W, PW.H];
+const VBW = VB[2];
+const APP_PX = 900;                    /* ความกว้างที่แอปจริงแสดงแผ่นตอนถอยสุด */
+const gain = Math.min(1.6, Math.max(1, Math.pow(APP_PX / VBW, 0.3)));
+const U = VBW / APP_PX;                /* 1 พิกเซลบนจอ = กี่หน่วยแผ่น */
+
+const svg = mk('svg', { viewBox:VB.join(' '), preserveAspectRatio:'xMidYMid meet' });
+const gGround = mk('rect', { x:VB[0], y:VB[1], width:VB[2], height:VB[3] });
+const gSea = mk('g'), gShelf = mk('g'), gLake = mk('g'), gIsl = mk('g'), gRiv = mk('g');
+const gReg = mk('g', { opacity:.38 }), gRte = mk('g'), gSym = mk('g');
+svg.append(gGround, gSea, gShelf, gIsl, gLake, gRiv, gReg, gRte, gSym);
+
+/* ── น้ำ (หน่วยแผ่น — โตตามแผ่น เพราะมันคือแผ่นดิน) ────────────────────── */
+for (const r of PW.sea){
+  gSea.append(mk('path', { d:ringD(r) }));
+  /* น้ำตื้นริมฝั่ง — เส้นหนาจาง ๆ ตามขอบ ทำให้ชายฝั่งอ่านเป็น "ฝั่ง" ไม่ใช่ "รอยตัด" */
+  gShelf.append(mk('path', { d:ringD(r), fill:'none', 'stroke-opacity':.55 }));
+}
+for (const r of PW.islands) gIsl.append(mk('path', { d:ringD(r) }));
+for (const r of PW.lakes)   gLake.append(mk('path', { d:ringD(r) }));
+for (const r of PW.rivers)
+  for (let i = 0; i + 3 < r.p.length; i += 2){
+    const hw = (r.w[i/2] + r.w[i/2 + 1]) / 2;
+    gRiv.append(mk('line', { x1:r.p[i], y1:r.p[i+1], x2:r.p[i+2], y2:r.p[i+3],
+      'data-w':hw, 'stroke-linecap':'round' }));
+  }
+
+/* ── เขตปี 221 ────────────────────────────────────────────────────────── */
+for (const id in TK.regions){
+  const r = TK.regions[id], c = TK.factions[r.owner].color;
+  gReg.append(mk('path', { d:r.fill || r.d, fill:c, stroke:c,
+                           'stroke-width':1.5 * U, 'stroke-linejoin':'round' }));
+}
+
+/* ── ลูกศร (แบบ ข · §3): เส้นสีฝ่าย 4px บนขอบมืด +4.5px — คงขนาดบนจอ ───── */
+for (const [id, side] of SAMPLE){
+  const rt = TK.routes[id]; if (!rt || !rt.d) continue;
+  const c = TK.factions[side].color;
+  gRte.append(mk('path', { d:rt.d, fill:'none', stroke:'#0b0d12', 'stroke-width':8.5 * U,
+                           'stroke-opacity':.5, 'stroke-linecap':'round' }));
+  gRte.append(mk('path', { d:rt.d, fill:'none', stroke:c, 'stroke-width':4 * U * gain,
+                           'stroke-opacity':.95, 'stroke-linecap':'round' }));
+}
+
+/* ── สัญลักษณ์สถานที่ · ตรวจชนแล้วยุบเป็นจุด (กติกาเดียวกับ scalePins) ───── */
+const RANK = { capital:0, city:1, town:2 };
+const taken = [];
+const hit = (a, b) => !(a.x1 < b.x0 || b.x1 < a.x0 || a.y1 < b.y0 || b.y1 < a.y0);
+const inView = p => p.x >= VB[0] - 60 && p.y >= VB[1] - 60 &&
+                    p.x <= VB[0] + VB[2] + 60 && p.y <= VB[1] + VB[3] + 60;
+const cand = Object.keys(TK.places).map(id => ({ id, p:TK.places[id] }))
+  .filter(o => GLYPH[o.p.type] && inView(o.p))
+  .sort((a, b) => (RANK[a.p.type] - RANK[b.p.type]) || (a.id < b.id ? -1 : 1));
+let nSym = 0, nDot = 0;
+for (const { p } of cand){
+  const g = GLYPH[p.type], s = g.px * gain / 24 * U;
+  /* ⚠ เผื่อขอบ 0.7 เท่าของกล่อง — ถ้าใช้กล่องเปลือย ๆ จะได้ 47 รูปตอนถอยสุด
+     ทั้งที่ §3 วัดของจริงไว้ว่าเหลือ 23 รูป · labeler ตัวจริงเผื่อระยะห่างขั้นต่ำ
+     ระหว่างรูปด้วย ไม่ใช่แค่ห้ามทับ · 0.7 ให้ผล 23 รูปพอดี */
+  const pad = 0.7 * 24 * s;
+  const box = { x0:p.x - 12*s - pad, y0:p.y - 22*s - pad, x1:p.x + 12*s + pad, y1:p.y + pad };
+  if (taken.some(t => hit(t, box))){
+    gSym.append(mk('circle', { cx:p.x, cy:p.y, r:2.6 * U, class:'dot' }));
+    nDot++; continue;
+  }
+  taken.push(box);
+  const grp = mk('g', { transform:`translate(${p.x - 12*s} ${p.y - 22*s}) scale(${s})` });
+  for (const d of g.fill) grp.append(mk('path', { d, class:'sym' }));
+  gSym.append(grp); nSym++;
+}
+document.getElementById('wrap').append(svg);
+
+/* ── ทาสีตามสไตล์ ───────────────────────────────────────────────────── */
+function paint(name){
+  const S = STYLE[name];
+  gGround.setAttribute('fill', S.ground);
+  for (const e of gSea.children)  { e.setAttribute('fill', S.sea); e.setAttribute('stroke', S.coast); e.setAttribute('stroke-width', S.coastW * U); }
+  for (const e of gShelf.children){ e.setAttribute('stroke', S.shelf); e.setAttribute('stroke-width', 7 * U); }
+  for (const e of gIsl.children)  { e.setAttribute('fill', S.ground); e.setAttribute('stroke', S.coast); e.setAttribute('stroke-width', S.coastW * U); }
+  for (const e of gLake.children) { e.setAttribute('fill', S.sea); e.setAttribute('stroke', S.lakeStroke); e.setAttribute('stroke-width', S.coastW * .8 * U); }
+  for (const e of gRiv.children)  { e.setAttribute('stroke', S.river);
+                                    e.setAttribute('stroke-width', Math.max(0.8 * U, +e.dataset.w * 2 * S.riverK)); }
+  for (const e of gSym.querySelectorAll('.sym, .dot')){
+    e.setAttribute('fill', S.ink); e.setAttribute('fill-opacity', .88);
+    e.setAttribute('stroke', S.inkHalo); e.setAttribute('stroke-width', .7 * U);
+  }
+  document.body.style.background = name === 'night' ? '#0b0d10' : '#14161a';
+  for (const b of document.querySelectorAll('[data-s]')) b.classList.toggle('on', b.dataset.s === name);
+  document.getElementById('note').textContent =
+    `${S.label} — ${S.why}   ·   สัญลักษณ์ ${nSym} รูป + จุด ${nDot}`;
+}
+for (const b of document.querySelectorAll('[data-s]')) b.onclick = () => paint(b.dataset.s);
+
+const tog = (id, el) => { const b = document.getElementById(id);
+  b.onclick = () => { b.classList.toggle('on'); el.style.display = b.classList.contains('on') ? '' : 'none'; }; };
+tog('b-reg', gReg); tog('b-rte', gRte); tog('b-sym', gSym);
+
+paint(STYLE[q.get('style')] ? q.get('style') : 'paper');
+if (q.has('wide')) document.body.classList.add('wide');
+if (q.has('bare')) for (const id of ['b-reg','b-rte','b-sym']) document.getElementById(id).click();
+</script>

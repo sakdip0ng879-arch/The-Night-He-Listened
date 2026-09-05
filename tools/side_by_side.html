@@ -1,0 +1,101 @@
+<!doctype html><meta charset="utf-8"><title>เทียบแผ่นต้นแบบกับแอปจริง</title>
+<!--
+  side_by_side.html — ★ เครื่องมือที่ควรมีตั้งแต่รอบแรก (2026-09-05)
+
+  เจ้าของ: *"จริงๆ แค่นายเทียบภาพระหว่างแผนที่ต้นแบบกับที่ทำมาก็น่าจะรู้แล้วไม่ใช่เหรอ"*
+  — ถูก · ที่ผ่านมาผมตรวจด้วยตัวเลขกับตัวตรวจ ซึ่งเห็นเฉพาะสิ่งที่ตัวเองไปถามมัน
+  ตัวตรวจไม่มีตา · หน้านี้มีตา
+
+  ขวา = **แอปจริง** (index.html ใน iframe · ไม่ได้วาดใหม่ ไม่ได้จำลอง)
+  ซ้าย = แผ่นต้นแบบ assets/map.jpg วางทับด้วย viewBox เดียวกันเป๊ะ
+  เลื่อน/ซูมในแอปฝั่งขวา ฝั่งซ้ายตามให้เอง
+
+    node tools\serve.js  แล้วเปิด /tools/side_by_side.html
+
+  โหมด:  ▸ เทียบข้าง    ▸ ทับ (เลื่อนความจาง)    ▸ ม่าน (ลากเส้นแบ่ง)
+-->
+<style>
+ html,body{margin:0;height:100%;background:#0b0d11;color:#cfd6de;
+   font:13px system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+ #bar{display:flex;gap:14px;align-items:center;padding:6px 12px;background:#151922;
+   border-bottom:1px solid #262d38}
+ #bar b{color:#e8c07a;font-weight:600}
+ #bar label{display:flex;gap:5px;align-items:center;color:#9fb0c2}
+ #stageWrap{position:relative;height:calc(100% - 37px)}
+ .pane{position:absolute;top:0;bottom:0;overflow:hidden;background:#000}
+ #left{left:0}  #right{right:0}
+ #left .plate{position:absolute;transform-origin:0 0;image-rendering:auto}
+ iframe{border:0;width:100%;height:100%;display:block}
+ .tag{position:absolute;top:6px;left:8px;z-index:5;background:#0009;padding:2px 7px;
+   border-radius:4px;font:11px ui-monospace,monospace;color:#cfd6de;pointer-events:none}
+ #split{position:absolute;top:0;bottom:0;width:3px;background:#e8c07a;cursor:ew-resize;z-index:9;display:none}
+</style>
+<div id="bar">
+  <b>เทียบแผ่นต้นแบบ ↔ แอปจริง</b>
+  <label>โหมด
+    <select id="mode">
+      <option value="side">เทียบข้าง</option>
+      <option value="over">ทับ</option>
+      <option value="wipe">ม่าน</option>
+    </select></label>
+  <label>ความจางของแผ่นต้นแบบ <input id="op" type="range" min="0" max="100" value="100"></label>
+  <span id="vb" style="color:#6f7c8b;font:11px ui-monospace,monospace"></span>
+</div>
+<div id="stageWrap">
+  <div class="pane" id="left"><div class="tag">แผ่นต้นแบบ (map.jpg)</div><img class="plate" src="../assets/map.jpg"></div>
+  <div class="pane" id="right"><div class="tag">แอปจริง</div><iframe id="app" src="../index.html"></iframe></div>
+  <div id="split"></div>
+</div>
+<script>
+const MW = 1650, MH = 1950;
+const L = document.getElementById('left'), R = document.getElementById('right');
+const img = L.querySelector('img.plate'), split = document.getElementById('split');
+let wipe = 0.5;
+
+function layout(){
+  const W = stageWrap.clientWidth, H = stageWrap.clientHeight, m = mode.value;
+  if (m === 'side'){
+    L.style.width = R.style.width = (W/2) + 'px';
+    L.style.opacity = 1; R.style.opacity = 1;
+    L.style.clipPath = ''; split.style.display = 'none';
+  } else {
+    L.style.width = R.style.width = W + 'px';
+    split.style.display = m === 'wipe' ? 'block' : 'none';
+    if (m === 'wipe'){
+      L.style.clipPath = `inset(0 ${100-wipe*100}% 0 0)`;
+      split.style.left = (wipe*W) + 'px';
+      L.style.opacity = 1;
+    } else { L.style.clipPath = ''; L.style.opacity = op.value/100; }
+  }
+  L.style.zIndex = 2;
+  sync();
+}
+/* อ่าน viewBox ของ SVG ในแอปจริง แล้ววาง map.jpg ให้ตรงกันเป๊ะ
+   (SVG ใช้ preserveAspectRatio ปริยาย = xMidYMid meet → ต้องคำนวณแบบเดียวกัน) */
+function sync(){
+  const doc = app.contentDocument; if (!doc) return;
+  const svg = doc.querySelector('#stage svg'); if (!svg) return;
+  const vbAttr = svg.getAttribute('viewBox'); if (!vbAttr) return;
+  const [vx, vy, vw, vh] = vbAttr.split(/[ ,]+/).map(Number);
+  const r = svg.getBoundingClientRect();
+  const pw = r.width, ph = r.height;
+  if (!pw || !ph) return;
+  const k = Math.min(pw/vw, ph/vh);
+  const ox = r.left + (pw - vw*k)/2 - vx*k;
+  const oy = r.top  + (ph - vh*k)/2 - vy*k;
+  img.style.width  = (MW*k) + 'px';
+  img.style.height = (MH*k) + 'px';
+  img.style.transform = `translate(${ox}px, ${oy - 37}px)`;
+  vb.textContent = `viewBox ${vx|0} ${vy|0} ${vw|0}×${vh|0}  ·  ${k.toFixed(3)}×`;
+}
+setInterval(sync, 120);
+addEventListener('resize', layout);
+mode.onchange = layout; op.oninput = layout;
+split.onpointerdown = e => {
+  const move = ev => { wipe = Math.min(1, Math.max(0, ev.clientX / stageWrap.clientWidth)); layout(); };
+  const up = () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); };
+  addEventListener('pointermove', move); addEventListener('pointerup', up); e.preventDefault();
+};
+app.addEventListener('load', () => setTimeout(layout, 600));
+layout();
+</script>

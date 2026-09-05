@@ -49,10 +49,16 @@ body{
 /* ⚠ ทะเล/ทะเลสาบ/เกาะ ย้ายไปชั้น #L-water แล้ว (2026-09-05) — ต้องอยู่ *บน* สีเขต
      ไม่งั้นสีเขต .45 กลบพื้นน้ำจนเหลือแต่เส้นขอบ แล้วตาอ่านว่า "วงกลวง" (เจ้าของทัก)
      ตัวเลือกที่นี่จึงต้องอ้าง #L-water ให้ตรงกับที่ strategic.js วางจริง */
-#L-water .pl-sea{fill:#26323D; stroke:#4A5C6A; stroke-width:2}
-#L-water .pl-shelf{fill:none; stroke:#27343F; stroke-width:22; stroke-opacity:.55}
+/* ★★ ทะเลสาบต้องเป็น **สีเดียวกับหมึกสายน้ำ** — มันคือน้ำสายเดียวกันที่กว้างขึ้น
+     ของเดิมทะเลสาบ #26323D ห่างจากพื้นดิน #1C2129 แค่นิดเดียว บนแผ่นมืดจึงอ่านเป็น "หลุม"
+     เหลือแต่เส้นขอบให้เห็น — เจ้าของทักสองรอบ
+     ⚠ รอบแรกผมแก้แต่ *ชั้น* (ย้ายขึ้นเหนือสีเขต) ซึ่งจำเป็นแต่ไม่พอ · ที่เหลือคือ *สี*
+     ทะเลไม่ใช้สีเดียวกับสายน้ำเพราะเป็นผืนใหญ่ ถ้าสว่างเท่ากันจะกลบทุกอย่าง
+     แต่ต้องสว่างพอให้อ่านว่า "น้ำ" ไม่ใช่ "ขอบแผ่น" */
+#L-water .pl-sea{fill:#33495B; stroke:#6E8DA3; stroke-width:2}
+#L-water .pl-shelf{fill:none; stroke:#3E5A70; stroke-width:22; stroke-opacity:.55}
 #L-water .pl-isl{fill:#1C2129; stroke:#4A5C6A; stroke-width:2}
-#L-water .pl-lake{fill:#26323D; stroke:#4A5C6A; stroke-width:1.6}
+#L-water .pl-lake{fill:#5F8299; stroke:none}
 /* หมึกน้ำอยู่คนละชั้น (#L-water) เพราะมันต้องอยู่ *บน* สีเขต ไม่ใช่ใต้ — §14 เฟส 2
    ★ สายน้ำเป็น **ลายฉลุของหมึกแผ่นเอง** (assets/water_stencil.png ผ่าน SVG mask)
      ไม่ใช่เส้นที่เราวาดใหม่ — ความเพี้ยนจากแผ่นเดิมจึงเป็นศูนย์ (§14 เฟส 4.3) */
@@ -80,8 +86,8 @@ body{
    ค่าที่เจ้าของเคาะคือชุด "เข้ม" ซึ่งเป็นค่าเริ่มต้นอยู่แล้ว · ชุด "ปกติ" คือแบบที่อ่อนลงหนึ่งขั้น */
 #stage.map-rich #L-plate .pl-ground{fill:#171A20}
 #stage.map-rich #L-water .pl-isl   {fill:#171A20}
-#stage.map-rich #L-water .pl-sea,
-#stage.map-rich #L-water .pl-lake  {fill:#202B36}
+#stage.map-rich #L-water .pl-sea   {fill:#2C4054}
+#stage.map-rich #L-water .pl-lake  {fill:#6E93AA}
 #stage.map-rich #L-water .pl-river-ink{fill:#6E93AA}
 #stage:not(.plate-new) #L-plate,
 #stage:not(.plate-new) #L-water{display:none}

@@ -379,6 +379,7 @@ if (require.main === module){
   const INVNAME = ['', 'ลอดใต้ป้าย', 'สะพานต่อลำน้ำ', 'เย็บก้อนน้ำไม่มีทางออก'];
   const invMark = (i, code) => { if (!m0[i] && !INV[i]) INV[i] = code; };
   const MADE = [];    /* ทุกเส้นที่เราลากเอง — ให้ invented_sheet.html เอาไปวางเทียบทีละเส้น */
+  let sten2 = null;   /* สำเนาลายฉลุ ไว้ให้รายงานท้ายไฟล์ใช้ */
 
   /* ⚠⚠ **ทางที่ลองแล้วไม่ได้ผล — อย่าลองซ้ำ** (2026-09-05)
      เจ้าของทักว่ายังมีแม่น้ำขาดเพราะไอคอน/ป้ายชื่อเมืองบัง ผมลองอุดที่ *ระดับ mask*
@@ -1201,6 +1202,7 @@ if (require.main === module){
       on = on2;
     }
 
+    sten2 = sten;
     const png = writePng1(W, H, sten);
     fs.writeFileSync(path.join(ROOT, 'assets', 'water_stencil.png'), png);
     console.log(`
@@ -1406,6 +1408,27 @@ if (require.main === module){
   console.log('\nเขียน data/plate_water.js  ' + (js.length/1024).toFixed(1) + ' KB');
   console.log(`  ทะเล ${sea.length} รูป · เกาะ ${islands.length} รูป · ทะเลสาบ ${lakes.length} รูป`);
   console.log(`  แม่น้ำ ${rivers.length} เส้น · ${vtx.toLocaleString()} จุด`);
+  /* ══ ★★★ ภาพ "น้ำของแผ่นที่เราไม่ได้วาด" ═══════════════════════════════
+     เจ้าของ: *"จริง ๆ แค่นายเทียบภาพระหว่างแผนที่ต้นแบบกับที่ทำมาก็น่าจะรู้แล้วไม่ใช่เหรอ"*
+     — ถูก · ที่ผ่านมาผมรายงานเป็น *ตัวเลข* ("ก้อนที่ใหญ่กว่า 120 px: 24 ก้อน")
+     ซึ่งอ่านแล้วไม่มีทางรู้ว่ามันคือทะเลสาบทั้งลูกหรือเศษตัวอักษร
+     ตอนนี้เขียนออกมาเป็น **ภาพ** ให้ดูทั้งแผ่นทีเดียว */
+  {
+    const covered = new Uint8Array(W*H);
+    for (let i = 0; i < W*H; i++) if (sten2[i]) covered[i] = 1;
+    for (const k of ['sea', 'lake']) for (const c of pick(O, k)) for (const q of c.px) covered[q] = 1;
+    const missing = new Uint8Array(W*H);
+    let nm = 0;
+    for (let i = 0; i < W*H; i++) if (m0[i] && !covered[i]){ missing[i] = 1; nm++; }
+    const { writePng1 } = require('./png1.js');
+    fs.writeFileSync(path.join(__dirname, '_missing.png'), writePng1(W, H, missing));
+    let tot0 = 0; for (let i = 0; i < W*H; i++) if (m0[i]) tot0++;
+    console.log(`
+★ น้ำของแผ่นที่เราไม่ได้วาด ${nm.toLocaleString()} px (${(nm/tot0*100).toFixed(1)}% ของหมึกน้ำทั้งแผ่น)`);
+    console.log('      → ดูเป็นภาพที่ tools/_missing.png · หน้าเทียบ tools/side_by_side.html');
+    REPORT.missing = nm;
+  }
+
   {
     const shown = new Uint8Array(W*H);
     const tally = [0,0,0,0];

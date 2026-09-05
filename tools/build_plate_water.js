@@ -1183,8 +1183,48 @@ if (require.main === module){
         if (m0[i] && NEARLAKE[i] && !OPEN0[i] && !sten[i]){ sten[i] = 1; armed++; }
       if (armed) console.log(`  ★ ใส่แขนของแหล่งน้ำกลับ ${armed.toLocaleString()} px`);
 
+      for (let i = 0; i < W*H; i++) if (riv[i] && !sten[i]) WHY[i] = 2;
+
+      /* ══ ★★★ เศษของลำน้ำที่ถูกป้ายสับเป็นท่อน — ใส่กลับ ═════════════════
+         เจ้าของ (รอบเจ็ด): *"ลบเกินได้ แต่ใส่เส้นแม่น้ำกลับไป มันแค่นี้เอง"*
+         และชี้สี่จุด: เหนือฉางอาน · เหนือโซ่วชุน · เหนือเจี้ยนเย่ · ไป๋ตี้
+
+         ส่องแล้วพบว่าเหตุผลที่หายไม่ใช่ตัวอักษร แต่เป็น **ตัวกรองของเราเองสองตัว**
+           · "เศษเล็ก" (ชิ้นเล็กกว่า 40 px)  · "กติกาเครือข่าย" (หนวดสั้นกว่า 30)
+         ป้ายชื่อเมือง/ไอคอน/กรอบดำ สับลำน้ำเป็นท่อนสั้น ๆ หลายท่อน
+         แต่ละท่อนเล็กเกินเกณฑ์ → ทิ้งหมด → **ลำน้ำขาดเป็นช่วง ๆ ตลอดสาย**
+
+         ★ กติกา: เศษน้ำเล็ก ๆ ที่ **อยู่ชิดกับลำน้ำที่เราวาดแล้ว (<=6 px)** ไม่ใช่ขยะ
+           มันคือท่อนของลำน้ำเส้นนั้นเอง — ใส่กลับ
+           แต่ถ้าตัวกรองบอกว่าเป็น *ตัวอักษร* หรือ *กล่องคำ* ไม่ใส่กลับ (นั่นระบุตัวได้แล้ว) */
+      /* ★ ทำซ้ำหลายรอบ — ท่อนที่ใส่กลับกลายเป็นลำน้ำให้ท่อนถัดไปเกาะต่อ
+         ลำน้ำที่ถูกสับยับ ๆ จึงต่อคืนได้ทั้งสาย ไม่ใช่แค่ท่อนที่บังเอิญติดของเดิม */
+      for (let round = 0; round < 8; round++){
+        const inv = new Uint8Array(W*H);
+        for (let i = 0; i < W*H; i++) inv[i] = sten[i] ? 0 : 1;
+        const dS = dt(W, H, inv);
+        const lost = new Uint8Array(W*H);
+        for (let i = 0; i < W*H; i++) if (m0[i] && !sten[i] && !OPEN0[i]) lost[i] = 1;
+        const LC = components(W, H, lost);
+        let back = 0, blobs = 0;
+        for (const c of LC.comps){
+          if (c.n > 200) continue;                       /* ท่อนต้องเล็ก */
+          let near = false;
+          for (const q of c.px) if (dS[q] <= 6){ near = true; break; }
+          if (!near) continue;                           /* ต้องชิดลำน้ำที่วาดแล้ว */
+          const t = {};
+          for (const q of c.px){ const k = WHY[q]; t[k] = (t[k]||0) + 1; }
+          const top = Object.entries(t).sort((p,q2)=>q2[1]-p[1])[0][0] | 0;
+          if (top === 1 || top === 3 || top === 4) continue;   /* กล่องคำ/ตัวอักษร/กรอบป้าย */
+          for (const q of c.px){ sten[q] = 1; back++; }
+          blobs++;
+        }
+        if (blobs) console.log(`  ★ ใส่ท่อนลำน้ำที่ถูกสับกลับ (รอบ ${round+1}) ${blobs} ท่อน · ${back.toLocaleString()} px`);
+        if (!blobs) break;
+      }
+
       let a = 0, b = 0;
-      for (let i = 0; i < W*H; i++){ if (riv[i]){ a++; if (!sten[i]) WHY[i] = 2; } if (sten[i]) b++; }
+      for (let i = 0; i < W*H; i++){ if (riv[i]) a++; if (sten[i]) b++; }
       console.log(`  ★ กรองด้วยเครือข่าย: หมึกสายน้ำ ${a.toLocaleString()} → ${b.toLocaleString()} px (ตัดหนวด <${SPUR} · ทิ้งเครือข่ายสั้น ${dropNet} ก้อน)`);
     }
     let on = 0; for (let i = 0; i < W*H; i++) if (sten[i]) on++;
@@ -1542,6 +1582,20 @@ if (require.main === module){
         console.log('        ' + String(c.n).padStart(5) + ' px  ' + c.x0+','+c.y0+'-'+c.x1+','+c.y1 + '   ' + top);
       } }
     REPORT.missing = nm;
+    /* PROBE="x,y,w,h;..." node tools\build_plate_water.js — ส่องว่าตรงนั้นหายเพราะใคร */
+    if (process.env.PROBE) for (const spec of process.env.PROBE.split(';')){
+      const [bx, by, bw, bh] = spec.split(',').map(Number);
+      const t = {}; let tot = 0, drawn = 0;
+      for (let y = by; y < by+bh; y++) for (let x = bx; x < bx+bw; x++){
+        const i = y*W + x; if (!m0[i]) continue;
+        tot++;
+        if (covered[i]) { drawn++; continue; }
+        const k = WHYNAME[WHY[i]]; t[k] = (t[k]||0) + 1;
+      }
+      console.log(`  PROBE ${spec}: หมึกน้ำของแผ่น ${tot} px · วาดแล้ว ${drawn} · หาย ${tot-drawn}`);
+      for (const [k, n] of Object.entries(t).sort((p,q)=>q[1]-p[1]))
+        console.log(`      ${k.padEnd(18)} ${n}`);
+    }
   }
 
   {

@@ -190,6 +190,24 @@ TK.map = (function(){
     return 3;                      /* ซูมเข้าจริง — ปล่อยครบ */
   }
 
+  /* ★★★ ปีของฉากที่กำลังอ่าน — **สัญลักษณ์ของสิ่งที่ยังไม่ถูกสร้าง ห้ามโผล่**
+     เจ้าของทัก 2026-09-05: *"พวกค่าย โซ่ป้อม ที่นา มันถูกสร้างมาทีหลังนี่"* — ถูก
+     ค่ายนาอู่จ้างหยวนตั้งปี 234 แต่เดิมวาดตั้งแต่ฉากปี 221 = **โกหกอยู่ 13 ปี**
+     แนวรั้วกัวหวยตั้งปี 229 · โซ่ป้อมเจียถิงปี 232 · ค่ายหน้าเฉินชางปี 224
+     ⚠ ทั้งเล่มสร้างขึ้นบนกติกา "ห้ามแสดงสิ่งที่ยังไม่มี" — ชั้นสัญลักษณ์เป็นชั้นเดียว
+       ที่ยังไม่เคารพกติกานั้น จนถึงวันนี้                                              */
+  let curYear = null;
+  function setYear(y){
+    if (y === curYear) return curYear;
+    curYear = y;
+    scaleCache = null;        /* บังคับให้คิดใหม่ ไม่งั้นแคชจะกันการเปลี่ยนไว้ */
+    scalePins();
+    applyWorksYear();
+    return curYear;
+  }
+  /* ของที่ยังไม่ถูกสร้าง ณ ปีนี้ (null = ยังไม่รู้ปี → แสดงไปก่อน ของเก่าไม่พัง) */
+  const notYet = y => (y != null && curYear != null && curYear < y);
+
   /* จุดไหนที่ labeler เลือกจะเขียนชื่อให้ — จุดกลมยังผูกกับชุดนี้ ส่วนสัญลักษณ์ไม่ผูก */
   let labelPins = new Set();
   /* ★ กล่องจริงของหมุดที่วาดอยู่ตอนนี้ (หน่วยแผนที่) — labeler ยืมไปใช้กันป้ายทับรูป
@@ -250,6 +268,7 @@ TK.map = (function(){
     layers.pins.querySelectorAll('.pin').forEach(g => {
       const id = g.dataset.id, ty = TK.places[id].type;
       if (!g.querySelector('.pin-sym') || (SYM_RANK[ty] || 3) > cap) return;
+      if (notYet(TK.places[id].year)) return;      /* ยังไม่ถูกสร้างในปีนี้ */
       cand.push({ id, ty, g,
                   pri: (forceLabels && forceLabels.has && forceLabels.has(id) ? 0 : 1),
                   rank: SYM_RANK[ty] || 3 });
@@ -291,7 +310,9 @@ TK.map = (function(){
         const kr = rp * f * mu / 24;
         /* ยืนขวารูปหลัก บนฐานเดียวกัน — ระยะห่างคิดจากครึ่งความกว้างของทั้งสองรูป */
         const dx = (GLYPH[ty].px * 0.46 + rp * 0.44) * f * mu;
-        rg.style.display = show ? '' : 'none';
+        /* ★ ป้ายเสริมมีปีของตัวเอง — เฉินชางเป็นยุ้งของฮั่นตั้งแต่ 233 เท่านั้น
+           ก่อนหน้านั้นมันเป็นป้อมของวุ่ย ป้ายยุ้งจึงห้ามโผล่ */
+        rg.style.display = (show && !notYet(p.roleYear)) ? '' : 'none';
         if (show) rg.setAttribute('transform',
           `translate(${(p.x + dx).toFixed(2)},${p.y.toFixed(2)}) scale(${kr.toFixed(4)}) translate(-12,-22)`);
       }
@@ -375,6 +396,14 @@ TK.map = (function(){
       probe.remove();
       layers.works.append(g);
     }
+  }
+
+  /* works โผล่เฉพาะปีที่มันมีอยู่จริง — เรียกจาก setYear */
+  function applyWorksYear(){
+    layers.works.querySelectorAll('.works').forEach(g => {
+      const w = (TK.works || []).find(x => x.id === g.dataset.id);
+      g.style.display = (w && notYet(w.year)) ? 'none' : '';
+    });
   }
 
   function buildPins(){
@@ -1457,7 +1486,7 @@ TK.map = (function(){
 
   /* ★ เปิดตาราง GLYPH ให้ ui.js เอาไปทำปุ่มสัญลักษณ์ — **อ่านอย่างเดียว**
      ห้ามให้ที่อื่นแก้ ไม่งั้นตารางสัญลักษณ์จะมีสองแหล่ง (§14) */
-  const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads,
+  const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads, setYear,
                 get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };

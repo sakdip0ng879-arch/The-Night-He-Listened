@@ -12,7 +12,7 @@
  *   · ★ ตาราง ENDS         → ยกเลิก · หัวท้ายของเส้นคือ "ชื่อ node" อยู่แล้ว
  *                             ไม่มีอะไรให้กรอกด้วยมือ จึงไม่มีอะไรให้กรอกผิด
  *
- * ตรวจข้อ 1–14 (ข้อ 5 มีสองด้าน) ทั้งหมดอ่านจากของจริง ไม่ได้จำลองการเรนเดอร์ (DECISIONS §13)
+ * ตรวจข้อ 1–15 (ข้อ 5 มีสองด้าน) ทั้งหมดอ่านจากของจริง ไม่ได้จำลองการเรนเดอร์ (DECISIONS §13)
  */
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
@@ -645,6 +645,65 @@ head('14 · โซ่ป้อม/แนวรั้ว เกาะอยู่
     }
     if (!bad14) ok('ผ่านทั้ง ' + ok14 + ' ชิ้น — ทุกชิ้นเกาะ edge จริงที่ลากแล้ว');
   }
+}
+
+/* ═══ 15 · ★★ ปีของสิ่งที่ถูกสร้างทีหลัง ═══════════════════════════════════
+   เพิ่ม 2026-09-05 · เจ้าของทัก: *"พวกค่าย โซ่ป้อม ที่นา มันถูกสร้างมาทีหลังนี่"*
+   ทั้งเล่มสร้างบนกติกา "ห้ามแสดงสิ่งที่ยังไม่มี" แต่ **ชั้นสัญลักษณ์ไม่เคารพกติกานั้น**
+   จนถึงวันนั้น — ค่ายนาอู่จ้างหยวนตั้งปี 234 แต่วาดตั้งแต่ฉากปี 221 = โกหกอยู่ 13 ปี
+
+   ⚠⚠ **ข้อนี้ไม่ใช่ error โดยตั้งใจ** — "ฉากปี 233 อ้างถึงอู่จ้างหยวน ทั้งที่ค่ายนา
+     ตั้งปี 234" **ไม่ผิด** เพราะที่ราบสูงมีอยู่ก่อนค่ายนา · ฉากนั้นชี้ *ที่ตั้ง* ไม่ใช่ชี้ *ค่ายนา*
+     สิ่งที่ข้อนี้ทำคือ **กางตารางให้คนดู** ว่าอะไรถูกซ่อนในปีไหนบ้าง จะได้เห็นด้วยตา
+     ว่าปีที่ตั้งไว้สมเหตุผลไหม — ตรวจอัตโนมัติแทนไม่ได้ เพราะมันเป็นคำถามเรื่องเรื่อง       */
+head('15 · ปีของสิ่งที่ถูกสร้างทีหลัง (ค่าย · ค่ายนา · ยุ้ง · โซ่ป้อม · แนวรั้ว)');
+{
+  /* ★ ใช้วิธีเดียวกับข้อ 11 เป๊ะ ๆ — สแกนไฟล์จริงจากดิสก์ แล้วอ่านผ่านชื่อ TK._partN
+     (รอบแรกผมเดาว่ามันอยู่ใน TK.parts แล้วได้ตารางที่ 'ฉากแรก' ว่างทุกแถว
+      ซึ่งดูเหมือนข้อมูลไม่มี ทั้งที่จริงคืออ่านผิดที่ — §E20 อีกครั้ง) */
+  const fs = require('fs');            /* ข้อ 11 ก็ require ในบล็อกตัวเองเหมือนกัน */
+  const pfiles = fs.readdirSync(path.join(ROOT,'data'))
+    .filter(f => /^_part\d+\.js$/.test(f)).sort();
+  pfiles.forEach(f => require(path.join(ROOT,'data',f)));
+  const beats = pfiles.reduce((a,f) => a.concat(TK['_' + f.slice(1).replace('.js','')] || []), []);
+
+  /* ฉากแรกที่แต่ละ node ถูกอ้างถึง (ทั้งหมุดและท่อนของเส้นทาง) */
+  const firstUse = {};
+  for (const b of beats)
+    for (const m of (b.markers || [])){
+      const ids = [];
+      if (m.place) ids.push(m.place);
+      const r = m.route && MR[m.route];
+      if (r) r.path.forEach(k => ids.push(k));
+      for (const k of ids)
+        if (firstUse[k] === undefined || b.year < firstUse[k].year) firstUse[k] = {year:b.year, id:b.id};
+    }
+
+  const Y0 = beats.length ? Math.min(...beats.map(b => b.year)) : 221;
+  const Y1 = beats.length ? Math.max(...beats.map(b => b.year)) : 285;
+  const rows = [];
+  let n15 = 0;
+
+  const check = (label, year, key) => {
+    if (year == null) return;
+    if (!(year >= Y0 && year <= Y1)){
+      bad(`${label} ปี ${year} อยู่นอกช่วงของเล่ม (${Y0}–${Y1})`); n15++; return;
+    }
+    const f = key && firstUse[key];
+    rows.push([label, year, f ? `${f.year} (${f.id})` : '—']);
+  };
+  for (const id in TK.places){
+    const p = TK.places[id];
+    if (p.year != null)     check(`${p.label} [${p.type}]`, p.year, id);
+    if (p.roleYear != null) check(`${p.label} ป้าย ${p.role}`, p.roleYear, id);
+  }
+  for (const w of (TK.works || [])) check(`${w.label} [${w.kind}]`, w.year, null);
+
+  if (!n15) ok(`ปีทุกค่าอยู่ในช่วงของเล่ม (${rows.length} รายการ)`);
+  console.log('      สิ่งที่ถูกสร้าง'.padEnd(34) + 'สร้างปี   ฉากแรกที่อ้างถึงจุดนี้');
+  rows.sort((a,b) => a[1] - b[1]).forEach(r =>
+    console.log('      ' + String(r[0]).padEnd(30) + String(r[1]).padStart(5) + '     ' + r[2]));
+  note('ฉากที่ปีน้อยกว่า "สร้างปี" จะเห็นจุดกลมแทนสัญลักษณ์ — ตั้งใจ ไม่ใช่บั๊ก');
 }
 
 /* ═══ สรุป ═══ */

@@ -767,6 +767,9 @@ TK.ui = (function(){
     const { sibs, marks, camBox } = compose(i);
 
     TK.map.flyTo(camBox || b.camera, ev.how === 'init' ? 0 : scrub ? 320 : 1000);
+    /* ★ บอกแผนที่ว่าตอนนี้ปีอะไร — สัญลักษณ์ของสิ่งที่ยังไม่ถูกสร้างจะได้ไม่โผล่
+       (ค่ายนา 234 · โซ่ป้อม 232 · แนวรั้ว 229 · ค่ายหน้าเฉินชาง 224) */
+    TK.map.setYear(b.year);
     TK.map.setMarkers(marks, ev.how !== 'init' && !scrub);
     paintSeasonNote(b, sibs);
   }

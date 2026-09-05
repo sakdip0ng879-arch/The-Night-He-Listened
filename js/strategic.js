@@ -128,16 +128,26 @@ TK.map = (function(){
        ⚠ ต้อง clip ไว้ในทะเล ไม่งั้นครึ่งนอกของเส้นจะล้นขึ้นบกเป็นหาดทรายจาง ๆ */
     const defs = mk('defs');
     layers.plate.append(defs);
+
+    /* ══ ★★★ ทะเล/ทะเลสาบ/เกาะ ต้องอยู่ **เหนือ** ชั้นสีเขต ═══════════════════
+       เจ้าของ (2026-09-05): *"ทำไมไม่เชื่อมทะเลสาบ หรือระบายสีให้ดี
+        ทำไมปล่อยมันกลวง ๆ แบบนั้น? รวมถึงทะเลด้วย"*
+
+       มันไม่ได้กลวง — มันถูกทับ · ปี 221 แผ่นดินมีเจ้าของทุกตารางนิ้ว สีเขต (.45)
+       จึงคลุมทั้งแผ่น พื้นทะเลสาบที่อยู่ *ใต้* สีเขตเลยกลืนไปกับพื้นดิน
+       เหลือแต่เส้นขอบที่เข้มพอจะทะลุขึ้นมา → ตาอ่านว่า "วงกลวง"
+       ★ เหตุผลเดียวกับที่หมึกสายน้ำย้ายขึ้นชั้น water ตั้งแต่เฟส 4 — คราวนี้ย้ายให้ครบ
+         พื้นดิน (.pl-ground) ยังอยู่ใต้สีเขตเหมือนเดิม เพราะสีเขตต้องทาบลงบนดิน */
     PW.sea.forEach((f, i) => {
       const d = ring(f), id = 'pl-clip-' + i;
       const cp = mk('clipPath',{id});
       cp.append(mk('path',{d}));
       defs.append(cp);
-      layers.plate.append(mk('path',{d, class:'pl-sea'}));
-      layers.plate.append(mk('path',{d, class:'pl-shelf', 'clip-path':`url(#${id})`}));
+      layers.water.append(mk('path',{d, class:'pl-sea'}));
+      layers.water.append(mk('path',{d, class:'pl-shelf', 'clip-path':`url(#${id})`}));
     });
-    for (const f of PW.islands) layers.plate.append(mk('path',{d:ring(f), class:'pl-isl'}));
-    for (const f of PW.lakes)   layers.plate.append(mk('path',{d:ring(f), class:'pl-lake'}));
+    for (const f of PW.islands) layers.water.append(mk('path',{d:ring(f), class:'pl-isl'}));
+    for (const f of PW.lakes)   layers.water.append(mk('path',{d:ring(f), class:'pl-lake'}));
 
     /* ── ★★★ สายน้ำ = **ลายฉลุหมึกของแผ่นเอง** ไม่ใช่เส้นที่เราวาดใหม่ ────────────
        เจ้าของทักรอบสาม (2026-09-05): *"ไล่ยังไงก็ไล่ไม่หมดหรอก ... มันเพี้ยนจากเดิม

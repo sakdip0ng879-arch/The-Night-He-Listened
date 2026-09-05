@@ -1,0 +1,70 @@
+<!doctype html><meta charset="utf-8"><title>หมึกที่เราประดิษฐ์เอง</title>
+<!--
+  invented_sheet.html — ดู "เส้นที่เราเติมเอง" ทุกเส้นทับแผ่นจริง
+    node tools\build_plate_water.js   (เขียน tools\_invented.png + tools\_cuts.json)
+    node tools\serve.js               แล้วเปิด /tools/invented_sheet.html
+
+  เจ้าของ (2026-09-05): *"การเชื่อมที่เฟค แค่กดย้อมดูแผนที่อันเดิมก็เห็นชัดแล้ว
+   ... เราต้องเอาให้ถูกที่ควรก่อน เพราะถ้าเราจะทำให้ทางน้ำสวยขึ้นภายหลัง
+   เราต้องมีทางที่ถูกก่อนจริงไหม"*
+
+  ฟ้า = หมึกของแผ่นที่เราลอกมา · แดง = เส้นที่เราเติมเอง
+  กติกา: ถ้าเส้นแดงเส้นไหนไม่มีร่องรอยลำน้ำในแผ่น เส้นนั้นผิด — ตัวตรวจผ่านก็ยังผิด
+-->
+<style>
+ body{margin:0;background:#0f1116;color:#cfd6de;font:13px system-ui,sans-serif}
+ h1{font-size:15px;margin:10px 14px 2px} p.note{margin:0 14px 8px;color:#8b96a4}
+ .wrap{position:relative;margin:8px 14px 22px;width:1155px;height:1365px;background:#000}
+ .wrap>*{position:absolute;inset:0;width:1155px;height:1365px}
+ .ink{-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:luminance;
+      -webkit-mask-source-type:luminance;-webkit-mask-size:1155px 1365px;mask-size:1155px 1365px}
+ label{margin:0 14px;color:#9fb0c2}
+ .grid{display:flex;flex-wrap:wrap;gap:12px;padding:0 14px 24px}
+ .cell{background:#1a1f27;border:1px solid #2b323c;border-radius:6px;padding:7px}
+ .cap{font:11px/1.35 ui-monospace,monospace;color:#9fb0c2;margin:0 0 5px}
+ .cap b{color:#ff7a7a}
+ .pair{display:flex;gap:5px}
+ .view{position:relative;overflow:hidden;width:230px;height:230px;background:#000}
+ .view img{position:absolute;image-rendering:pixelated;transform-origin:0 0}
+ .view .m{-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;mask-mode:luminance;
+          -webkit-mask-source-type:luminance;position:absolute;inset:0}
+ .lbl{font:10px ui-monospace,monospace;color:#6f7c8b;text-align:center;margin-top:2px}
+</style>
+<h1>หมึกที่เราประดิษฐ์เอง — <span id="n"></span></h1>
+<p class="note">ฟ้า = ลอกจากแผ่น · <b style="color:#ff4d4d">แดง = เราเติมเอง</b>
+ · ซ้าย = แผ่นล้วน ขวา = แผ่นจาง + หมึกของเรา</p>
+<label>ความเข้มแผ่นเดิม <input id="op" type="range" min="0" max="100" value="55"></label>
+<div class="wrap">
+  <img src="../assets/map.jpg" id="pl" style="width:1155px;height:1365px">
+  <div class="ink" style="background:#3f7fa8;-webkit-mask-image:url(../assets/water_stencil.png);mask-image:url(../assets/water_stencil.png)"></div>
+  <div class="ink" style="background:#ff3b3b;-webkit-mask-image:url(_invented.png);mask-image:url(_invented.png)"></div>
+</div>
+<div class="grid" id="g"></div>
+<script>
+const BOX = 230, MW = 1650, MH = 1950;
+op.oninput = () => pl.style.opacity = op.value/100;
+pl.style.opacity = .55;
+fetch('_cuts.json').then(r=>r.json()).then(R=>{
+  const t = R.invented||[], names = ['','ลอดใต้ป้าย','สะพานต่อลำน้ำ','เย็บก้อนน้ำ'];
+  n.textContent = t.slice(1).reduce((a,b)=>a+b,0).toLocaleString() + ' px · '
+    + (R.made||[]).length + ' เส้น  ('
+    + t.map((v,i)=>i&&v?names[i]+' '+v.toLocaleString():'').filter(Boolean).join(' · ') + ')';
+  (R.made||[]).forEach((s,i)=>{
+    const len = Math.hypot(s.x2-s.x, s.y2-s.y);
+    const cw = Math.max(120, len+90);
+    const ox = (s.x+s.x2)/2 - cw/2, oy = (s.y+s.y2)/2 - cw/2, k = BOX/cw;
+    const mask = (src,color)=>`<div class="m" style="background:${color};
+        -webkit-mask-image:url(${src});mask-image:url(${src});
+        -webkit-mask-position:${-ox*k}px ${-oy*k}px;mask-position:${-ox*k}px ${-oy*k}px;
+        -webkit-mask-size:${MW*k}px ${MH*k}px;mask-size:${MW*k}px ${MH*k}px"></div>`;
+    const view = ink => `<div><div class="view">
+        <img src="../assets/map.jpg" style="transform:scale(${k}) translate(${-ox}px,${-oy}px);opacity:${ink?.45:1}">
+        ${ink?mask('../assets/water_stencil.png','#4a90c2')+mask('_invented.png','#ff3b3b'):''}
+      </div><div class="lbl">${ink?'ของเรา':'แผ่นเดิม'}</div></div>`;
+    g.insertAdjacentHTML('beforeend', `<div class="cell">
+        <p class="cap">${String(i+1).padStart(2,'0')} · <b>${s.kind}</b> ${len.toFixed(0)} หน่วย<br>
+          ${s.x},${s.y} → ${s.x2},${s.y2} · ${s.why}</p>
+        <div class="pair">${view(false)}${view(true)}</div></div>`);
+  });
+});
+</script>

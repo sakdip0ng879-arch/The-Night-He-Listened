@@ -367,6 +367,19 @@ if (require.main === module){
   const WHY = new Uint8Array(W*H);
   const WHYNAME = ['ไม่ทราบ','กล่องคำ','กติกาเครือข่าย','ตัวอักษร','กรอบป้าย','เศษเล็ก','น้ำเปิด'];
 
+  /* ══ ★★★ ทะเบียน "หมึกที่เราประดิษฐ์เอง" ═══════════════════════════════
+     เจ้าของ (รอบหก): *"อย่างที่สองคือการเชื่อมที่เฟค แค่กดย้อมดูแผนที่อันเดิม
+      ก็เห็นชัดแล้ว ... เราต้องเอาให้ถูกที่ควรก่อน เพราะถ้าเราจะทำให้ทางน้ำสวยขึ้น
+      ภายหลัง เราต้องมีทางที่ถูกก่อนจริงไหม"* — **ถูก และสำคัญกว่าตัวเลขทุกตัว**
+
+     ทุกพิกเซลที่ไม่ได้อยู่บนแผ่นเดิมต้องลงทะเบียนที่นี่ พร้อมบอกว่าใครวาด
+     แล้ว build เขียน tools/_invented.png ออกมาให้ดูด้วยตาได้ทุกครั้ง
+     ★ กติกา: **ถ้ามองแล้วเส้นไหนไม่มีในแผ่น เส้นนั้นผิด ไม่ว่าตัวตรวจจะผ่านหรือไม่** */
+  const INV = new Uint8Array(W*H);
+  const INVNAME = ['', 'ลอดใต้ป้าย', 'สะพานต่อลำน้ำ', 'เย็บก้อนน้ำไม่มีทางออก'];
+  const invMark = (i, code) => { if (!m0[i] && !INV[i]) INV[i] = code; };
+  const MADE = [];    /* ทุกเส้นที่เราลากเอง — ให้ invented_sheet.html เอาไปวางเทียบทีละเส้น */
+
   /* ⚠⚠ **ทางที่ลองแล้วไม่ได้ผล — อย่าลองซ้ำ** (2026-09-05)
      เจ้าของทักว่ายังมีแม่น้ำขาดเพราะไอคอน/ป้ายชื่อเมืองบัง ผมลองอุดที่ *ระดับ mask*
      ก่อน thinning สองแบบ คิดว่าจะได้เส้นที่ไหลต่อเองและ smooth กว่าเอาท่อนไปปะ:
@@ -517,9 +530,11 @@ if (require.main === module){
           const nx = Math.round(cx)+dx, ny = Math.round(cy)+dy;
           if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
           const i = ny*W + nx;
-          if (!m[i]){ m[i] = 1; WHY[i] = 0; sewnPx++; }
+          if (!m[i]){ m[i] = 1; WHY[i] = 0; sewnPx++; } invMark(i, 1);
         }
       }
+      MADE.push({ kind:'ลอดใต้ป้าย', x:Math.round(a.x), y:Math.round(a.y),
+        x2:Math.round(b.x), y2:Math.round(b.y), why:`หมึกใต้เส้น ${Math.round(best.score*100)}%` });
       sewn++;
     }
 
@@ -728,7 +743,10 @@ if (require.main === module){
        3. ความกว้างที่จุดต่อไล่จากปลายหนึ่งไปอีกปลาย ไม่ใช่ค่าเฉลี่ยค่าเดียวทั้งสะพาน
 
      ⚠⚠ ทางที่ลองแล้วไม่ได้ผลอยู่ในหมายเหตุด้านบน (อุดที่ระดับ mask) — อย่าลองซ้ำ */
-  const inkPaths = ['_plate_dark.rle', '_plate_relief.rle']
+  /* ⚠ **หลักฐานว่าลำน้ำถูกบัง = หมึกดำ (ป้าย/ไอคอน/ตัวหนังสือ) เท่านั้น**
+     เคยรวม _plate_relief (ภูเขา) ไว้ด้วย → สะพานลากผ่านทิวเขาได้โดยอ้างว่า "มีหมึกทับ"
+     แต่แผ่นวาดภูเขา *ข้าง* ลำน้ำ ไม่ได้วาดทับจนลำน้ำหาย */
+  const inkPaths = ['_plate_dark.rle']
     .map(f => path.join(__dirname, f)).filter(fs.existsSync);
   let ink = null;
   if (inkPaths.length){
@@ -736,7 +754,16 @@ if (require.main === module){
     for (const f of inkPaths){ const k = readRle(f).m; for (let i = 0; i < W*H; i++) if (k[i]) ink[i] = 1; }
   } else console.log('  ⚠ ไม่เจอ _plate_dark.rle — ข้ามการต่อแม่น้ำ (รัน plate_ink.ps1 ใหม่)');
 
-  const MAXGAP = 70, COS = 0.4, WRATIO = 3.2, COVER = 0.6;
+  /* ══ ★★★ เกณฑ์ของสะพาน — เข้มขึ้นรอบที่หก (2026-09-05) ═════════════════
+     เจ้าของ: *"การเชื่อมที่เฟค แค่กดย้อมดูแผนที่อันเดิมก็เห็นชัดแล้ว
+      ... เราต้องเอาให้ถูกที่ควรก่อน"*  — เส้นปลอมแย่กว่าเส้นขาด เพราะเส้นขาด
+     คนดูรู้ว่าขาด แต่เส้นปลอมคนดูเชื่อว่ามีจริง
+
+     ของเดิม MAXGAP=70 · COVER=0.6 → ได้สะพานยาว 65 หน่วยที่มีหมึกทับแค่ 60%
+     ลากผ่านที่โล่งจากเจียงหลิงขึ้นไปจิงโจว **ซึ่งแผ่นไม่ได้วาดไว้เลย**
+     ★ ป้าย/ไอคอนที่บังลำน้ำจริงกว้างราว 20–35 หน่วย ไม่ใช่ 65
+       → 40 หน่วย · หมึกทับ 85% · ทิศต่างกันไม่เกิน ~53° */
+  const MAXGAP = 40, COS = 0.6, WRATIO = 3.2, COVER = 0.85;
   const bridges = [];
   if (ink){
     const kk = (x, y) => x + ',' + y;
@@ -960,6 +987,7 @@ if (require.main === module){
     }
 
     BRIDGES = bridges;
+    for (const b of bridges) MADE.push({ kind:'สะพาน', x:b.x, y:b.y, x2:b.x2, y2:b.y2, why:b.why });
     const rounds = bridges.length ? Math.max(...bridges.map(b => b.round)) : 0;
     console.log(`  ★ ต่อแม่น้ำที่ขาด ${bridges.length} จุด (เย็บ ${rounds} รอบ · สะพานโค้งตามทิศของลำน้ำ)`);
     for (const b of [...bridges].sort((x, y) => y.d - x.d).slice(0, 10))
@@ -1028,7 +1056,7 @@ if (require.main === module){
             if (dx*dx + dy*dy > hw*hw) continue;
             const nx = x+dx, ny = y+dy;
             if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-            riv[ny*W+nx] = 1;
+            riv[ny*W+nx] = 1; invMark(ny*W+nx, 2);
           }
         }
       }
@@ -1130,10 +1158,11 @@ if (require.main === module){
              เพราะ *กติกาทางออกเองคือหลักฐาน* — ระบบน้ำ 500+ px ที่ไม่มีทางออกเป็นไปไม่ได้
              (เจอจริงที่เฉินหลิว: แผ่นเว้นช่องไว้ตรงที่ป้าย "Ding Tao" วางอยู่บนกระดาษเปล่า
               หลักฐานหมึกจึงไม่ผ่าน ทั้งที่สายน้ำต่อกันแน่นอน) */
-          /* ★ ระบบใหญ่มาก = กติกาทางออกหนักแน่นพอจะเย็บข้ามที่ว่างเปล่า
-             (ลุ่มน้ำเว่ยทั้งกวานจง 3,016 px ห่างเครือข่าย 56 px เพราะแผ่นเอาตัวอักษร
-              ของฝ่ายเว่ยวางทับช่วงนั้น — บนกระดาษจึงไม่มีหมึกให้เป็นหลักฐานเลย) */
-          if (gap >= 6 && !(c.n >= 500 && gap <= 32) && !(c.n >= 1500 && gap <= 75)){
+          /* ⚠ เคยมีทางลัด "ก้อนใหญ่เย็บข้ามที่ว่างได้โดยไม่ต้องมีหลักฐาน"
+             — **ถอดออกแล้ว** เจ้าของทักว่าเส้นแบบนั้นคือเส้นปลอม
+             กติกาทางออกใช้ *ตั้งคำถาม* ได้ แต่ใช้ *ตอบ* แทนหลักฐานไม่ได้
+             ถ้าไม่มีหมึกให้เชื่อ ให้ไปขึ้นรายงาน "ก้อนน้ำไม่มีทางออก" ตามตรง */
+          if (gap >= 6){
             let hit = 0, tot = 0;
             const steps = Math.max(3, Math.ceil(gap));
             for (let t = 1; t < steps; t++){
@@ -1146,7 +1175,7 @@ if (require.main === module){
               }
               hit += near; tot++;
             }
-            if (tot && hit/tot < 0.55) continue;
+            if (tot && hit/tot < 0.80) continue;
           }
           /* วาดริบบิ้นกว้างเท่าลำน้ำตรงนั้น */
           const hw = Math.max(1.5, D[best]);
@@ -1158,9 +1187,11 @@ if (require.main === module){
               if (dx*dx + dy*dy > hw*hw) continue;
               const nx = Math.round(x)+dx, ny = Math.round(y)+dy;
               if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-              sten[ny*W+nx] = 1;
+              sten[ny*W+nx] = 1; invMark(ny*W+nx, 3);
             }
           }
+          MADE.push({ kind:'เย็บก้อนน้ำ', x:bx, y:by, x2:tx, y2:ty,
+            why:`ก้อน ${c.n} px · ช่อง ${gap.toFixed(0)}` });
           welded++; made++;
         }
         if (!made) break;
@@ -1375,6 +1406,21 @@ if (require.main === module){
   console.log('\nเขียน data/plate_water.js  ' + (js.length/1024).toFixed(1) + ' KB');
   console.log(`  ทะเล ${sea.length} รูป · เกาะ ${islands.length} รูป · ทะเลสาบ ${lakes.length} รูป`);
   console.log(`  แม่น้ำ ${rivers.length} เส้น · ${vtx.toLocaleString()} จุด`);
+  {
+    const shown = new Uint8Array(W*H);
+    const tally = [0,0,0,0];
+    for (let i = 0; i < W*H; i++) if (INV[i]){ shown[i] = 1; tally[INV[i]]++; }
+    const { writePng1 } = require('./png1.js');
+    fs.writeFileSync(path.join(__dirname, '_invented.png'), writePng1(W, H, shown));
+    const tot = tally.reduce((a, b) => a + b, 0);
+    console.log(`
+★ หมึกที่เราประดิษฐ์เอง (ไม่มีบนแผ่น) ${tot.toLocaleString()} px`);
+    for (let k = 1; k < 4; k++) if (tally[k])
+      console.log(`      ${INVNAME[k].padEnd(24)} ${tally[k].toLocaleString().padStart(6)} px`);
+    console.log('      → ดูด้วยตาที่ tools/_invented.png (เทียบกับแผ่นใน cut_sheet.html)');
+    REPORT.invented = tally;
+    REPORT.made = MADE;
+  }
   fs.writeFileSync(path.join(__dirname, '_cuts.json'), JSON.stringify(REPORT));
   console.log(`  ใช้เวลา ${((Date.now()-t0)/1000).toFixed(1)} วินาที`);
 }

@@ -320,6 +320,16 @@ TK.map = (function(){
   }
   /* ของที่ยังไม่ถูกสร้าง ณ ปีนี้ (null = ยังไม่รู้ปี → แสดงไปก่อน ของเก่าไม่พัง) */
   const notYet = y => (y != null && curYear != null && curYear < y);
+  /* ★★ **ของที่สร้างไว้ ต้องหายไปตอนมันหมดหน้าที่ด้วย** (เจ้าของสั่ง 2026-09-06:
+     *"ค่ายมันควรตั้งแค่ตอนมาตีหรือล้อม และหายไปหลังจากใช้งาน ... ยุ้งที่ถูกเผา
+      มันต้องหายไป ไม่ใช่อยู่ตลอด"*)
+
+     ของเดิมมีแต่ปี *เริ่ม* (`year` / `roleYear`) ไม่มีปี *จบ* — ค่ายที่ตั้งปี 224
+     จึงยืนอยู่บนแผนที่จนจบเรื่องปี 285 ทั้งที่เรื่องเลิกพูดถึงมันตั้งแต่ปี 231
+     → เพิ่ม `gone` / `roleGone` = **ปีแรกที่มันไม่อยู่แล้ว** (ครึ่งเปิด [year, gone))
+     ไม่ใส่ = อยู่ตลอด เหมือนเดิมทุกประการ */
+  const past  = y => (y != null && curYear != null && curYear >= y);
+  const alive = (from, to) => !notYet(from) && !past(to);
 
   /* จุดไหนที่ labeler เลือกจะเขียนชื่อให้ — จุดกลมยังผูกกับชุดนี้ ส่วนสัญลักษณ์ไม่ผูก */
   let labelPins = new Set();
@@ -381,7 +391,7 @@ TK.map = (function(){
     layers.pins.querySelectorAll('.pin').forEach(g => {
       const id = g.dataset.id, ty = TK.places[id].type;
       if (!g.querySelector('.pin-sym') || (SYM_RANK[ty] || 3) > cap) return;
-      if (notYet(TK.places[id].year)) return;      /* ยังไม่ถูกสร้างในปีนี้ */
+      if (!alive(TK.places[id].year, TK.places[id].gone)) return;   /* ยังไม่มี หรือหมดหน้าที่ไปแล้ว */
       cand.push({ id, ty, g,
                   pri: (forceLabels && forceLabels.has && forceLabels.has(id) ? 0 : 1),
                   rank: SYM_RANK[ty] || 3 });
@@ -425,7 +435,7 @@ TK.map = (function(){
         const dx = (GLYPH[ty].px * 0.46 + rp * 0.44) * f * mu;
         /* ★ ป้ายเสริมมีปีของตัวเอง — เฉินชางเป็นยุ้งของฮั่นตั้งแต่ 233 เท่านั้น
            ก่อนหน้านั้นมันเป็นป้อมของวุ่ย ป้ายยุ้งจึงห้ามโผล่ */
-        rg.style.display = (show && !notYet(p.roleYear)) ? '' : 'none';
+        rg.style.display = (show && alive(p.roleYear, p.roleGone)) ? '' : 'none';
         if (show) rg.setAttribute('transform',
           `translate(${(p.x + dx).toFixed(2)},${p.y.toFixed(2)}) scale(${kr.toFixed(4)}) translate(-12,-22)`);
       }
@@ -515,7 +525,7 @@ TK.map = (function(){
   function applyWorksYear(){
     layers.works.querySelectorAll('.works').forEach(g => {
       const w = (TK.works || []).find(x => x.id === g.dataset.id);
-      g.style.display = (w && notYet(w.year)) ? 'none' : '';
+      g.style.display = (w && alive(w.year, w.gone)) ? '' : 'none';
     });
   }
 
@@ -609,13 +619,21 @@ TK.map = (function(){
   function settleLabels(delay){
     clearTimeout(settleTimer);
     layers.labels.style.opacity = 0;
-    layers.pins.style.opacity   = 0;
+    /* ★★ **หมุดห้ามหาย** ระหว่างกล้องเคลื่อน (เจ้าของทัก 2026-09-06:
+       *"ทำไมทุกครั้งที่กดเล่นฉาก หมุดสัญลักษณ์มันจะหายไปทุกครั้งแล้วค่อยกลับมา
+        เหมือนมันโหลดอยู่"*)
+
+       ของเดิมซ่อนทั้งสามชั้นเพราะกลัวงานหนัก แต่เหตุผลนั้นใช้ได้กับ **ป้าย** เท่านั้น —
+       ป้ายต้องคำนวณตำแหน่งใหม่ทุกเฟรมเพื่อไม่ให้ทับกัน (122 หมุด × 26 ป้าย ต่อเฟรม)
+       ส่วน **หมุดอยู่ที่พิกัดคงที่บนแผ่น** มันเลื่อนไปกับ viewBox เองอยู่แล้ว
+       ไม่ต้องคำนวณอะไรระหว่างทาง · ที่ต้องจัดใหม่มีแค่ *ขนาด* ซึ่งรอตอนนิ่งได้
+       → ปล่อยให้หมุดโตตามแผนที่ระหว่างกล้องบิน แล้วสแนปขนาดตอน relayout
+       ★ วงเน้นยังต้องซ่อน (§17 — วงของฉากเก่าห้ามค้างระหว่างบิน) */
     layers.focus.style.opacity  = 0;   // วงเน้นของฉากเก่าห้ามค้างระหว่างกล้องบิน (§17)
     settleTimer = setTimeout(() => {
       relayout();
       updateWhere();
       layers.labels.style.opacity = 1;
-      layers.pins.style.opacity   = 1;
       layers.focus.style.opacity  = 1;
     }, delay);
   }
@@ -1481,8 +1499,9 @@ TK.map = (function(){
     });
     host.addEventListener('pointermove', e => {
       if (!from) return;
+      /* ลากแผนที่ด้วยมือ — ซ่อนแค่ป้ายกับวงเน้น เหมือนตอนกล้องบิน (2026-09-06)
+         หมุดเลื่อนไปกับ viewBox เองอยู่แล้ว ไม่มีเหตุให้หาย */
       if (!from.moved){ from.moved = true; layers.labels.style.opacity = 0;
-                        layers.pins.style.opacity = 0;
                         layers.focus.style.opacity = 0; }
       const sc = vb.w / (host.clientWidth || 1);
       vb.x = from.vx - (e.clientX - from.mx) * sc;

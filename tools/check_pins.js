@@ -206,6 +206,68 @@ B.forEach((b, n) => {
   console.log(`อ่านปีสิ้นจาก note ได้ ${n} คน (จาก ${Object.keys(TK.people).length})`);
 }
 
+/* ── 6 · ★ สัญลักษณ์ที่ยังตั้งอยู่ หลังจากเรื่องเลิกใช้มันไปแล้ว ─────────────
+   เจ้าของ (2026-09-06): *"พวกค่าย พวกที่นา อย่างค่ายเนี่ย มันควรตั้งแค่ตอนมาตีหรือล้อม
+    และหายไปหลังจากใช้งานไหม ไม่ใช่อยู่ตลอด · ยุ้งที่ถูกเผา มันต้องหายไป"*
+
+   ของที่มีปี *เริ่ม* แต่ไม่มีปี *จบ* จะยืนอยู่บนแผนที่จนจบเรื่อง
+   ตัวตรวจนี้เทียบ "ปีที่เรื่องพูดถึงมันครั้งสุดท้าย" กับ "ปีสุดท้ายของเรื่อง"
+   ★ ไม่ได้แปลว่าผิดเสมอ — ป้อมที่ยังมีกองรักษาการณ์อยู่จริงก็ต้องอยู่ต่อ
+     แต่ทุกอันต้องตอบได้ว่า "หลังจากนั้นมันยังอยู่เพราะอะไร" */
+{
+  const LAST = B[B.length - 1].year;
+  /* ปีที่ฉากไหนก็ตามพูดถึงที่นั้นครั้งสุดท้าย */
+  const lastSeen = {};
+  B.forEach(b => { for (const m of b.markers || []) if (m.place)
+    lastSeen[m.place] = { year: b.year, id: b.id }; });
+
+  const TIMED = new Set(['camp', 'farm', 'fort']);
+  for (const id in PL){
+    const p = PL[id];
+    const timed = TIMED.has(p.type) || p.year != null || p.roleYear != null;
+    if (!timed) continue;
+    if (p.gone != null || p.roleGone != null) continue;   /* บอกวันหมดอายุไว้แล้ว */
+    const ls = lastSeen[id];
+    const from = p.year ?? p.roleYear;
+    if (!ls){
+      add('สัญลักษณ์ที่ไม่มีฉากไหนใช้เลย', B[0],
+        `${PLBL(id)} (${p.type}${from ? ' ตั้งปี ' + from : ''}) — ไม่มีฉากไหนปักหมุดเลย`);
+      continue;
+    }
+    const idle = LAST - ls.year;
+    if (idle >= 5)
+      add('สัญลักษณ์ยังตั้งอยู่หลังเรื่องเลิกใช้', B.find(b => b.id === ls.id),
+        `${PLBL(id)} (${p.type}${from ? ' ตั้งปี ' + from : ''}) — เรื่องพูดถึงครั้งสุดท้าย ${ls.id} ปี ${ls.year}`
+        + ` แล้วยังยืนอยู่บนแผนที่อีก ${idle} ปีจนจบเรื่อง (ปี ${LAST})`);
+  }
+  for (const w of TK.works || []){
+    if (w.gone != null) continue;
+    const ends = (w.on || []).map(id => lastSeen[id]).filter(Boolean)
+      .sort((x, y) => y.year - x.year)[0];
+    const y = ends ? ends.year : w.year;
+    const idle = LAST - y;
+    if (idle >= 5)
+      add('สัญลักษณ์ยังตั้งอยู่หลังเรื่องเลิกใช้', B.find(b => b.id === (ends || {}).id) || B[0],
+        `${w.label} (works ตั้งปี ${w.year}) — ปลายทางถูกพูดถึงครั้งสุดท้ายปี ${y}`
+        + ` แล้วยังยืนอยู่อีก ${idle} ปีจนจบเรื่อง`);
+  }
+}
+
+/* ── 7 · ★ ฉากที่ปักหมุดก่อนปีที่สัญลักษณ์นั้นถูกสร้าง ─────────────────────
+   ด้านกลับของข้อ 6 — ของที่ยังไม่ถูกสร้างจะไม่มีรูป หมุดจึงเป็นจุดเปล่า
+   ทั้งที่ฉากกำลังเล่าเรื่องมันอยู่ (เจอที่อู่จ้างหยวน: ค่ายหลวงตั้งปี 233 แต่ year=234) */
+{
+  B.forEach(b => {
+    for (const m of b.markers || []){
+      const p = PL[m.place]; if (!p) continue;
+      const from = p.year;
+      if (from != null && b.year < from)
+        add('ฉากใช้สัญลักษณ์ก่อนปีที่มันถูกสร้าง', b,
+          `${PLBL(m.place)} ตั้งไว้ปี ${from} แต่ฉากนี้ปี ${b.year} ปักหมุดแล้ว — รูปจะยังไม่ขึ้น`);
+    }
+  });
+}
+
 /* ── รายงาน ─────────────────────────────────────────────────────────── */
 const byKind = {};
 for (const o of out) (byKind[o.kind] = byKind[o.kind] || []).push(o);

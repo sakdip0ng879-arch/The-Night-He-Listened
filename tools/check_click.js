@@ -207,7 +207,13 @@ async function main(){
     const end = await evalJs(probe);
     rows.push(['Enter after ' + ctl, mid === end ? 'ok' : 'DEAD', String(mid), String(end)]);
     await evalJs(`(()=>{const p=document.getElementById('btnPlay');
-       if(p.textContent.indexOf('Stop')>=0) p.click();
+       /* ⚠⚠ **ตัวตรวจที่โกหกเพราะข้อความเปลี่ยนภาษา** (เจอ 2026-09-06)
+          บรรทัดนี้เคยเช็คว่าป้ายปุ่มมีคำว่า 'Stop' ไหม — ตอนนั้นปุ่มเป็นภาษาอังกฤษ
+          พอแปลเป็นไทย ('▶ เล่น' / '❚❚ หยุด') เงื่อนไขก็เป็นเท็จตลอดกาล
+          → หยุดการเล่นอัตโนมัติไม่สำเร็จ ฉากจึงเดินต่อเองระหว่างรอบทดสอบถัดไป
+          แล้วไปโผล่เป็น 'Enter after mapmode DEAD' แบบสุ่ม ทั้งที่ Enter ไม่ได้ทำอะไรเลย
+          ★ เช็คจาก **สัญลักษณ์** ที่ไม่ขึ้นกับภาษา: ถ้าไม่มี '▶' แปลว่ากำลังเล่นอยู่ */
+       if(p.textContent.indexOf('▶') < 0) p.click();
        TK.spine.toggle(false);
        const s=document.getElementById('btnSeason'); if(s.classList.contains('on')) s.click();})()`);
     await wait(300);

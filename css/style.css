@@ -254,7 +254,24 @@ rect.sp-none{fill:#6b7285}
 #tkmap .pin-sym path.gs, #tkmap .pin-role path.gs{fill:none; stroke:#151a22; stroke-opacity:.95;
                  stroke-width:1.35; stroke-linecap:round; paint-order:normal}
 /* เมืองหลวงยังต้องเด่นกว่าเมืองอื่น — ใช้พื้นทองอ่อนแทนขาว ขอบเข้มชุดเดียวกัน */
-#tkmap .pin.t-capital .pin-sym path{fill:#F3D590; stroke:#2a1d05; stroke-width:1.25}
+#tkmap .pin.t-capital .pin-sym path:not(.gs){fill:#F3D590; stroke:#2a1d05; stroke-width:1.25}
+
+/* ══ ★★ สีของสัญลักษณ์ = **ประเภทของสิ่งนั้น** ไม่ใช่การตกแต่ง (เจ้าของสั่ง 2026-09-06) ══
+   ขาวล้วนอ่านง่ายก็จริง แต่มันทำให้ทุกอย่างดูเป็นของชนิดเดียวกันหมด
+   ★ กติกา: **พื้นอ่อน + ขอบเข้มชุดเดิม** — สีบอกชนิด ส่วนความอ่านง่ายยังมาจากขอบกับออร่า
+     ห้ามใช้สีฝ่าย (เขียว/น้ำเงิน/แดง) กับสัญลักษณ์เด็ดขาด — สามสีนั้นจองไว้ให้ *เจ้าของพื้นที่*
+     ถ้าเอามาใช้กับรูปด้วย คนอ่านจะอ่านว่า "ป้อมนี้เป็นของวุ่ย" ทั้งที่รูปไม่ได้บอกข้างเลย */
+#tkmap .pin.t-city    .pin-sym path:not(.gs){fill:#F2EDE2}   /* เมือง — งาช้าง */
+#tkmap .pin.t-town    .pin-sym path:not(.gs){fill:#F6F2E8}   /* เมืองเล็ก — อ่อนกว่าหนึ่งขั้น */
+#tkmap .pin.t-pass    .pin-sym path:not(.gs){fill:#D9C9A8}   /* ด่าน — หินทราย */
+#tkmap .pin.t-fort    .pin-sym path:not(.gs){fill:#C9CFD6}   /* ป้อม — หินเทา */
+#tkmap .pin.t-camp    .pin-sym path:not(.gs){fill:#E4D6A7}   /* ค่าย — ผ้าใบกระโจม */
+#tkmap .pin.t-farm    .pin-sym path:not(.gs){fill:#CFE0A8}   /* ที่นา — ข้าวอ่อน */
+#tkmap .pin.t-farm    .pin-sym path.gs{stroke:#4E6A2A}  /* ร่องนาเป็นสีเขียวเข้ม ไม่ใช่ดำ */
+#tkmap .pin.t-mountain .pin-sym path:not(.gs){fill:#BFD3B4}  /* ภูเขา — เขียวหม่น */
+#tkmap .pin.t-valley_mouth .pin-sym path:not(.gs){fill:#CBD8C4}
+#tkmap .pin.t-ford    .pin-sym path.gs{stroke:#2F6E8F}  /* ท่าข้าม — เส้นน้ำต้องเป็นสีน้ำ */
+#tkmap .pin-role path{fill:#EBC77A}                 /* ยุ้งข้าว — สีเมล็ดข้าว */
 
 /* ป้ายกับหมุดเฟดหายระหว่างกล้องเคลื่อน แล้วโผล่กลับมาตอนนิ่ง
    ทั้งเร็วกว่าและดูดีกว่าปล่อยให้วิ่งสะบัดตามกล้อง */

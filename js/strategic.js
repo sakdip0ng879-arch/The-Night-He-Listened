@@ -421,10 +421,16 @@ TK.map = (function(){
         if (!show) delete symBox[id];
         if (show){
           const p = TK.places[id], k = GLYPH[ty].px * f * mu / 24;
-          symBox[id] = { x:p.x - GLYPH[ty].px*f*mu/2, y:p.y - GLYPH[ty].px*f*mu,
+          /* ★★ `sdx` / `sdy` — เลื่อน **เฉพาะรูป** ออกจากจุดหมุด (เจ้าของทัก 2026-09-06:
+             *"สัญลักษณ์มันทับชื่อเมืองบนแผนที่"*) · จุดกลมกับป้ายยังอยู่ที่พิกัดจริง
+             ค่าที่ใส่ไว้ใน data/places.js มาจาก `tools/check_symbols.js` ซึ่งวัดจาก
+             **หมึกดำของแผ่นเอง** ว่ารูปทับตัวหนังสือกี่พิกเซล แล้วหาที่วางที่ทับน้อยสุด
+             ⚠ ส่วนใหญ่เป็นการเลื่อน *ขึ้น* เพราะรูปที่ขยับข้างจะไปนั่งใกล้เมืองอื่นแทน */
+          const sdx = p.sdx || 0, sdy = p.sdy || 0;
+          symBox[id] = { x:p.x - GLYPH[ty].px*f*mu/2 + sdx, y:p.y - GLYPH[ty].px*f*mu + sdy,
                          w:GLYPH[ty].px*f*mu, h:GLYPH[ty].px*f*mu };
           sym.setAttribute('transform',
-            `translate(${p.x.toFixed(2)},${p.y.toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
+            `translate(${(p.x+sdx).toFixed(2)},${(p.y+sdy).toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
         }
       }
       const rg = g.querySelector('.pin-role');
@@ -437,7 +443,8 @@ TK.map = (function(){
            ก่อนหน้านั้นมันเป็นป้อมของวุ่ย ป้ายยุ้งจึงห้ามโผล่ */
         rg.style.display = (show && alive(p.roleYear, p.roleGone)) ? '' : 'none';
         if (show) rg.setAttribute('transform',
-          `translate(${(p.x + dx).toFixed(2)},${p.y.toFixed(2)}) scale(${kr.toFixed(4)}) translate(-12,-22)`);
+        /* ป้ายยุ้งต้องเลื่อนตามรูปหลักด้วย ไม่งั้นมันจะหลุดไปลอยอยู่คนละที่ */
+          `translate(${(p.x + dx + (p.sdx||0)).toFixed(2)},${(p.y + (p.sdy||0)).toFixed(2)}) scale(${kr.toFixed(4)}) translate(-12,-22)`);
       }
     });
     applyPinVisibility();

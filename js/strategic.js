@@ -390,7 +390,10 @@ TK.map = (function(){
     const cand = [];
     layers.pins.querySelectorAll('.pin').forEach(g => {
       const id = g.dataset.id, ty = TK.places[id].type;
-      if (!g.querySelector('.pin-sym') || (SYM_RANK[ty] || 3) > cap) return;
+      /* ★ สถานที่ที่ฉากชี้ให้ดู **ข้ามเพดาน LOD** — ตั้งแต่ 2026-09-06 รูปคือหมุดของฉาก
+         ถ้ามันถูกซ่อนเพราะเพดาน ฉากก็จะไม่มีอะไรให้ชี้ (เดิมมีหมุดกลมสำรอง ตอนนี้ไม่มีแล้ว) */
+      const isHot = forceLabels && forceLabels.has && forceLabels.has(id);
+      if (!g.querySelector('.pin-sym') || (!isHot && (SYM_RANK[ty] || 3) > cap)) return;
       if (!alive(TK.places[id].year, TK.places[id].gone)) return;   /* ยังไม่มี หรือหมดหน้าที่ไปแล้ว */
       cand.push({ id, ty, g,
                   pri: (forceLabels && forceLabels.has && forceLabels.has(id) ? 0 : 1),
@@ -1060,12 +1063,39 @@ TK.map = (function(){
       layers.markers.append(a.g);
   }
   /* ── หมุด / ลูกศร / การปะทะ ── */
+  /* ══ ★★ หมุดของฉาก = **รูปของสถานที่นั้นเอง** (เจ้าของสั่ง 2026-09-06) ═══════
+     *"เอาพวกหมุดกลมๆ ใหญ่ๆ ของเราออกได้ และใช้สัญลักษณ์นั้นแทนไปเลย
+      เวลาทำ Animation กระเพื่อมก็ทำโดยใช้สัญลักษณ์นั้นไปเลย"*
+
+     เดิมวาดวงกลมทองทับรูป — เอาของที่ไม่มีความหมายไปบังของที่มีความหมาย
+     และมันคือเหตุผลที่เราไปเลื่อนรูปหนีชื่อเมือง ซึ่งทำให้ตำแหน่งเมืองเพี้ยน (ถอยกลับแล้ว)
+     ★ ต้องเรียก **หลัง** scalePins ของฉากนี้ ไม่งั้น symBox ยังเป็นของฉากก่อน */
+  function fitPinsToSymbols(){
+    layers.pins.querySelectorAll('.pin.hot').forEach(p => p.classList.remove('hot'));
+    layers.markers.querySelectorAll('.mk-pin[data-place]').forEach(g => {
+      const id = g.dataset.place, s = symBox[id];
+      if (!s) return;                                  /* ไม่มีรูป — ใช้หมุดกลมแบบเดิม */
+      const halo = g.querySelector('.mk-halo'), dot = g.querySelector('.mk-dot');
+      const cx = s.x + s.w/2, cy = s.y + s.h/2;
+      const r0 = Math.max(s.w, s.h) * 0.62, r1 = r0 * 1.42;
+      if (halo){
+        halo.setAttribute('cx', cx.toFixed(2)); halo.setAttribute('cy', cy.toFixed(2));
+        halo.style.setProperty('--r0', r0.toFixed(2) + 'px');
+        halo.style.setProperty('--r1', r1.toFixed(2) + 'px');
+      }
+      if (dot) dot.style.display = 'none';             /* รูปเป็นหมุดแล้ว ไม่ต้องมีจุด */
+      const pin = layers.pins.querySelector('.pin[data-id="' + id + '"]');
+      if (pin) pin.classList.add('hot');
+    });
+  }
+
   function clearMarkers(){
     mkTimers.forEach(clearTimeout);  mkTimers = [];
     mkTweens.forEach(cancel => cancel()); mkTweens = [];
     layers.markers.replaceChildren();
     /* ผีของโหมดสองเอกภพตายพร้อมฉาก — สีแผ่นดินไม่ต้องคืนที่นี่
        เพราะ render() ของฉากใหม่เรียก setOwners ของมันเองเสมอ */
+    layers.pins.querySelectorAll('.pin.hot').forEach(p => p.classList.remove('hot'));
     mirrorSnap = null; mirrorG = null;
   }
 
@@ -1121,7 +1151,7 @@ TK.map = (function(){
            ถ้าหมุดใส่เลขไม่ได้ กองรักษาการณ์จะไร้น้ำหนักทุกฉาก — โปรเจกต์ 2 วัดไว้แล้วว่า
            12 จาก 16 ฉากรบวาดกองทัพไว้ฝ่ายเดียวเพราะเหตุนี้ */
         const col = m.side && TK.factions[m.side] ? TK.factions[m.side].color : null;
-        const g = mk('g',{class:'mk-pin'});
+        const g = mk('g',{class:'mk-pin', 'data-place':m.place});
         const halo = mk('circle',{cx:p.x, cy:p.y, r:13, class:'mk-halo'});
         const dot  = mk('circle',{cx:p.x, cy:p.y, r:5,  class:'mk-dot'});
         /* ⚠ `.style.fill` ไม่ใช่ `setAttribute('fill')` — style.css มี `.mk-halo{fill:var(--gold)}`
@@ -1377,6 +1407,10 @@ TK.map = (function(){
     if (!walking) flushOwners();
 
     /* ทุกอย่างเข้าคิวครบแล้ว จัดทีเดียว — ต้องรอให้ครบ ไม่งั้นป้ายแรก ๆ ไม่รู้ว่ามีใครตามมา */
+    /* รูปของฉากนี้ต้องถูกเลือกใหม่ก่อน แล้วค่อยให้หมุดกับป้ายเกาะมัน
+       (forceLabels เพิ่งครบตรงนี้ — scalePins ที่ setYear เรียกไป ยังเป็นของฉากก่อน) */
+    scalePins();
+    fitPinsToSymbols();
     layoutAnnotations();
   }
 

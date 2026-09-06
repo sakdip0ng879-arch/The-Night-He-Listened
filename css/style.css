@@ -291,7 +291,10 @@ rect.sp-none{fill:#6b7285}
 .mk-label{fill:var(--gold); font-weight:700; font-size:16px;
   paint-order:stroke; stroke:#0b0d12; stroke-width:4.5px; stroke-linejoin:round}
 .mk-cap{pointer-events:none}
-@keyframes pulse{0%,100%{r:13; opacity:.22} 50%{r:19; opacity:.06}}
+/* ★★ วงกระเพื่อมต้องพองรอบ **รูปสัญลักษณ์** ไม่ใช่รอบจุดขนาดตายตัว (เจ้าของสั่ง 2026-09-06)
+   รัศมีจึงมาจากตัวแปรที่ JS ตั้งตามขนาดรูปจริง · ค่าเริ่มต้นคือของเดิม (13→19)
+   สำหรับสถานที่ที่ไม่มีรูปให้เกาะ */
+@keyframes pulse{0%,100%{r:var(--r0,13px); opacity:.22} 50%{r:var(--r1,19px); opacity:.06}}
 
 /* ป้ายธง — ใครเดินเส้นนี้ และมากับกี่คน · ราคาของวงปะทะ
    พื้นหลังต้องทึบพอ เพราะมันลอยอยู่บนแผนที่พื้นที่มีทั้งตัวหนังสือ ภูเขา และแม่น้ำ
@@ -679,3 +682,15 @@ html.no-intro #intro{display:none}
 .lg-sides i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px}
 .lg-foot{color:var(--dim); font-size:10.5px; line-height:1.4; margin-top:9px;
   padding-top:8px; border-top:1px solid var(--line)}
+
+/* ══ ★★ สถานที่ที่ฉากชี้ให้ดู = **รูปของมันเองสว่างขึ้น** ไม่ใช่หมุดกลมทับมัน ══
+   เจ้าของสั่ง 2026-09-06: *"เราสามารถเอาพวกหมุดกลมๆ ใหญ่ๆ ของเราออกได้
+    และใช้สัญลักษณ์นั้นแทนไปเลย เวลาทำ Animation กระเพื่อมก็ทำโดยใช้สัญลักษณ์นั้นไปเลย"*
+
+   ทำไมถึงถูก: หมุดกลมทับรูป = เอาของที่ไม่มีความหมายไปบังของที่มีความหมาย
+   และมันบังคับให้เราเลื่อนรูปหนี ซึ่งทำให้ตำแหน่งเมืองเพี้ยน (ลองแล้วในคอมมิตก่อน — ถอยกลับ)
+   ★ รูปอยู่ที่พิกัดจริงเสมอ · ฉากชี้ตรงไหน รูปตรงนั้นเปลี่ยนสีเป็นทองแล้วมีวงพองรอบตัว */
+#tkmap .pin.hot .pin-sym path:not(.gs){fill:#F3D590}
+#tkmap .pin.hot .pin-sym path{stroke:#5A420C; stroke-width:1.35}
+#tkmap .pin.hot .pin-sym path.gs{fill:none; stroke:#5A420C}
+#tkmap .pin.hot .pin-role path{fill:#F7E3AE}

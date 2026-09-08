@@ -1,0 +1,136 @@
+{
+  "version": "4.0",
+  "date": "2026-09-08",
+  "coordinateSystem": {
+    "width": 1650,
+    "height": 1950,
+    "origin": "top-left",
+    "x": "right",
+    "y": "down"
+  },
+  "counts": {
+    "riverReaches": 95,
+    "lakes": 9,
+    "seaShapes": 4
+  },
+  "sourceSha256": "aa873762aef175129e532313fd9ea553917b9647a94dbd77cda8f8a21c66c0e4",
+  "terrainSha256": "a98791d99e8adfe567eee96d4584dc33e1464bbb0ebaf8a943f3e5a84642061f",
+  "terrainOrigin": "Built-in ImageGen, exec-f3cecb6e-fdf1-4232-8fbd-f69dd0565c99.png; original PNG preserved, constrained by an SVG source-footprint mask.",
+  "productionModified": false,
+  "containsCities": false,
+  "containsLabels": false,
+  "containsRoads": false,
+  "rendering": "Recommended: inline terrain-layer.svg with externally cached terrain-art.png, then water.svg; optional wall.svg only if the existing app wall is disabled. Use load-map-layers.js. Self-contained base-map.svg/terrain.svg retained for standalone review.",
+  "files": {
+    "base-map.svg": {
+      "bytes": 4011634,
+      "sha256": "4a04d11173104535c1369e7303c49cb6e5039ec2a98f93e71a667ee63674c290"
+    },
+    "terrain.svg": {
+      "bytes": 3770609,
+      "sha256": "85b3bd2130ca859449e05b474cc9ae58b83c53e760b0cef2ac85d504f9b10e40"
+    },
+    "water.svg": {
+      "bytes": 241150,
+      "sha256": "f2a5f23e088aa0ab1884dbd6f061513edfd41d453df6f101fb3a151a3e7b472d"
+    },
+    "water.json": {
+      "bytes": 245003,
+      "sha256": "938234b2df0cbc31a903ce88766cac3a8c3599fd44b7fa21aecb6456e689a728"
+    },
+    "HYDROLOGY_NOTES_TH.md": {
+      "bytes": 9564,
+      "sha256": "2c50f952dbeca55e9ef6545a4569d79419304bb07b782ed30b6efd190522a5ae"
+    },
+    "water-verification.json": {
+      "bytes": 2845,
+      "sha256": "7b9fdd9a6a3d3096d40f474977ae989878d7a216355cfe9a025e0e58a187ec38"
+    },
+    "terrain-art.png": {
+      "bytes": 2739525,
+      "sha256": "a98791d99e8adfe567eee96d4584dc33e1464bbb0ebaf8a943f3e5a84642061f"
+    },
+    "terrain-layer.svg": {
+      "bytes": 117936,
+      "sha256": "d5fb342a81cba5f05f5f3745365a01042265fc89cbe9c5fcaac3a834696bb46c"
+    },
+    "wall.svg": {
+      "bytes": 40940,
+      "sha256": "6fb58a058da44cda6ccb238d2aa14210a0936ab48dfbd4af544d237c0dc99fed"
+    },
+    "wall.json": {
+      "bytes": 6278,
+      "sha256": "04682d46e775f5c331d99efb4bcbf721e9f34a4d4b8fb6b45c5193c1e8e06356"
+    },
+    "HANDOFF_TH.md": {
+      "bytes": 868,
+      "sha256": "4e0986ef3f38371c0f2e90f532760c731738698d41dbb5cbe2a4ce693a5c17aa"
+    },
+    "REPLY_TO_CLAUDE_TH.md": {
+      "bytes": 16790,
+      "sha256": "214cbe4087ef3d31b24850ed7ad75a04d20dc6b22949b037b4d2e2b17c646273"
+    },
+    "ROUND_04_FROM_CODEX_TH.md": {
+      "bytes": 16790,
+      "sha256": "214cbe4087ef3d31b24850ed7ad75a04d20dc6b22949b037b4d2e2b17c646273"
+    },
+    "QA.md": {
+      "bytes": 664,
+      "sha256": "6904320fe395006bef547f6715cdb9f44dfc7b8cc1a201be66812e9d21e66055"
+    },
+    "water-v4-check.json": {
+      "bytes": 21252,
+      "sha256": "028cf88cad3c6903dd26a0bc708bf290c5df3f85b0bd26bf9df2fed3158ac5d8"
+    },
+    "load-map-layers.js": {
+      "bytes": 2280,
+      "sha256": "682e331aa02420d8313e334722582264dcd475a75984d85492da82af638d5e11"
+    },
+    "preview.html": {
+      "bytes": 2071,
+      "sha256": "4cc1a56aeb49e8c0962b1c60a3684bb7669c2eef6b24c5fdafbd3d28b3a8161b"
+    }
+  },
+  "terrainResolution": {
+    "requested": [
+      3300,
+      3900
+    ],
+    "delivered": [
+      1153,
+      1364
+    ],
+    "role": "Low-frequency artistic background (Claude fallback), saturation .5, contrast compressed, opacity .65. Native 2x detail was not delivered; no artificial upscale claimed."
+  },
+  "contextualRelief": {
+    "id": "west_chengdu",
+    "source": "https://whc.unesco.org/en/list/1213/",
+    "basis": "Qionglai/Jiajin mountainous country west of the Chengdu plain. User requested this missing context on 2026-09-08. Geographic region is supported; this schematic pixel envelope is an artistic interpretation, not a surveyed boundary.",
+    "d": "M 25 722 Q 102 677 175 693 Q 220 714 231 752 Q 224 789 201 818 Q 176 850 182 884 Q 181 924 157 955 Q 126 982 100 955 Q 59 917 35 872 Q 10 818 25 722 Z"
+  },
+  "wallPolylineCount": 13,
+  "wallIsSeparate": true,
+  "productionSnapshot": [
+    {
+      "file": "data/places.js",
+      "sha256": "11b82db12f12ac42f81522a032d749399b24dcfc439236a0f3adad16919e6f94"
+    },
+    {
+      "file": "data/roads.js",
+      "sha256": "9aad66dcdbb422b75bdcd780a644f7b20b6a294a3aa99f17fc6e08d08f8af51f"
+    },
+    {
+      "file": "data/geo.js",
+      "sha256": "4d0d90fd4bcf9c63f935e84ad09a98a42405ef91f9e1302442d7464cd266fd5c"
+    },
+    {
+      "file": "data/timeline.js",
+      "sha256": "362bcd8a731ee53964d87332e2a85eff0a0c16663070defdf4ae7baad56442d7"
+    },
+    {
+      "file": "data/wall.js",
+      "sha256": "c0539b9ae9c773d353c0e1d7f7bbfe3705981c755e6acecfc52b24fdfae12db0"
+    }
+  ],
+  "revisionNotes": "Water confluence fixes, curved lake shores, opaque pool fill above river outlines, named water groups. Terrain raster and loader unchanged from v3."
+}

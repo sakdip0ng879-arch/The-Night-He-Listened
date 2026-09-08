@@ -1,0 +1,155 @@
+{
+  "checkedAt": "2026-09-08T02:34:17.329Z",
+  "rivers": 95,
+  "lakes": 9,
+  "seaShapes": 4,
+  "uniqueIds": true,
+  "singleContinuousPathPerReach": true,
+  "sharedEndpointsExact": true,
+  "finiteInBoundsPoints": true,
+  "noRepeatedReachVertices": true,
+  "junctionChecks": [
+    {
+      "id": "yellow_sea",
+      "reach": "yellow_mouth",
+      "point": [
+        1272,
+        270
+      ],
+      "target": "sea_0",
+      "visibleGap": 0
+    },
+    {
+      "id": "qi_sea",
+      "reach": "qi_lower",
+      "point": [
+        1312,
+        295
+      ],
+      "target": "sea_0",
+      "visibleGap": 0
+    },
+    {
+      "id": "huai_lake",
+      "reach": "huai_lower",
+      "point": [
+        1382,
+        718
+      ],
+      "target": "hongze",
+      "visibleGap": 0
+    },
+    {
+      "id": "huai_sea",
+      "reach": "huai_outlet",
+      "point": [
+        1412,
+        590
+      ],
+      "target": "sea_1",
+      "visibleGap": 0
+    },
+    {
+      "id": "yang_sea",
+      "reach": "yangtze_estuary",
+      "point": [
+        1580,
+        868
+      ],
+      "target": "sea_1",
+      "visibleGap": 0
+    },
+    {
+      "id": "qinhuai_join",
+      "reach": "qinhuai",
+      "point": [
+        1404,
+        845
+      ],
+      "target": "yangtze_estuary",
+      "visibleGap": 0
+    },
+    {
+      "id": "chao",
+      "reach": "chao_outlet",
+      "point": [
+        1300,
+        868
+      ],
+      "target": "chao",
+      "visibleGap": 0
+    },
+    {
+      "id": "chao_out",
+      "reach": "chao_outlet",
+      "point": [
+        1350,
+        902
+      ],
+      "target": "yangtze_poyang_jianye",
+      "visibleGap": 0
+    },
+    {
+      "id": "emei_join",
+      "reach": "emei_stream",
+      "point": [
+        199,
+        1142
+      ],
+      "target": "sichuan_west_south",
+      "visibleGap": 0
+    },
+    {
+      "id": "erhai",
+      "reach": "erhai_link",
+      "point": [
+        30,
+        1445
+      ],
+      "target": "erhai",
+      "visibleGap": 0
+    },
+    {
+      "id": "ze_sea",
+      "reach": "ze_estuary",
+      "point": [
+        1528,
+        1023
+      ],
+      "target": "sea_1",
+      "visibleGap": 0
+    },
+    {
+      "id": "baima_south",
+      "reach": "baima_canal",
+      "point": [
+        1421,
+        776
+      ],
+      "target": "baima",
+      "visibleGap": 0
+    },
+    {
+      "id": "baima_yangtze",
+      "reach": "baima_canal",
+      "point": [
+        1447,
+        841
+      ],
+      "target": "yangtze_estuary",
+      "visibleGap": 0
+    },
+    {
+      "id": "zhang_ye_join",
+      "reach": "zhang_ye_branch",
+      "point": [
+        1057,
+        470
+      ],
+      "target": "zhang_middle",
+      "visibleGap": 0
+    }
+  ],
+  "unconnectedMouths": [],
+  "limitation": "Geometry checks detect structural defects; they do not certify historical accuracy, source completeness, or water-flow direction."
+}

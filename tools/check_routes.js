@@ -706,6 +706,118 @@ head('15 · ปีของสิ่งที่ถูกสร้างที�
   note('ฉากที่ปีน้อยกว่า "สร้างปี" จะเห็นจุดกลมแทนสัญลักษณ์ — ตั้งใจ ไม่ใช่บั๊ก');
 }
 
+/* ═══ 16 · ★★ สิ่งก่อสร้างยืนอยู่บนแผ่นดินของใคร ═══════════════════════════════
+   เพิ่ม 2026-09-06 · เจ้าของจับได้เองว่า **โซ่ป้อมของฮั่นถูกวาดคร่อมแดนวุ่ยอยู่สองปี**
+   (`jieting_chain` side:han year:232 บน `tianshui–jieting` ซึ่งวุ่ยยึดไว้ตั้งแต่ c6-12 ปี 231
+    จนฮั่นชิงคืนที่ c7-05 ปี 233)
+
+   ★ ทำไมไม่มีตัวตรวจตัวไหนเห็น: ข้อ 14 ถามว่า "เกาะถนนจริงไหม" · ข้อ 15 ถามว่า
+     "ปีอยู่ในช่วงของเล่มไหม" — **ไม่มีใครถามว่าแผ่นดินใต้มันเป็นของใคร ณ ปีนั้น**
+     ข้อนี้ถามคำถามนั้น และถามทุกปีที่ชิ้นนั้นยังโผล่อยู่บนจอ ไม่ใช่แค่ปีที่สร้าง
+
+   ★ วิธี: สุ่มจุดตามช่วง from–to ของ edge แล้วหาเจ้าของเขต ณ **ปลายปีนั้น**
+     (สะสม mapDelta ของทุกฉากที่ year ≤ ปีนั้น เหมือนที่ engine ทำ)
+     ผิด = **ทุกจุดที่สุ่ม** ตกอยู่ในเขตของฝ่ายตรงข้าม · จุดที่คร่อมเส้นแบ่งไม่ถูกฟ้อง
+   ⚠ `frontline:true` = เจ้าของประกาศว่าตั้งใจ (แนวรั้วกัวหวย 229 ตั้ง "เหนือเส้นเมือง
+     ของฮั่น" บนเส้นที่แผนที่ราชการไม่มีชื่อ — เขตหนึ่งเขตหนึ่งเจ้าของแสดงไม่ได้)     */
+head('16 · โซ่ป้อม/แนวรั้ว/ค่าย ยืนอยู่บนแผ่นดินของฝ่ายตัวเองไหม');
+{
+  const WK = TK.works || [];
+  let REGN = null;
+  try {
+    require(path.join(ROOT, 'data', 'geo.js'));
+    try { require(path.join(ROOT, 'data', 'geo_fill.js')); } catch { /* ใช้รูปที่ลากมือ */ }
+    require(path.join(ROOT, 'data', 'timeline.js'));
+    REGN = TK.regions;
+  } catch (e) { REGN = null; }
+
+  if (!WK.length)      note('ยังไม่มี works ประกาศไว้');
+  else if (!REGN)      warn('โหลด geo/timeline ไม่ได้ — ข้ามข้อนี้ (ไม่ใช่ผลตรวจ)');
+  else {
+    /* รูปเดียวกับที่วาดจริง (geo_fill ถ้ามี) — วิธีเดียวกับ check_map.js เป๊ะ ๆ */
+    const loops = d => {
+      const out = [];
+      for (const chunk of d.split('M').slice(1)){
+        const pts = []; const re = /(-?[\d.]+)\s*,\s*(-?[\d.]+)/g; let m;
+        while ((m = re.exec(chunk))) pts.push([+m[1], +m[2]]);
+        if (pts.length > 2) out.push(pts);
+      }
+      return out;
+    };
+    const shp = {};
+    for (const id in REGN) shp[id] = loops(REGN[id].fill || REGN[id].d);
+    const inPoly = (pts, x, y) => {
+      let hit = false;
+      for (let i = 0, j = pts.length - 1; i < pts.length; j = i++){
+        const [xi, yi] = pts[i], [xj, yj] = pts[j];
+        if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) hit = !hit;
+      }
+      return hit;
+    };
+    const regionAt = (x, y) => {
+      for (const id in shp) if (shp[id].some(l => inPoly(l, x, y))) return id;
+      return null;
+    };
+    const TL = TK.timeline || [];
+    const Y1 = TL.length ? Math.max(...TL.map(b => b.year)) : 285;
+    const ownCache = {};
+    const ownersAtEndOf = y => {
+      if (ownCache[y]) return ownCache[y];
+      const o = {};
+      for (const id in REGN) o[id] = REGN[id].owner;
+      for (const b of TL) if (b.year <= y) Object.assign(o, b.mapDelta || {});
+      return (ownCache[y] = o);
+    };
+    const LBL = s => (TK.factions[s] || {}).label || s;
+
+    const byPair4 = {};
+    E.forEach(e => { byPair4[key(e.a,e.b)] = e; byPair4[key(e.b,e.a)] = e; });
+
+    let bad16 = 0, ok16 = 0;
+    for (const w of WK){
+      if (!w.side || w.side === 'none' || w.year == null) continue;
+      const e = byPair4[key(w.on[0], w.on[1])]; if (!e || !e.d) continue;
+      /* จุดตัวอย่างตามช่วง from–to · ทิศ from→to เดินจาก on[0] ไป on[1] */
+      const pts = samplePath(e.d, 2);
+      if (pts.length < 2) continue;
+      const fwd = near(pts[0][0], pts[0][1], N[w.on[0]].x, N[w.on[0]].y, 3);
+      const seq = fwd ? pts : pts.slice().reverse();
+      const samples = [];
+      for (let k = 0; k <= 6; k++){
+        const u = w.from + (w.to - w.from) * (k / 6);
+        samples.push(seq[Math.min(seq.length - 1, Math.round(u * (seq.length - 1)))]);
+      }
+      const yEnd = (w.gone != null ? w.gone - 1 : Y1);
+      const wrong = [];
+      for (let y = w.year; y <= yEnd; y++){
+        const own = ownersAtEndOf(y);
+        const holders = new Set();
+        for (const s of samples){ const r = regionAt(s[0], s[1]); if (r) holders.add(own[r]); }
+        if (!holders.size) continue;                       /* ไม่ตกในเขตไหนเลย — ข้อ 14 ดูแล */
+        if ([...holders].every(h => h && h !== 'none' && h !== w.side))
+          wrong.push(y + ':' + [...holders].map(LBL).join('/'));
+      }
+      const tag = w.id + ' (' + (w.label || w.kind) + ' · ' + LBL(w.side) + ')';
+      /* รายการปีอาจยาวหลายสิบปีถ้าชิ้นนั้นไม่มี `gone` — ตัดให้อ่านออก แล้วบอกยอดจริง */
+      const yl = wrong.length > 6
+        ? wrong.slice(0,3).join(' · ') + ' … ' + wrong[wrong.length-1] +
+          ' (รวม ' + wrong.length + ' ปี)'
+        : wrong.join(' · ');
+      if (!wrong.length) ok16++;
+      else if (w.frontline){
+        note(tag + ' ยืนในแดนอีกฝ่ายปี ' + yl +
+             ' — **ประกาศ `frontline:true` ไว้แล้ว** (แนวคร่อมเส้นแบ่งที่เขตแสดงไม่ได้)');
+        ok16++;
+      } else {
+        bad(tag + ' ยืนอยู่บนแผ่นดินของอีกฝ่ายเต็มเส้น: ' + yl +
+            ' — ถ้าตั้งใจให้ใส่ `frontline:true` พร้อมเหตุผล ถ้าไม่ตั้งใจให้แก้ `year` หรือ `on`');
+        bad16++;
+      }
+    }
+    if (!bad16) ok('ผ่านทั้ง ' + ok16 + ' ชิ้น — ไม่มีชิ้นไหนยืนคร่อมแดนศัตรูโดยไม่ได้ประกาศ');
+  }
+}
+
 /* ═══ สรุป ═══ */
 console.log('\n' + '─'.repeat(58));
 console.log(errs ? '✖ ผิด ' + errs + ' รายการ' : '✔ ไม่มีข้อผิดพลาด');

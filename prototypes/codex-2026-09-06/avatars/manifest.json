@@ -1,0 +1,748 @@
+{
+  "source": "data/names.js",
+  "sourceSha256": "4461e9b4f6b4416bf463957803e61507a1a7415a3e83982a3b1038b95ae98abc",
+  "count": 80,
+  "completedCount": 29,
+  "approvedStyle": true,
+  "nextId": "caopi",
+  "assetPatterns": {
+    "fullBody": "approved/{id}-alpha.png",
+    "portrait96": "portraits/96/{id}.png",
+    "portrait192": "portraits/192/{id}.png"
+  },
+  "people": [
+    {
+      "order": 1,
+      "id": "liubei",
+      "label": "หลิวเป้ย",
+      "py": "Liu Bei",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/liubei-alpha-v2.png"
+    },
+    {
+      "order": 2,
+      "id": "guanyu",
+      "label": "กวนอวี่",
+      "py": "Guan Yu",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/guanyu-alpha.png"
+    },
+    {
+      "order": 3,
+      "id": "zhangfei",
+      "label": "จางเฟย",
+      "py": "Zhang Fei",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/zhangfei-alpha.png"
+    },
+    {
+      "order": 4,
+      "id": "zhaoyun",
+      "label": "จ้าวหยุน",
+      "py": "Zhao Yun",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/zhaoyun-alpha.png"
+    },
+    {
+      "order": 5,
+      "id": "kongming",
+      "label": "จูเก๋อเลี่ยง",
+      "py": "Zhuge Liang",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/kongming-alpha.png"
+    },
+    {
+      "order": 6,
+      "id": "machao",
+      "label": "หม่าเชา",
+      "py": "Ma Chao",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/machao-alpha.png"
+    },
+    {
+      "order": 7,
+      "id": "madai",
+      "label": "หม่าไต้",
+      "py": "Ma Dai",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/madai-alpha.png"
+    },
+    {
+      "order": 8,
+      "id": "masu",
+      "label": "หม่าซู่",
+      "py": "Ma Su",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/masu-alpha.png"
+    },
+    {
+      "order": 9,
+      "id": "huangquan",
+      "label": "หวงเฉวียน",
+      "py": "Huang Quan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/huangquan-alpha.png"
+    },
+    {
+      "order": 10,
+      "id": "qinmi",
+      "label": "ฉินมี่",
+      "py": "Qin Mi",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/qinmi-alpha.png"
+    },
+    {
+      "order": 11,
+      "id": "fazheng",
+      "label": "ฝ่าเจิ้ง",
+      "py": "Fa Zheng",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/fazheng-alpha.png"
+    },
+    {
+      "order": 12,
+      "id": "dengzhi",
+      "label": "เติ้งจือ",
+      "py": "Deng Zhi",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/dengzhi-alpha.png"
+    },
+    {
+      "order": 13,
+      "id": "wulan",
+      "label": "อู๋หลาน",
+      "py": "Wu Lan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/wulan-alpha.png"
+    },
+    {
+      "order": 14,
+      "id": "liyan",
+      "label": "หลี่เหยียน",
+      "py": "Li Yan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/liyan-alpha.png"
+    },
+    {
+      "order": 15,
+      "id": "liushan",
+      "label": "หลิวช่าน",
+      "py": "Liu Shan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/liushan-alpha.png"
+    },
+    {
+      "order": 16,
+      "id": "liuxuan",
+      "label": "หลิวเสวียน",
+      "py": "Liu Xuan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/liuxuan-alpha.png"
+    },
+    {
+      "order": 17,
+      "id": "jiangwan",
+      "label": "เจี่ยงหว่าน",
+      "py": "Jiang Wan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/jiangwan-alpha.png"
+    },
+    {
+      "order": 18,
+      "id": "feiyi",
+      "label": "เฟ่ยอี",
+      "py": "Fei Yi",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/feiyi-alpha.png"
+    },
+    {
+      "order": 19,
+      "id": "dongyun",
+      "label": "ต่งหยุ่น",
+      "py": "Dong Yun",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/dongyun-alpha.png"
+    },
+    {
+      "order": 20,
+      "id": "wangping",
+      "label": "หวังผิง",
+      "py": "Wang Ping",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/wangping-alpha.png"
+    },
+    {
+      "order": 21,
+      "id": "weiyan",
+      "label": "เว่ยเหยียน",
+      "py": "Wei Yan",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/weiyan-alpha.png"
+    },
+    {
+      "order": 22,
+      "id": "yangyi",
+      "label": "หยางอี๋",
+      "py": "Yang Yi",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/yangyi-alpha.png"
+    },
+    {
+      "order": 23,
+      "id": "jiangwei",
+      "label": "เจียงเหวย",
+      "py": "Jiang Wei",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/jiangwei-alpha.png"
+    },
+    {
+      "order": 24,
+      "id": "luoxian",
+      "label": "หลัวเซี่ยน",
+      "py": "Luo Xian",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/luoxian-alpha.png"
+    },
+    {
+      "order": 25,
+      "id": "huanghao",
+      "label": "หวงเฮ่า",
+      "py": "Huang Hao",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/huanghao-alpha.png"
+    },
+    {
+      "order": 26,
+      "id": "huangzhong",
+      "label": "หวงจง",
+      "py": "Huang Zhong",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/huangzhong-alpha.png"
+    },
+    {
+      "order": 27,
+      "id": "zhangda",
+      "label": "จางต๋า",
+      "py": "Zhang Da",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/zhangda-alpha.png"
+    },
+    {
+      "order": 28,
+      "id": "fanqiang",
+      "label": "ฟ่านเฉียง",
+      "py": "Fan Qiang",
+      "side": "han",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/fanqiang-alpha.png"
+    },
+    {
+      "order": 29,
+      "id": "caocao",
+      "label": "เฉาเชา",
+      "py": "Cao Cao",
+      "side": "wei",
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caocao-alpha.png"
+    },
+    {
+      "order": 30,
+      "id": "caopi",
+      "label": "เฉาพี",
+      "py": "Cao Pi",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 31,
+      "id": "caorui",
+      "label": "เฉารุ่ย",
+      "py": "Cao Rui",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 32,
+      "id": "caofang",
+      "label": "เฉาฟาง",
+      "py": "Cao Fang",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 33,
+      "id": "caomao",
+      "label": "เฉาเหมา",
+      "py": "Cao Mao",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 34,
+      "id": "caozhen",
+      "label": "เฉาเจิน",
+      "py": "Cao Zhen",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 35,
+      "id": "caoshuang",
+      "label": "เฉาส่วง",
+      "py": "Cao Shuang",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 36,
+      "id": "caoren",
+      "label": "เฉาเหริน",
+      "py": "Cao Ren",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 37,
+      "id": "simayi",
+      "label": "ซือหม่าอี้",
+      "py": "Sima Yi",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 38,
+      "id": "simashi",
+      "label": "ซือหม่าซือ",
+      "py": "Sima Shi",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 39,
+      "id": "simazhao",
+      "label": "ซือหม่าเจา",
+      "py": "Sima Zhao",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 40,
+      "id": "zhanghe",
+      "label": "จางเหอ",
+      "py": "Zhang He",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 41,
+      "id": "caohong",
+      "label": "เฉาหง",
+      "py": "Cao Hong",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 42,
+      "id": "guohuai",
+      "label": "กัวหวย",
+      "py": "Guo Huai",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 43,
+      "id": "haozhao",
+      "label": "ห่าวเจา",
+      "py": "Hao Zhao",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 44,
+      "id": "feiyao",
+      "label": "เฟ่ยเย่า",
+      "py": "Fei Yao",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 45,
+      "id": "qinlang",
+      "label": "ฉินหลาง",
+      "py": "Qin Lang",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 46,
+      "id": "dengai",
+      "label": "เติ้งอ้าย",
+      "py": "Deng Ai",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 47,
+      "id": "chenqun",
+      "label": "เฉินฉวิน",
+      "py": "Chen Qun",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 48,
+      "id": "mengda",
+      "label": "เมิ่งต๋า",
+      "py": "Meng Da",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 49,
+      "id": "jiachong",
+      "label": "เจี่ยฉง",
+      "py": "Jia Chong",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 50,
+      "id": "chengji",
+      "label": "เฉิงจี้",
+      "py": "Cheng Ji",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 51,
+      "id": "wangling",
+      "label": "หวังหลิง",
+      "py": "Wang Ling",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 52,
+      "id": "guanqiujian",
+      "label": "กว้านชิวเจี่ยน",
+      "py": "Guanqiu Jian",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 53,
+      "id": "wenqin",
+      "label": "เหวินชิน",
+      "py": "Wen Qin",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 54,
+      "id": "zhugedan",
+      "label": "จูเก๋อต้าน",
+      "py": "Zhuge Dan",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 55,
+      "id": "wangxiong",
+      "label": "หวังสยง",
+      "py": "Wang Xiong",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 56,
+      "id": "suze",
+      "label": "ซูเจ๋อ",
+      "py": "Su Ze",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 57,
+      "id": "zhangji",
+      "label": "จางจี้",
+      "py": "Zhang Ji",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 58,
+      "id": "xiahouyuan",
+      "label": "เซี่ยโหวเยวียน",
+      "py": "Xiahou Yuan",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 59,
+      "id": "guoxun",
+      "label": "กัวซวิน",
+      "py": "Guo Xun",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 60,
+      "id": "xiahouba",
+      "label": "เซี่ยโหวป้า",
+      "py": "Xiahou Ba",
+      "side": "han",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 61,
+      "id": "sunquan",
+      "label": "ซุนเฉวียน",
+      "py": "Sun Quan",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 62,
+      "id": "sundeng",
+      "label": "ซุนเติง",
+      "py": "Sun Deng",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 63,
+      "id": "sunjun",
+      "label": "ซุนจวิ้น",
+      "py": "Sun Jun",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 64,
+      "id": "sunchen",
+      "label": "ซุนเฉิน",
+      "py": "Sun Chen",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 65,
+      "id": "sunhao",
+      "label": "ซุนเฮ่า",
+      "py": "Sun Hao",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 66,
+      "id": "luxun",
+      "label": "ลู่ซวิ่น",
+      "py": "Lu Xun",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 67,
+      "id": "lukang",
+      "label": "ลู่ค่าง",
+      "py": "Lu Kang",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 68,
+      "id": "lumeng",
+      "label": "หลวี่เหมิง",
+      "py": "Lü Meng",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 69,
+      "id": "zhuran",
+      "label": "จูหรัน",
+      "py": "Zhu Ran",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 70,
+      "id": "zhuhuan",
+      "label": "จูหวน",
+      "py": "Zhu Huan",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 71,
+      "id": "zhugeke",
+      "label": "จูเก๋อเค่อ",
+      "py": "Zhuge Ke",
+      "side": "wu",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 72,
+      "id": "kebineng",
+      "label": "เคอปี่เหนิง",
+      "py": "Kebineng",
+      "side": "none",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 73,
+      "id": "zhangjin",
+      "label": "จางจิ้น",
+      "py": "Zhang Jin",
+      "side": "none",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 74,
+      "id": "huanghua",
+      "label": "หวงหัว",
+      "py": "Huang Hua",
+      "side": "none",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 75,
+      "id": "quyan",
+      "label": "ชวีเหยี่ยน",
+      "py": "Qu Yan",
+      "side": "none",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 76,
+      "id": "yangfu",
+      "label": "หยางฟู่",
+      "py": "Yang Fu",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 77,
+      "id": "jiangxu",
+      "label": "เจียงซวี่",
+      "py": "Jiang Xu",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 78,
+      "id": "zhaoang",
+      "label": "จ้าวอ๋าง",
+      "py": "Zhao Ang",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 79,
+      "id": "wangyi",
+      "label": "หวังอี้",
+      "py": "Wang Yi",
+      "side": "wei",
+      "status": "not_started",
+      "file": null
+    },
+    {
+      "order": 80,
+      "id": "yuanshao",
+      "label": "หยวนเส้า",
+      "py": "Yuan Shao",
+      "side": "none",
+      "status": "not_started",
+      "file": null
+    }
+  ],
+  "lastReviewed": "2026-09-07",
+  "nextAction": "Continue Wei faction with caopi, caorui and caofang. Produce full-body alpha plus 96px and 192px portraits for each.",
+  "generationMode": "built_in_imagegen",
+  "sampleRevision": 3,
+  "promptFile": "prompts.md",
+  "qualityNotes": [
+    "Characters 1-29 have 1254x1254 RGBA full-body masters normalized to 84% canvas height.",
+    "Characters 1-29 also have transparent portrait icons at 96x96 and 192x192 under portraits/{size}/{id}.png.",
+    "Background extraction is performed locally from the generated white master to avoid baked checkerboard output."
+  ],
+  "style": "painted_semi_realistic_adult",
+  "approvedSample": "approved/liubei-alpha-v2.png",
+  "handoffPrompt": "HANDOFF_PROMPT_TH.md"
+}

@@ -435,6 +435,72 @@ TK.ui = (function(){
   let curBeat = null, mirrorT1 = 0, mirrorT2 = 0;
   const mirrorSeen = new Set();
 
+  /* ══ ★★ การ์ดข้อมูลจุด — คลิกหมุดแล้วอ่านได้ว่ามันคืออะไรและใครใช้มันบ้าง ══════════
+     เจ้าของถามหาตอนเห็นหน้าต้นแบบของ Codex (2026-09-08) · หมุดเป็นของเรามาตลอด
+     สิ่งที่ขาดคือการ์ดนี้ · ผมขอสามช่องนี้ไปเองใน `NOTES_FROM_CLAUDE_TH.md §4` เพราะ
+     มันคือสิ่งที่ต้องเปิดดูทุกครั้งที่สอบเทียบตำแหน่งรูปกับแผ่น:
+       `sdx/sdy/anchor` — ค่าที่เลื่อน *เฉพาะรูป* ออกจากหมุด
+       `year/gone`      — หลายจุดเกิดและหายกลางเรื่อง (ค่าย · โซ่ป้อม · ยุ้ง)
+       ฉากที่ใช้จุดนี้   — ตอบคำถามที่แพงที่สุด: "ถ้าขยับจุดนี้ ฉากไหนพังบ้าง"
+     ⚠ นับเฉพาะฉากที่ **ปักหมุด/ปะทะที่จุดนี้ตรง ๆ** ไม่นับถนนหรือกล้องที่ผ่านโดยอ้อม
+       (ข้อจำกัดเดียวกับที่ฝั่ง Codex ระบุไว้ในต้นแบบ — เขียนบอกไว้ในการ์ดด้วย)      */
+  let placeUse = null;
+  function placeUsage(id){
+    if (!placeUse){
+      placeUse = new Map();
+      E.beats.forEach(b => {
+        for (const m of (b.markers || [])){
+          if (!m.place || m.echo) continue;
+          if (!placeUse.has(m.place)) placeUse.set(m.place, []);
+          const list = placeUse.get(m.place);
+          if (!list.some(x => x.id === b.id)) list.push({id:b.id, year:b.year});
+        }
+      });
+    }
+    return placeUse.get(id) || [];
+  }
+
+  function setupPlaceCard(){
+    const box = $('#placecard');
+    if (!box || !TK.map.setPlaceClick) return;
+    const esc = t => String(t == null ? '' : t)
+      .replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+    const close = () => { box.hidden = true; };
+
+    TK.map.setPlaceClick((id, p) => {
+      const use = placeUsage(id);
+      const row = (k, v) => v == null || v === '' ? ''
+        : `<div class="pc-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`;
+      const life = p.year != null || p.gone != null
+        ? (p.year != null ? p.year : '—') + ' → ' + (p.gone != null ? (p.gone - 1) : 'จบเล่ม')
+        : null;
+      const shift = (p.sdx || p.sdy || p.anchor)
+        ? `${p.sdx || 0}, ${p.sdy || 0}${p.anchor ? ' · ' + p.anchor : ''}` : null;
+      box.innerHTML =
+        `<button class="pc-x" title="ปิด">✕</button>` +
+        `<p class="pc-kind">${esc(p.type)}${p.role ? ' · ' + esc(p.role) : ''}</p>` +
+        `<h3>${esc(p.label)}</h3>` +
+        `<p class="pc-py">${esc(p.py || '')}${p.map ? ' <span>· แผ่นพิมพ์ว่า ' + esc(p.map) + '</span>' : ''}</p>` +
+        row('พิกัดบนแผ่น', p.x + ', ' + p.y) +
+        row('เลื่อนรูป', shift) +
+        row('มีอยู่ช่วงปี', life) +
+        (p.chk ? `<p class="pc-warn">⚠ ยังไม่ได้สอบเทียบกับแผ่น (chk)</p>` : '') +
+        (p.note ? `<p class="pc-note">${esc(p.note)}</p>` : '') +
+        `<div class="pc-scenes"><span>ฉากที่ปักจุดนี้ (${use.length})</span>` +
+          (use.length
+            ? use.map(u => `<button data-go="${esc(u.id)}">${esc(u.id)} · ${u.year}</button>`).join('')
+            : '<i>ยังไม่มีฉากไหนใช้</i>') +
+        `</div>` +
+        `<p class="pc-foot">นับเฉพาะฉากที่ปักหมุดหรือปะทะตรงจุดนี้ · ไม่นับถนนหรือกล้องที่ผ่านโดยอ้อม</p>`;
+      box.hidden = false;
+      box.querySelector('.pc-x').onclick = close;
+      box.querySelectorAll('[data-go]').forEach(b2 => {
+        b2.onclick = () => { const n = beatIndexById(b2.dataset.go); if (n >= 0) scrollTo(n); };
+      });
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
   function bindControls(){
     tap('#btnNext',  () => { setPlaying(false); scrollTo(Math.min(E.length - 1, E.index + 1)); });
     tap('#btnPrev',  () => { setPlaying(false); scrollTo(Math.max(0, E.index - 1)); });
@@ -602,21 +668,70 @@ TK.ui = (function(){
       const v = (raw === null || raw === '') ? NaN : +raw;
       if (Number.isInteger(v) && v >= 0 && v < MODES.length) mi = v;
     } catch {}
+    /* ★ ชั้นภาพรุ่นใหม่ไม่ได้ใช้ CSS ของเราคุมความเข้ม — loader ของมันคุมด้วย filter
+       จึงต้องซิงก์ตรงนี้ **ในตัว applyMode เอง** ห้ามไปผูก handler ใหม่ที่ปุ่ม
+       ⚠ `tap()` ใช้ `el.onclick =` ซึ่ง **ทับ handler เดิมทิ้ง** — เรียก tap ซ้ำที่ปุ่มเดียวกัน
+         = ฆ่าปุ่มนั้น (เกือบพลาดมาแล้ว 2026-09-08) */
+    let artBaseOn = false;
     const applyMode = () => {
       const st = $('#stage');
       if (!(mi >= 0 && mi < MODES.length)) mi = MODES.length - 1;
       MODES.forEach(m => m.cls && st.classList.remove(m.cls));
       if (MODES[mi].cls) st.classList.add(MODES[mi].cls);
       $('#mapmode').textContent = 'แผนที่: ' + MODES[mi].label;
+      /* ⚠⚠ **แผ่นวาดใหม่ใช้ธีมกลางวันเสมอ** — อย่าเอา "เข้ม" ไปแมปกับ `night` ของ loader
+         มันคือ `brightness(.24)` ซึ่งออกแบบมาสำหรับแอปพื้นดำ · แผ่นนี้เป็นกระดาษ
+         พอจับคู่กันแล้วได้แผนที่มืดขุ่นทั้งใบ ภูเขาหายหมด (เจอ 2026-09-08)
+         ปุ่ม "แผนที่: ปกติ/เข้ม" ยังทำงานอยู่ — มันไปคุม *ความเข้มของสีเขตของเรา* ผ่าน
+         คลาส `map-rich` ใน css แทน ซึ่งเป็นสิ่งที่มันควรคุมตั้งแต่แรกบนแผ่นสว่าง */
+      if (artBaseOn && TK.map.setArtTheme) TK.map.setArtTheme('day');
       try { localStorage.setItem('tk-mapmode', mi); } catch {}
     };
     tap('#mapmode', () => { mi = (mi + 1) % MODES.length; applyMode(); });
     applyMode();
 
-    /* ⛔ ถอดออก 2026-09-06 — เจ้าของสั่งหยุดโครงการแผ่นวาดเอง (DECISIONS §14 เฟส 5)
-       ล้างค่าที่ค้างใน localStorage ของผู้ใช้เดิมด้วย ไม่งั้นเบราว์เซอร์ที่เคยเปิดแผ่นใหม่
-       จะถือคีย์ที่ไม่มีความหมายไว้ตลอดกาล (บทเรียน §E21 — ค่าค้างใน localStorage อันตราย) */
+    /* ⛔ คีย์เก่าของโครงการ "แผ่นที่เราวาดเอง" ที่ปิดถาวร 2026-09-06 — ล้างทิ้งต่อไป
+       ไม่งั้นเบราว์เซอร์ที่เคยเปิดแผ่นเก่าจะถือคีย์ที่ไม่มีความหมายไว้ตลอดกาล (§E21)
+       ⚠ ชั้นภาพรุ่นใหม่ใช้คีย์ `tk-base` คนละตัว — **ห้ามเอามาใช้ซ้ำคีย์เดิม** */
     try { localStorage.removeItem('tk-plate'); } catch {}
+
+    /* ══ ★★ แผ่นพื้น: ต้นฉบับ ↔ ภาพวาดใหม่ (เจ้าของสั่งเสียบ 2026-09-08) ══════════
+       ปุ่มนี้สลับ *ฐาน* ไม่ใช่ความเข้ม — คนละแกนกับ `#mapmode` ที่อยู่ข้าง ๆ
+       ⚠ `setArt` เป็น async (โหลด SVG + PNG 2.7 MB ครั้งแรก) ปุ่มจึงต้อง:
+         ① กันกดซ้ำระหว่างโหลด ② บอกผู้ใช้ว่ากำลังโหลด ③ **ถ้าโหลดพัง ต้องกลับไปต้นฉบับ
+         และบอกด้วย** ห้ามค้างที่ข้อความว่าเปิดอยู่ทั้งที่จอไม่เปลี่ยน
+       ⚠ ไม่เรียก `setArt(true)` ตอนโหลดหน้าเว้นแต่ผู้อ่านเคยเลือกไว้ — ค่าเริ่มต้นคือ
+         แผ่นต้นฉบับ เพราะเป็นของที่ตรวจแล้วทั้งเล่ม 132 ฉาก */
+    {
+      const btn = $('#btnBase');
+      const LABEL = { off:'แผ่น: ต้นฉบับ', on:'แผ่น: วาดใหม่', busy:'แผ่น: กำลังโหลด…' };
+      let baseOn = false, busy = false;
+      const paint = () => {
+        btn.textContent = busy ? LABEL.busy : (baseOn ? LABEL.on : LABEL.off);
+        btn.classList.toggle('on', baseOn && !busy);
+        btn.disabled = busy;
+      };
+      const apply = want => {
+        if (busy) return;
+        busy = true; paint();
+        Promise.resolve(TK.map.setArt(want)).then(ok => {
+          baseOn = !!ok;
+          artBaseOn = baseOn;                 /* ให้ applyMode ซิงก์ความเข้มให้ */
+          if (want && !ok) btn.title = 'โหลดชั้นภาพไม่สำเร็จ — ยังใช้แผ่นต้นฉบับอยู่';
+          if (baseOn) TK.map.setArtTheme('day');   /* กลางวันเสมอ — ดูเหตุผลที่ applyMode */
+          try { localStorage.setItem('tk-base', baseOn ? '1' : '0'); } catch {}
+        }).finally(() => { busy = false; paint(); });
+      };
+      tap('#btnBase', () => apply(!baseOn));
+    setupPlaceCard();
+      paint();
+      /* ★★ แผ่นวาดใหม่เป็น **ค่าเริ่มต้น** ตั้งแต่ 2026-09-08 (เจ้าของเคาะ "ใช่เป็นค่าเริ่มต้นเลย")
+         ⚠ แยก "ยังไม่เคยเลือก" ออกจาก "เลือกว่าไม่เอา" ให้ชัด — บทเรียน §E21 (`+null` = 0)
+           คนที่เคยกดปิดไว้ต้องได้แผ่นต้นฉบับตามที่เขาเลือก ไม่ใช่โดนบังคับกลับทุกครั้งที่เปิด */
+      try {
+        if (localStorage.getItem('tk-base') !== '0') apply(true);
+      } catch { apply(true); }
+    }
 
     document.addEventListener('keydown', e => {
       if (e.target.closest('#reader') && ['ArrowUp','ArrowDown','PageUp','PageDown'].includes(e.key))
@@ -782,7 +897,11 @@ TK.ui = (function(){
     /* ★ บอกแผนที่ว่าตอนนี้ปีอะไร — สัญลักษณ์ของสิ่งที่ยังไม่ถูกสร้างจะได้ไม่โผล่
        (ค่ายนา 234 · โซ่ป้อม 232 · แนวรั้ว 229 · ค่ายหน้าเฉินชาง 224) */
     TK.map.setYear(b.year);
-    TK.map.setMarkers(marks, ev.how !== 'init' && !scrub);
+    /* ★ ส่ง mapDelta ไปด้วย — แผนที่ใช้มันตอบคำถาม "ฉากนี้ชี้มาที่นี่เพราะอะไร"
+       (หมุดที่อยู่ในเขตซึ่งเปลี่ยนมือในฉากนี้ = ชนิด 'flip' · ดู evScan ใน strategic.js)
+       ⚠ ของฉาก *ปัจจุบัน* เท่านั้น — marker แบบ echo ของฉากพี่น้องในฤดูเดียวกัน
+         ไม่ได้วงกระเพื่อมอยู่แล้ว จึงไม่ต้องรู้ delta ของฉากตัวเอง */
+    TK.map.setMarkers(marks, ev.how !== 'init' && !scrub, b.mapDelta);
     paintSeasonNote(b, sibs);
   }
 

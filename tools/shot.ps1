@@ -32,6 +32,7 @@ param(
   [switch]$Season,
   [switch]$Spine,
   [switch]$Roads,
+  [switch]$Art,
   [switch]$Mirror
 )
 
@@ -143,6 +144,19 @@ $driver = @'
   if (q.has('spine'))  { document.getElementById('btnSpine').click(); await wait(120); }
   /* โหมดถนน — กดปุ่มจริงเหมือนสองโหมดข้างบน (DECISIONS §15) */
   if (q.has('roads'))  { document.getElementById('btnRoads').click(); await wait(120); }
+  /* ★ โหมดแผ่นภาพวาดใหม่ (2026-09-08) — กดปุ่มจริงเหมือนโหมดอื่น แล้ว **ต้องรอ**
+     เพราะมันโหลด SVG กับ PNG 2.7 MB ผ่านเน็ตเวิร์กจริง ไม่ใช่แค่สลับคลาส
+     ⚠ ไม่มีโหมดนี้ = ภาพตรวจงานถ่ายชั้นภาพใหม่ไม่ได้เลยสักใบ (localStorage ของ
+       โปรไฟล์ Chrome ใหม่ว่างเสมอ ปุ่มจึงเริ่มที่ "แผ่น: ต้นฉบับ" ทุกครั้ง) */
+  /* ★ บังคับ *สถานะ* ของแผ่น ไม่ใช่ 'กดปุ่มหนึ่งครั้ง' — ตั้งแต่ 2026-09-08
+     แผ่นวาดใหม่เป็นค่าเริ่มต้น การกดปุ่มทื่อ ๆ จึงกลายเป็นการ *ปิด* มัน
+     art=1 บังคับเปิด · art=0 บังคับปิด (ใช้ถ่ายแผ่นต้นฉบับไว้เทียบ) */
+  if (q.has('art')) {
+    const want = q.get('art') !== '0';
+    if (TK.map.artOn !== want) document.getElementById('btnBase').click();
+    for (let k = 0; k < 80 && TK.map.artOn !== want; k++) await wait(100);
+    await wait(500);
+  }
 
   /* .region มี transition:fill .9s — เคยรอ 900ms พอดีเป๊ะ แล้วได้ภาพกลางทาง
      ภาคเหนือออกมาเป็นสีวุ่ยทั้งแถบทั้งที่ HUD บอกว่าวุ่ยเหลือศูนย์เขต
@@ -207,6 +221,7 @@ try {
     if ($Season) { $qs += "&season=1"; $file += "-season" }
     if ($Spine)  { $qs += "&spine=1";  $file += "-spine" }
     if ($Roads)  { $qs += "&roads=1";  $file += "-roads" }
+    if ($Art)    { $qs += "&art=1";    $file += "-art" }
     if ($Mirror) { $qs += "&mirror=1"; $file += "-mirror" }
     # ★ 2026-09-01 — ปิดหน้าเปิด ไม่งั้นมันทับภาพตรวจงานทุกใบ (ui.js setupIntro)
     $qs += "&intro=0"

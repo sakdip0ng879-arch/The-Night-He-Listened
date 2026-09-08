@@ -1,0 +1,1128 @@
+{
+  "date": "2026-09-08T02:34:19.412Z",
+  "checks": {
+    "realYilingUpstreamPreserved": true,
+    "falseJianglingDiagonalRemoved": true,
+    "falseJiangxiaStubRemoved": true,
+    "bothCatchmentsReachEasternYangtze": true,
+    "lakeFillAboveRiverCasing": true,
+    "namedRiverGroups": true,
+    "allLakeRingsCurved": true
+  },
+  "changedReaches": [
+    {
+      "id": "yangtze_jiangling",
+      "before": {
+        "samples": 150,
+        "sourceInkPercent": 80
+      },
+      "after": {
+        "samples": 83,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_han_dongting",
+      "before": {
+        "samples": 151,
+        "sourceInkPercent": 96
+      },
+      "after": {
+        "samples": 137,
+        "sourceInkPercent": 98.5
+      }
+    },
+    {
+      "id": "yangtze_dongting_poyang",
+      "before": {
+        "samples": 200,
+        "sourceInkPercent": 98
+      },
+      "after": {
+        "samples": 187,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "dongting_yangtze",
+      "before": {
+        "samples": 169,
+        "sourceInkPercent": 97.6
+      },
+      "after": {
+        "samples": 161,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_dongting_west",
+      "before": {
+        "samples": 293,
+        "sourceInkPercent": 98.6
+      },
+      "after": {
+        "samples": 238,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "you",
+      "before": {
+        "samples": 144,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 97,
+        "sourceInkPercent": 100
+      }
+    }
+  ],
+  "coverageMethod": "Approximately one sample per source pixel of centerline, cyan within radius 2. Before/after use identical method. Source-color agreement is diagnostic only; source-derived landmask would not be independent geographic evidence.",
+  "allReaches": [
+    {
+      "id": "wei_west",
+      "before": {
+        "samples": 461,
+        "sourceInkPercent": 99.3
+      },
+      "after": {
+        "samples": 461,
+        "sourceInkPercent": 99.3
+      }
+    },
+    {
+      "id": "jing",
+      "before": {
+        "samples": 210,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 210,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "wei_east",
+      "before": {
+        "samples": 127,
+        "sourceInkPercent": 98.4
+      },
+      "after": {
+        "samples": 127,
+        "sourceInkPercent": 98.4
+      }
+    },
+    {
+      "id": "huang_upper",
+      "before": {
+        "samples": 67,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 67,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "fen_lower",
+      "before": {
+        "samples": 128,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 128,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "huang_tong",
+      "before": {
+        "samples": 104,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 104,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "huang_east",
+      "before": {
+        "samples": 266,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 266,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "han_upper",
+      "before": {
+        "samples": 437,
+        "sourceInkPercent": 97
+      },
+      "after": {
+        "samples": 437,
+        "sourceInkPercent": 97
+      }
+    },
+    {
+      "id": "dan_upper",
+      "before": {
+        "samples": 157,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 157,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "si",
+      "before": {
+        "samples": 115,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 115,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "dan_lower",
+      "before": {
+        "samples": 53,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 53,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "han_xiangyang",
+      "before": {
+        "samples": 19,
+        "sourceInkPercent": 89.5
+      },
+      "after": {
+        "samples": 19,
+        "sourceInkPercent": 89.5
+      }
+    },
+    {
+      "id": "yu",
+      "before": {
+        "samples": 230,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 230,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "han_downstream",
+      "before": {
+        "samples": 29,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 29,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yellow_west_north",
+      "before": {
+        "samples": 1489,
+        "sourceInkPercent": 99.8
+      },
+      "after": {
+        "samples": 1489,
+        "sourceInkPercent": 99.8
+      }
+    },
+    {
+      "id": "yellow_top_branch",
+      "before": {
+        "samples": 21,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 21,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yellow_northern_loop",
+      "before": {
+        "samples": 625,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 625,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "jing_headwater",
+      "before": {
+        "samples": 70,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 70,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "fen_upper",
+      "before": {
+        "samples": 345,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 345,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yellow_zhongyuan",
+      "before": {
+        "samples": 91,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 91,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yellow_mouth",
+      "before": {
+        "samples": 451,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 451,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "qi_lower",
+      "before": {
+        "samples": 427,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 427,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "zhang",
+      "before": {
+        "samples": 131,
+        "sourceInkPercent": 90.1
+      },
+      "after": {
+        "samples": 131,
+        "sourceInkPercent": 90.1
+      }
+    },
+    {
+      "id": "zhang_middle",
+      "before": {
+        "samples": 96,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 96,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "zhang_to_yellow",
+      "before": {
+        "samples": 106,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 106,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yellow_northern_small",
+      "before": {
+        "samples": 52,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 52,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "zhang_southern",
+      "before": {
+        "samples": 144,
+        "sourceInkPercent": 87.5
+      },
+      "after": {
+        "samples": 144,
+        "sourceInkPercent": 87.5
+      }
+    },
+    {
+      "id": "zhang_joined",
+      "before": {
+        "samples": 81,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 81,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "wen",
+      "before": {
+        "samples": 140,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 140,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "si_eastern",
+      "before": {
+        "samples": 64,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 64,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "si_xuzhou",
+      "before": {
+        "samples": 193,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 193,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yi",
+      "before": {
+        "samples": 104,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 104,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ying",
+      "before": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ying_to_yi",
+      "before": {
+        "samples": 51,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 51,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yi_to_huai",
+      "before": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ru_tributary",
+      "before": {
+        "samples": 215,
+        "sourceInkPercent": 93
+      },
+      "after": {
+        "samples": 215,
+        "sourceInkPercent": 93
+      }
+    },
+    {
+      "id": "huai",
+      "before": {
+        "samples": 378,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 378,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "huai_shouchun",
+      "before": {
+        "samples": 35,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 35,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "huai_lower",
+      "before": {
+        "samples": 149,
+        "sourceInkPercent": 91.9
+      },
+      "after": {
+        "samples": 149,
+        "sourceInkPercent": 91.9
+      }
+    },
+    {
+      "id": "si_to_huai",
+      "before": {
+        "samples": 98,
+        "sourceInkPercent": 72.4
+      },
+      "after": {
+        "samples": 98,
+        "sourceInkPercent": 72.4
+      }
+    },
+    {
+      "id": "huai_outlet",
+      "before": {
+        "samples": 177,
+        "sourceInkPercent": 84.7
+      },
+      "after": {
+        "samples": 177,
+        "sourceInkPercent": 84.7
+      }
+    },
+    {
+      "id": "han_to_yangtze",
+      "before": {
+        "samples": 155,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 155,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_upper",
+      "before": {
+        "samples": 524,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 524,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_min_tuo",
+      "before": {
+        "samples": 67,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 67,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_tuo_jialing",
+      "before": {
+        "samples": 119,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 119,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_jialing_wu",
+      "before": {
+        "samples": 102,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 102,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_gorges",
+      "before": {
+        "samples": 431,
+        "sourceInkPercent": 99.3
+      },
+      "after": {
+        "samples": 431,
+        "sourceInkPercent": 99.3
+      }
+    },
+    {
+      "id": "yangtze_jiangling",
+      "before": {
+        "samples": 150,
+        "sourceInkPercent": 80
+      },
+      "after": {
+        "samples": 83,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_han_dongting",
+      "before": {
+        "samples": 151,
+        "sourceInkPercent": 96
+      },
+      "after": {
+        "samples": 137,
+        "sourceInkPercent": 98.5
+      }
+    },
+    {
+      "id": "yangtze_dongting_poyang",
+      "before": {
+        "samples": 200,
+        "sourceInkPercent": 98
+      },
+      "after": {
+        "samples": 187,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_poyang_jianye",
+      "before": {
+        "samples": 356,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 356,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_estuary",
+      "before": {
+        "samples": 202,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 202,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "qinhuai",
+      "before": {
+        "samples": 111,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 111,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "chao_outlet",
+      "before": {
+        "samples": 78,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 78,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "min_north",
+      "before": {
+        "samples": 261,
+        "sourceInkPercent": 99.6
+      },
+      "after": {
+        "samples": 261,
+        "sourceInkPercent": 99.6
+      }
+    },
+    {
+      "id": "min_middle",
+      "before": {
+        "samples": 94,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 94,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "min_chengdu_branch",
+      "before": {
+        "samples": 87,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 87,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "tuo",
+      "before": {
+        "samples": 304,
+        "sourceInkPercent": 87.5
+      },
+      "after": {
+        "samples": 304,
+        "sourceInkPercent": 87.5
+      }
+    },
+    {
+      "id": "min_tuo_link",
+      "before": {
+        "samples": 32,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 32,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "min_lower",
+      "before": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 133,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "min_yangtze",
+      "before": {
+        "samples": 89,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 89,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "sichuan_west",
+      "before": {
+        "samples": 408,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 408,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "sichuan_west_south",
+      "before": {
+        "samples": 130,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 130,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "emei_stream",
+      "before": {
+        "samples": 178,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 178,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "jialing",
+      "before": {
+        "samples": 387,
+        "sourceInkPercent": 92.2
+      },
+      "after": {
+        "samples": 387,
+        "sourceInkPercent": 92.2
+      }
+    },
+    {
+      "id": "dang",
+      "before": {
+        "samples": 121,
+        "sourceInkPercent": 98.3
+      },
+      "after": {
+        "samples": 121,
+        "sourceInkPercent": 98.3
+      }
+    },
+    {
+      "id": "jialing_to_yangtze",
+      "before": {
+        "samples": 54,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 54,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "wu",
+      "before": {
+        "samples": 638,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 638,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ruo",
+      "before": {
+        "samples": 304,
+        "sourceInkPercent": 99.3
+      },
+      "after": {
+        "samples": 304,
+        "sourceInkPercent": 99.3
+      }
+    },
+    {
+      "id": "lu",
+      "before": {
+        "samples": 64,
+        "sourceInkPercent": 96.9
+      },
+      "after": {
+        "samples": 64,
+        "sourceInkPercent": 96.9
+      }
+    },
+    {
+      "id": "erhai_link",
+      "before": {
+        "samples": 74,
+        "sourceInkPercent": 97.3
+      },
+      "after": {
+        "samples": 74,
+        "sourceInkPercent": 97.3
+      }
+    },
+    {
+      "id": "dongting_yangtze",
+      "before": {
+        "samples": 169,
+        "sourceInkPercent": 97.6
+      },
+      "after": {
+        "samples": 161,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yangtze_dongting_west",
+      "before": {
+        "samples": 293,
+        "sourceInkPercent": 98.6
+      },
+      "after": {
+        "samples": 238,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "you",
+      "before": {
+        "samples": 144,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 97,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "yuan",
+      "before": {
+        "samples": 567,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 567,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "xiang_upper",
+      "before": {
+        "samples": 265,
+        "sourceInkPercent": 99.2
+      },
+      "after": {
+        "samples": 265,
+        "sourceInkPercent": 99.2
+      }
+    },
+    {
+      "id": "xiang_gui",
+      "before": {
+        "samples": 139,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 139,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "xiang_gui_head",
+      "before": {
+        "samples": 43,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 43,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "xiang_gui_east",
+      "before": {
+        "samples": 88,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 88,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "southern_plate_channel",
+      "before": {
+        "samples": 581,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 581,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_west",
+      "before": {
+        "samples": 348,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 348,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_cangwu",
+      "before": {
+        "samples": 111,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 111,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_north",
+      "before": {
+        "samples": 252,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 252,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_estuary",
+      "before": {
+        "samples": 45,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 45,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_eastern",
+      "before": {
+        "samples": 315,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 315,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "pearl_delta_link",
+      "before": {
+        "samples": 53,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 53,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "gan_west",
+      "before": {
+        "samples": 504,
+        "sourceInkPercent": 99.2
+      },
+      "after": {
+        "samples": 504,
+        "sourceInkPercent": 99.2
+      }
+    },
+    {
+      "id": "gan_east",
+      "before": {
+        "samples": 350,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 350,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "poyang_yangtze",
+      "before": {
+        "samples": 76,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 76,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ze",
+      "before": {
+        "samples": 179,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 179,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ze_west",
+      "before": {
+        "samples": 203,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 203,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "ze_estuary",
+      "before": {
+        "samples": 45,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 45,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "baima_canal",
+      "before": {
+        "samples": 83,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 83,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "min_chengdu_east",
+      "before": {
+        "samples": 101,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 101,
+        "sourceInkPercent": 100
+      }
+    },
+    {
+      "id": "zhang_ye_branch",
+      "before": {
+        "samples": 41,
+        "sourceInkPercent": 100
+      },
+      "after": {
+        "samples": 41,
+        "sourceInkPercent": 100
+      }
+    }
+  ]
+}

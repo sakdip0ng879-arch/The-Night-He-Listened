@@ -51,8 +51,11 @@ for (const id in PL){
   const px = GLYPH_PX[p.type];
   if (!px) continue;                                   /* ชนิดที่ไม่มีรูป */
   const size = px * zoomF * mu;                        /* ด้านของรูป (หน่วยแผนที่) */
-  /* รูปยืนบนจุด: ล่างสุดอยู่ที่ p.y · กึ่งกลางแนวนอนที่ p.x (ตรงกับ scalePins) */
-  const x0 = Math.round(p.x - size/2 + (p.sdx || 0)), y0 = Math.round(p.y - size + (p.sdy || 0));
+  /* รูปยืนบนจุด: ล่างสุดอยู่ที่ p.y · กึ่งกลางแนวนอนที่ p.x (ตรงกับ scalePins)
+     ★ `anchor:"center"` (ด่านที่วางทับรูปของแผ่น) = กึ่งกลางรูปอยู่ที่จุด — ต้องคิดตามด้วย
+       ไม่งั้นตัวตรวจจะวัดกล่องผิดที่ แล้วรายงานว่าด่านทับตัวหนังสือทั้งที่ไม่ทับ */
+  const x0 = Math.round(p.x - size/2 + (p.sdx || 0));
+  const y0 = Math.round((p.anchor === 'center' ? p.y - size/2 : p.y - size) + (p.sdy || 0));
   const x1 = Math.round(x0 + size),  y1 = Math.round(y0 + size);
   let ink = 0, tot = 0;
   for (let y = Math.max(0, y0); y < Math.min(H, y1); y++)

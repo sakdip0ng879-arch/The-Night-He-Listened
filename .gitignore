@@ -37,3 +37,20 @@ tools/_*.json
 # วัตถุดิบ Natural Earth — หลายเมกะไบต์ ใช้ตอน build เท่านั้น
 # ผลลัพธ์ที่ commit คือ data/rivers.js ที่เล็กกว่ามาก (ดู tools/build_rivers.js)
 vendor/naturalearth/*.geojson
+
+# ── prototypes/ = พื้นที่ทำงานของฝั่ง Codex — ทั้งโฟลเดอร์ 106 MB ────────────
+# repo นี้เป็น public (GitHub Pages) เก็บแค่สองอย่างที่มีค่าระยะยาวและไม่ซ้ำที่อื่น:
+#   ① **บทสนทนากับเขา** (`*.md`) — NOTES/REPLY/ROUND_xx/QA/HANDOFF · เป็นประวัติการตัดสินใจ
+#   ② **ไอคอนต้นฉบับ** (`icons/*.svg`) — เป็นของที่เราลอก path มาใส่ตาราง ART จริง ๆ
+#      ต้องเก็บไว้เทียบว่าไม่ได้พิมพ์ใหม่เอง (มีสคริปต์ตรวจใน LOG §5.16)
+#   + `avatars/manifest.json` — แผนงาน 80 ตัว/ทำแล้ว 29 · เล็กและใช้อ้างอิงต่อ
+# ของส่งมอบตัวจริงถูกคัดลอกไป `assets/map-art/` แล้ว **ไม่เก็บสำเนาซ้ำ**
+prototypes/**
+!prototypes/**/
+!prototypes/**/*.md
+!prototypes/codex-2026-09-06/icons/*.svg
+!prototypes/codex-2026-09-06/avatars/manifest.json
+# ซ้ำกับ assets/map-art/ · และไฟล์งานระหว่างทางหลายสิบเมกะ
+prototypes/**/delivery/*.svg
+prototypes/**/delivery/*.json
+prototypes/**/map/**

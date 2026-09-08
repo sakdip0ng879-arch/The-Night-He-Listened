@@ -92,6 +92,90 @@ body{
 #stage:not(.plate-new) #L-plate,
 #stage:not(.plate-new) #L-water{display:none}
 
+/* ══ ★★★ ชั้นภาพรุ่น 03 จากฝั่ง Codex (เสียบ 2026-09-08) ═══════════════════════
+   ภาพมาเป็น `<g data-art-layer="terrain|water">` ที่ strategic.js ย้ายเข้าสองชั้นนี้
+   ★ ของเราเองที่เคยวาดไว้ในชั้นเดียวกัน (`.pl-*` จาก plate_water) ต้อง **ซ่อน ไม่ใช่ลบ**
+     — HANDOFF สั่งไว้ว่า *"เลือกแทนชั้นน้ำเดิมหนึ่งชุด ไม่วาดสองชุดซ้อนกัน"*
+     และ `data/plate_water.js` ยังเป็นข้อมูลที่ `check_water.js` ใช้อยู่ ห้ามทิ้ง */
+#stage.art-on #L-plate > :not([data-art-layer]),
+#stage.art-on #L-water > :not([data-art-layer]){display:none}
+/* ══ ★★★ ระบบสีของโหมดแผ่นวาดใหม่ — **แผ่นเป็นพระเอก สีของเราเป็นตัวประกอบ**
+   เจ้าของสั่ง 2026-09-08: *"สีที่ใช้ระบายมันกลบความสวยของแผนที่ที่ GPT ทำมาหมดเลย
+    โดยเฉพาะภูเขามันโดนกลบหมด และแม่น้ำกลืนกับสีเขียวไปเลย"*
+
+   ★ ต้นเหตุ: เราเอาวิธีคิดของ "แผ่นมืด" มาใช้กับ "แผ่นกระดาษสว่าง"
+     บนแผ่นมืด สีเขตต้องทึบถึงจะเห็น · บนกระดาษ ความทึบเท่านั้นกลายเป็นสีทาทับ
+
+   ⛔⛔ **ทางที่เคยเดินแล้วถอยกลับมา — ห้ามเดินซ้ำ** (เจ้าของสั่งถอย 2026-09-08 ตอนเย็น)
+     รอบแรกผมแก้ด้วยการ *ปลด opacity ของชั้นออก* แล้วตั้ง `fill-opacity:.28`
+     คู่กับ `stroke-opacity:.95; stroke-width:2.6` — คือให้อ่านเจ้าของพื้นที่จาก **เส้นขอบ**
+     เจ้าของทักทันทีว่า *"เหมือนการซอยเขตให้มันชัดโดยใช้ขอบเข้มเข้ามาตี ...
+     แผนที่เก่าไม่มีปัญหา ทำไมอันนี้มีล่ะ"* — และคำถามนั้นชี้ตรงเข้าต้นเหตุ
+
+   ★★★ **คำตอบ: ปัญหาที่เส้นขอบเกิดมาแก้ ถูกแก้ไปแล้วด้วยวิธีอื่นตั้งแต่วันเดียวกัน**
+     • แผ่นเดิมไม่มีปัญหาเพราะ **ใต้สีไม่มีอะไรให้กลบ** — หมึกภูเขาบน map.jpg มีแค่
+       17,963 px = 0.56% ของแผ่น (วัดไว้ที่ LOG §5.12) ทาทับ .45 ก็ไม่ได้เสียอะไร
+     • แผ่นใหม่มีภาพนูนเต็มแผ่น รอบแรกจึงโดนกลบจริง
+     • แต่ `strategic.js` `loadArt()` **ยกภาพนูนออกไปไว้ *เหนือ* สีเขตแล้ว** (`#L-relief`
+       + `mix-blend-mode:multiply` ข้างล่างนี้) ภูเขาจึงไม่ได้อยู่ใต้สีอีกต่อไป
+       มันทำหน้าที่ *ทำให้มืดลง* จากข้างบน → **ความทึบของสีเขตไม่เกี่ยวกับภูเขาอีกแล้ว**
+     ตารางใน HANDOFF §1① ที่บอกว่า `.45` แล้วภูเขาหาย เป็นตัวเลขที่วัด **ก่อน** มี multiply
+     พิสูจน์ด้วยภาพคู่เทียบที่ c9-05 แล้ว: เอาขอบออก + ดันเนื้อสีกลับ → ภูเขาคมกว่าเดิม
+
+   ⚠⚠ **ห้าม "เอาขอบออก" ด้วย `stroke-opacity:0`** (HANDOFF เคยเสนอทางนี้ไว้)
+     `stroke-width:1.5` ของ `.region` **ไม่ใช่เส้นขอบ** มันคือตัวปิดรอย anti-aliasing
+     ตรงรอยต่อ path สองอัน (อ่านบันทึกประวัติของเลขนี้ที่ `.region` ข้างล่าง)
+     ถอดมันออกเมื่อไหร่ = ได้เส้นขาวบาง ๆ คั่นทุกเขต
+
+   ★ วิธีที่ถูก คือ **กลไกเดิมของแผ่นเก่าเป๊ะ ๆ — คุมความเข้มที่ `opacity` ของ *ชั้น***
+     ไม่ใช่ที่ `fill/stroke` ของแต่ละรูป · ทำแบบนี้แล้ว stroke จางเท่า fill โดยอัตโนมัติ
+     (เส้นหายไปเอง แต่ยังปิดรอยต่ออยู่) และไม่มีการทับซ้อนของ stroke บน fill
+     ที่ทำให้ขอบเข้มขึ้นมาเองแม้ตั้งค่าเท่ากัน — เพราะ alpha ถูกรวมในชั้นก่อน แล้วค่อยจาง
+   ★ ตัวเลขสองตัวข้างล่าง **ไม่ได้ตั้งใหม่ด้วยตา** — เป็นค่าที่มีอยู่แล้วทั้งคู่:
+     `.38` = `#L-regions` ฐานเดิม · `.45` = `#stage.plate-new #L-regions` เดิม */
+#stage.art-on #L-regions{opacity:.45}                  /* "เข้ม" (ค่าเริ่มต้นของปุ่ม) */
+/* ปุ่ม "แผนที่: ปกติ/เข้ม" มีความหมายกับแผ่นนี้ตรงนี้ — คุมเนื้อสีเขต ไม่ใช่ความสว่างของแผ่น */
+#stage.art-on:not(.map-rich) #L-regions{opacity:.38}   /* "ปกติ" */
+
+/* ★ เงาเขา — คูณทับสีพื้น · ต้องถอดสีก่อน ไม่งั้นภาพสีน้ำตาลจะย้อมสีฝ่ายให้เพี้ยน
+   ยกความเข้มขึ้นได้แล้วเพราะเนื้อสีเขตบางลงมาก (เดิม .55 ตอนเขตทึบ .62) */
+#L-relief{mix-blend-mode:multiply}
+#L-relief image{opacity:.72; filter:grayscale(1) brightness(1.06) contrast(1.22)}
+#stage:not(.art-on) #L-relief{display:none}
+
+/* ★★ น้ำ — ไฟล์ส่งมาเป็น **เทาอมเขียว** (`#9bbdbc` / `#688f87`) ซึ่งสวยบนกระดาษเปล่า
+   แต่พอมีแผ่นดินของฮั่นสีเขียวอยู่ข้างใต้ มันกลืนกันทันที (เจ้าของจับได้)
+   → ดันไปทางน้ำเงินให้พ้นย่านสีเขียว แต่คงความหม่นของแผ่นไว้ ไม่ใช่ฟ้าสด
+
+   ══ รุ่น 04 (8 ก.ย. 2026) — เล็งด้วย **class** แล้ว ไม่ใช่ตำแหน่ง ══════════════
+   เราขอไปเองใน `NOTES_FROM_CLAUDE_TH.md` §2.1 ว่า `nth-of-type` คือระเบิดเวลา
+   (วันที่เขาสลับลำดับกลุ่ม สีน้ำจะเพี้ยนทั้งแผ่นโดยไม่มีอะไรฟ้อง) — **เขาให้ class มาแล้ว**
+
+   โครงของไฟล์รุ่น 04 มี **สี่ชนิด** และลำดับวาดสำคัญ (บนลงล่าง = หลังทับหน้า):
+     ① `.open-water-shore` 13 รูป  — ขอบทะเล/ทะเลสาบ (รูปปิด มี fill + stroke)
+     ② `.rivers-casing`   95 เส้น  — ขอบเข้มของแม่น้ำ
+     ③ `.rivers-core`     95 เส้น  — แกนอ่อนของแม่น้ำ
+     ④ `.open-water-fill` 13 รูป  — **ผิวน้ำนิ่งทับปิดท้าย** กันไม่ให้ขอบแม่น้ำ ② โผล่ในทะเลสาบ
+
+   ⚠⚠ **`.open-water-fill` ห้ามมี `stroke` เด็ดขาด** (Codex เตือนมาเอง) — มันถูกวาด
+     ทับท้ายสุด ถ้าใส่เส้นขอบให้มัน จะได้ **ขอบตัดขวางปากแม่น้ำ** ทุกจุดที่แม่น้ำไหลลงทะเลสาบ
+   ⚠⚠ **`.open-water-fill` กับ `.rivers-core` ต้องเป็นสีเดียวกัน** ไม่งั้นเห็นรอยต่อ
+     ตรงปากน้ำ เพราะแม่น้ำวิ่งเข้าไปจบใต้ผิวน้ำนิ่งพอดี
+   ⚠ **ห้ามเขียนกฎรวบว่า `... path{fill:X; stroke:Y}` แบบเดิมอีก** — ของเดิมเล็ง
+     "ลูกตรงที่เป็น path" ซึ่งรุ่น 04 มี **26 อัน** (shore 13 + fill 13) ไม่ใช่ 13
+     กฎเดิมจะไปใส่ stroke ให้ ④ ด้วย = ตำหนิที่ย่อหน้าบนเตือนไว้เป๊ะ ๆ
+   ⚠ **ห้ามยัด `fill` ให้ ② หรือ ③** — มันเป็นเส้นเปิด ยัด fill แล้วถูกปิดเป็นรูป
+     → ได้ลิ่มสีฟ้าพาดทั้งแผ่น (ผมพลาดข้อนี้มาแล้ว 2026-09-08 เช้า) */
+#stage.art-on #L-water [data-art-layer="water"] .open-water-shore{fill:#93BEDA; stroke:#5E8CAB}
+#stage.art-on #L-water [data-art-layer="water"] .rivers-casing{stroke:#4E7A9B}
+#stage.art-on #L-water [data-art-layer="water"] .rivers-core{stroke:#93BEDA}
+#stage.art-on #L-water [data-art-layer="water"] .open-water-fill{fill:#93BEDA; stroke:none}
+/* กำแพงบนกระดาษสว่างต้องเข้มขึ้น ไม่งั้นหายไปกับพื้น (ของเดิมตั้งไว้สำหรับพื้นมืด) */
+#stage.art-on #L-wall .pl-wall,
+#stage.art-on #L-wall .pl-tooth{stroke:#6B6255}
+#stage.art-on.map-rich #L-wall .pl-wall,
+#stage.art-on.map-rich #L-wall .pl-tooth{stroke:#A2988A}
+
 #stage.map-faint #basemap{filter:saturate(.18) brightness(1.30) contrast(.72)}
 #stage.map-rich  #basemap{filter:saturate(.85) brightness(.96) contrast(1)}
 
@@ -183,8 +267,14 @@ rect.sp-none{fill:#6b7285}
 .sp-sw.sp-han{background:var(--han)} .sp-sw.sp-wei{background:var(--wei)}
 .sp-sw.sp-wu{background:var(--wu)}
 
-/* กันเส้นที่ลืมสั่ง fill ไม่ให้กลายเป็นก้อนทึบ — ยกเว้นชั้นพื้นที่ยึดครองที่ต้องระบายจริง */
-#tkmap path:not(.region){fill:none}
+/* กันเส้นที่ลืมสั่ง fill ไม่ให้กลายเป็นก้อนทึบ — ยกเว้นชั้นพื้นที่ยึดครองที่ต้องระบายจริง
+   ⚠⚠⚠ **กฎนี้อันตรายกว่าที่หน้าตาบอก** — CSS ชนะ presentation attribute เสมอ
+     `fill="white"` ที่เขียนมาในไฟล์ SVG ภายนอกจึงถูกกฎนี้ลบทิ้งเงียบ ๆ
+     เจอครั้งที่สอง 2026-09-08: หน้ากากภูเขาของชั้นภาพรุ่น 03 เป็น `<path fill="white">`
+     อยู่ใน `<mask>` → ถูกทำเป็น `fill:none` → หน้ากากดำสนิท → **ภูเขาหายทั้งแผ่น**
+     โดยไม่มี error ใด ๆ (ครั้งแรกคือ `.pin-sym` 2026-09-02 — ดูคอมเมนต์ข้างล่าง)
+   ★ ทางแก้: กันทั้งซับทรีของชั้นภาพภายนอกออกจากกฎนี้ ของข้างในมี fill ของตัวเองครบแล้ว */
+#tkmap path:not(.region):not([data-art-layer] *){fill:none}
 
 #L-regions{opacity:.38}
 /* ประวัติของเลขนี้: 34 → 10 → 1.5
@@ -221,6 +311,38 @@ rect.sp-none{fill:#6b7285}
 .region-focus-coast{stroke-opacity:.45}
 /* แสงทองจางบนพื้นที่ที่เน้น — ให้กลุ่มเขตอ่านเป็นก้อนเดียว มีมิติ (§17) */
 .region-glow{stroke:none; pointer-events:none}
+
+/* ══ ★★ การ์ดข้อมูลจุด — คลิกหมุดแล้วอ่านได้ (2026-09-08) ═══════════════════════
+   อยู่มุมซ้ายล่างของแผนที่ ไม่ชนกับ `#where` (ซ้ายบน) และแถบปุ่ม (ขวาบน)
+   ⚠ ต้อง `pointer-events:auto` เพราะปุ่มข้างในต้องกดได้จริง (check_click จะจับถ้าไม่ได้) */
+#placecard{position:absolute; left:var(--pad); bottom:calc(var(--pad) + 4px); z-index:6;
+  width:264px; max-height:62%; overflow:auto;
+  background:rgba(14,16,21,.93); backdrop-filter:blur(9px);
+  border:1px solid var(--line); border-left:3px solid var(--gold);
+  border-radius:9px; padding:11px 13px 10px; color:var(--text); font-size:12px}
+#placecard .pc-x{position:absolute; top:6px; right:7px; background:none; border:0;
+  color:var(--dim); font-size:13px; cursor:pointer; padding:2px 5px; border-radius:5px}
+#placecard .pc-x:hover{color:var(--text); background:rgba(255,255,255,.08)}
+#placecard .pc-kind{color:var(--dim); font-size:10.5px; letter-spacing:.4px;
+  text-transform:uppercase; margin:0 0 2px}
+#placecard h3{margin:0 0 1px; font-size:16px; color:var(--gold)}
+#placecard .pc-py{margin:0 0 8px; color:var(--dim); font-size:11px}
+#placecard .pc-py span{opacity:.75}
+#placecard .pc-row{display:flex; justify-content:space-between; gap:10px;
+  padding:3px 0; border-top:1px solid rgba(255,255,255,.06)}
+#placecard .pc-row span{color:var(--dim)}
+#placecard .pc-row b{font-weight:600; text-align:right}
+#placecard .pc-warn{margin:7px 0 0; color:#E0B457; font-size:11px}
+#placecard .pc-note{margin:8px 0 0; color:#c8cddb; font-size:11px; line-height:1.5;
+  padding-top:7px; border-top:1px solid rgba(255,255,255,.06)}
+#placecard .pc-scenes{margin-top:9px; padding-top:7px;
+  border-top:1px solid rgba(255,255,255,.06); display:flex; flex-wrap:wrap; gap:4px}
+#placecard .pc-scenes > span{width:100%; color:var(--dim); font-size:10.5px; margin-bottom:2px}
+#placecard .pc-scenes i{color:var(--dim)}
+#placecard .pc-scenes button{background:rgba(255,255,255,.07); border:1px solid var(--line);
+  color:var(--text); border-radius:5px; padding:2px 7px; font-size:11px; cursor:pointer}
+#placecard .pc-scenes button:hover{border-color:var(--gold); color:var(--gold)}
+#placecard .pc-foot{margin:8px 0 0; color:var(--dim); font-size:10px; line-height:1.45}
 
 .pin circle{fill:#f3f6ff; stroke:#0b0d12; stroke-width:1.4; opacity:.9}
 .pin.t-capital circle{fill:var(--gold); stroke-width:2}
@@ -268,8 +390,15 @@ rect.sp-none{fill:#6b7285}
 #tkmap .pin.t-camp    .pin-sym path:not(.gs){fill:#E4D6A7}   /* ค่าย — ผ้าใบกระโจม */
 #tkmap .pin.t-farm    .pin-sym path:not(.gs){fill:#CFE0A8}   /* ที่นา — ข้าวอ่อน */
 #tkmap .pin.t-farm    .pin-sym path.gs{stroke:#4E6A2A}  /* ร่องนาเป็นสีเขียวเข้ม ไม่ใช่ดำ */
-#tkmap .pin.t-mountain .pin-sym path:not(.gs){fill:#BFD3B4}  /* ภูเขา — เขียวหม่น */
-#tkmap .pin.t-valley_mouth .pin-sym path:not(.gs){fill:#CBD8C4}
+/* ★★ ภูเขา/ปากหุบ — **หินเทาอมฟ้า ไม่ใช่เขียว** (เจ้าของทัก 2026-09-06:
+   *"สีภูเขาควรเป็นสีอื่นไหม เพราะมันค่อนข้างกลืนกับฉาก"* — ถูก)
+   เขียวหม่น `#BFD3B4` เดิมนั่งอยู่บนพื้นกระดาษสีเขียวอ่อนกับหมึกภูเขาสีเขียวของแผ่นเอง
+   → ค่าความสว่างต่างกันไม่ถึงขั้น ตาจึงอ่านมันเป็น "ส่วนหนึ่งของฉากหลัง" ไม่ใช่สัญลักษณ์
+   ★ หินเทาอมฟ้าเป็นสีเย็นสีเดียวที่เหลือในจานนี้ (ยังไม่ชนกับสีฝ่ายและไม่ชนกับทองเมืองหลวง)
+     และตรงความหมายด้วย — ภูเขาคือหิน · ป้อม `#C9CFD6` ใช้เทาเหมือนกันแต่เย็นกว่าหนึ่งขั้น */
+#tkmap .pin.t-mountain .pin-sym path:not(.gs){fill:#B9C2CE}   /* ภูเขา — หินเทาอมฟ้า */
+#tkmap .pin.t-mountain .pin-sym path{stroke:#2B3440}          /* ขอบเข้มอมน้ำเงิน ไม่ใช่ดำล้วน */
+#tkmap .pin.t-valley_mouth .pin-sym path:not(.gs){fill:#C7CEDA}
 #tkmap .pin.t-ford    .pin-sym path.gs{stroke:#2F6E8F}  /* ท่าข้าม — เส้นน้ำต้องเป็นสีน้ำ */
 #tkmap .pin-role path{fill:#EBC77A}                 /* ยุ้งข้าว — สีเมล็ดข้าว */
 
@@ -294,7 +423,23 @@ rect.sp-none{fill:#6b7285}
 /* ★★ วงกระเพื่อมต้องพองรอบ **รูปสัญลักษณ์** ไม่ใช่รอบจุดขนาดตายตัว (เจ้าของสั่ง 2026-09-06)
    รัศมีจึงมาจากตัวแปรที่ JS ตั้งตามขนาดรูปจริง · ค่าเริ่มต้นคือของเดิม (13→19)
    สำหรับสถานที่ที่ไม่มีรูปให้เกาะ */
-@keyframes pulse{0%,100%{r:var(--r0,13px); opacity:.22} 50%{r:var(--r1,19px); opacity:.06}}
+@keyframes pulse{0%,100%{r:var(--r0,13px); opacity:var(--o0,.22)}
+                 50%    {r:var(--r1,19px); opacity:var(--o1,.06)}}
+
+/* ══ ★★★ จังหวะการเต้นบอกชนิดของเหตุการณ์ ไม่ใช่แค่สี (เจ้าของสั่ง 2026-09-06) ══
+   สีอย่างเดียวไม่พอบนกระดาษที่มีทั้งเขียว น้ำเงิน และหมึกดำอยู่แล้ว — **จังหวะ**
+   เป็นช่องสัญญาณที่ว่างอยู่ และตาคนจับความต่างของจังหวะได้ก่อนจับความต่างของเฉดสี
+     รบ    เร็วและแรง — เหมือนชีพจรตอนตกใจ
+     ธงพลิก ช้าและกว้าง — การเปลี่ยนมือของแผ่นดินไม่ใช่เรื่องเร่งรีบ
+     เสบียง ช้าที่สุด สม่ำเสมอ — มันคือสายที่ไหลอยู่ตลอด ไม่ใช่เหตุการณ์ครั้งเดียว
+   ⚠ ค่าที่ไม่ประกาศ = 2.2s ของเดิมทุกประการ (force / focus ไม่เปลี่ยนเลย)  */
+.mk-pin.ev-battle .mk-halo{animation-duration:1.25s}
+.mk-pin.ev-flip   .mk-halo{animation-duration:3.2s}
+.mk-pin.ev-supply .mk-halo{animation-duration:3.8s}
+/* วงของการรบต้องทึบกว่าเพื่อน — มันแข่งกับวงปะทะสีเหลืองที่ซ้อนอยู่จุดเดียวกัน
+   ⚠ ตั้ง `opacity` ตรง ๆ ไม่ได้ — keyframes ทับเสมอ · ต้องผ่านตัวแปรที่ keyframes อ่าน */
+.mk-pin.ev-battle .mk-halo{--o0:.26; --o1:.07}
+.mk-pin.ev-flip   .mk-halo{--o0:.26; --o1:.07}
 
 /* ป้ายธง — ใครเดินเส้นนี้ และมากับกี่คน · ราคาของวงปะทะ
    พื้นหลังต้องทึบพอ เพราะมันลอยอยู่บนแผนที่พื้นที่มีทั้งตัวหนังสือ ภูเขา และแม่น้ำ
@@ -689,8 +834,34 @@ html.no-intro #intro{display:none}
 
    ทำไมถึงถูก: หมุดกลมทับรูป = เอาของที่ไม่มีความหมายไปบังของที่มีความหมาย
    และมันบังคับให้เราเลื่อนรูปหนี ซึ่งทำให้ตำแหน่งเมืองเพี้ยน (ลองแล้วในคอมมิตก่อน — ถอยกลับ)
-   ★ รูปอยู่ที่พิกัดจริงเสมอ · ฉากชี้ตรงไหน รูปตรงนั้นเปลี่ยนสีเป็นทองแล้วมีวงพองรอบตัว */
-#tkmap .pin.hot .pin-sym path:not(.gs){fill:#F3D590}
-#tkmap .pin.hot .pin-sym path{stroke:#5A420C; stroke-width:1.35}
-#tkmap .pin.hot .pin-sym path.gs{fill:none; stroke:#5A420C}
-#tkmap .pin.hot .pin-role path{fill:#F7E3AE}
+   ★ รูปอยู่ที่พิกัดจริงเสมอ · ฉากชี้ตรงไหน รูปตรงนั้นติดไฟแล้วมีวงพองรอบตัว
+
+   ══ ★★★ แก้ 2026-09-06 รอบสอง — **ไฟไม่ใช่สีทองอีกต่อไป** ═══════════════════════
+   เจ้าของทัก: *"การ Highlight เมืองที่มีเหตุการณ์เป็นติดไฟสีทอง ... ไม่งั้นทุกอย่าง
+    จะเหมือนเมืองหลวงไปหมด เราต้องแยกมันตามเหตุการณ์ · การสู้รบเป็นสีนึง
+    การเล่าเรื่องเน้นตรงนั้นเป็นสีนึง"* — ถูกทั้งสองข้อ:
+     (1) `#F3D590` ที่ใช้เป็นสีไฟ **คือสีเดียวกับพื้นรูปเมืองหลวงเป๊ะ ๆ** (ดูกฎ t-capital
+         ข้างบน) → เมืองเล็กที่ฉากชี้ อ่านออกมาเป็น "เมืองหลวง" ทุกครั้ง
+     (2) ไฟสีเดียวแปลว่า "ตรงนี้มีอะไร" แต่ไม่ได้บอกว่า **อะไร**
+
+   ★ กติกาใหม่ — สามช่องสัญญาณ แยกหน้าที่กันเด็ดขาด:
+       **พื้นรูป**  = ชนิดของสถานที่ (เมือง/ด่าน/ค่าย/ที่นา) — ไฟ**ไม่แตะ**พื้นรูปเลย
+                     จึงไม่มีทางกลายเป็นเมืองหลวง และไม่มีทางกลายเป็นสีฝ่าย
+       **ขอบ+ออร่า** = ชนิดของเหตุการณ์ (`--ev` ที่ strategic.js ตั้งให้ต่อหมุด)
+       **ป้าย**     = ฝ่าย (สีชิปเหมือนเดิม)
+   ⚠ ออร่าขาวของกฎฐาน (#tkmap .pin-sym) ถูกกฎนี้ทับ — จึงต้องเขียนชั้นขาวกลับเข้ามา
+     เองในนี้ ไม่งั้นรูปที่ติดไฟจะอ่านไม่ออกบนชื่อเมืองสีดำที่แผ่นพิมพ์ไว้ */
+#tkmap .pin.hot .pin-sym path{stroke:var(--ev,#5A420C); stroke-width:1.7}
+/* ★ ไอคอนชุดใหม่ทาสีด้วย inline style (เพื่อรักษาเงาสองระดับ) ซึ่งชนะ selector ทุกตัว
+   → สถานะ "ฉากชี้มาที่นี่" ต้องใช้ `!important` เพื่อทวงเส้นขอบคืนมาให้สีเหตุการณ์
+   ⚠ นี่คือที่เดียวในไฟล์ที่ใช้ !important และมีเหตุผลเฉพาะข้อนี้ ห้ามลอกไปใช้ที่อื่น */
+#tkmap .pin.hot .pin-sym path.art{stroke:var(--ev,#5A420C) !important; stroke-width:1.2}
+#tkmap .pin.hot .pin-sym path.gs{fill:none; stroke:var(--ev,#5A420C)}
+#tkmap .pin.hot .pin-role path{stroke:var(--ev,#5A420C); stroke-width:1.4}
+/* ⚠ ออร่าสีชั้นเดียวเท่านั้น — ลองซ้อนสองชั้น (3.5px + 7px) แล้วสีทับสีจนกลายเป็น
+   ก้อนดำขุ่นรอบรูป (ตรวจด้วยภาพจริง c7-04 2026-09-06) · ชั้นขาวต้องมาก่อนเสมอ
+   มันคือชั้นที่ดันชื่อเมืองสีดำของแผ่นให้ห่างตัวรูป */
+#tkmap .pin.hot .pin-sym, #tkmap .pin.hot .pin-role{
+  filter:drop-shadow(0 0 1.6px rgba(255,255,255,.95))
+         drop-shadow(0 0 4px   var(--ev,#d9b169));
+}

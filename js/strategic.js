@@ -99,6 +99,7 @@ TK.map = (function(){
     svg.insertBefore(mask, layers.regions);
 
     buildPlate();
+    buildWall();          /* ★ ไม่ขึ้นกับแผ่นไหน — ต้องอยู่นอก buildPlate (ดูคอมเมนต์ที่ buildWall) */
     buildRegions();
     buildWorks();
     buildPins();
@@ -118,7 +119,12 @@ TK.map = (function(){
        ต้องโตตามแผ่นเหมือนแม่น้ำกับกำแพง (§3) · relayout จึงไม่ต้องแตะชั้นนี้เลย  */
   function buildPlate(){
     const PW = TK.plateWater;
-    if (!PW){ layers.plate.remove(); return; }
+    /* ⚠⚠ **ห้าม `layers.plate.remove()`** — `#L-plate` เป็น *ช่องว่าง* ของ renderer
+       ไม่ใช่ภาพวาดของเรา · ตั้งแต่ 2026-09-06 ที่ถอด `plate_water.js` ออกจาก index.html
+       ชั้นนี้ถูกลบตอน init ทุกครั้ง แล้วชั้นภาพรุ่น 03 ก็ไม่มีที่ลง (เจอ 2026-09-08:
+       น้ำขึ้นแต่ภูเขาหาย เพราะ append เข้า node ที่หลุด DOM ไปแล้ว — เงียบสนิท ไม่ error)
+       ปล่อยให้ว่างไว้ ไม่มีอะไรวาดก็ไม่กินอะไร */
+    if (!PW) return;
     const ring = f => { let d = ''; for (let i = 0; i < f.length; i += 2)
       d += (i ? 'L' : 'M') + f[i] + ' ' + f[i+1]; return d + 'Z'; };
 
@@ -179,6 +185,16 @@ TK.map = (function(){
        อยู่เหนือชั้นเขตเหมือนหมึกน้ำ เพราะมันคือเส้นที่เรื่องอ้างถึงตลอด (แนวชายแดนเหนือ)
        ★ วาดเป็นเส้น + **ฟันเสมา** ห้อยด้านใต้ — เพื่อให้อ่านออกทันทีว่าเป็นสิ่งที่ *คนสร้าง*
          ไม่ใช่แม่น้ำอีกสาย · ฟันหันลงใต้เสมอ เพราะกำแพงกันของที่มาจากทางเหนือ  */
+  }
+
+  /* ⚠⚠ แยกออกมาจาก `buildPlate` 2026-09-08 — เดิมกำแพงถูกวาดอยู่ *ข้างใน* บล็อกที่
+     return ทิ้งเมื่อไม่มี `TK.plateWater` · พอถอด `plate_water.js` ออกจาก index.html
+     (2026-09-06) กำแพงจึงไม่เคยถูกวาดอีกเลย ทั้งที่ CSS ยังสั่งให้แสดงในโหมดแผ่นใหม่
+     → `#L-wall` ว่างเปล่ามาตลอด และไม่มีใครเห็นเพราะโหมดนั้นก็ถูกปิดไปพร้อมกัน
+     ★ กำแพงไม่ได้ขึ้นกับแผ่นไหนเลย มันมาจาก `data/wall.js` — ต้องวาดเสมอ
+     (Codex ส่ง `wall.svg` มาให้เผื่อกรณีนี้ แต่เราใช้ของเราเองดีกว่า: แหล่งเดียวกัน
+      ไม่ต้องโหลดเพิ่ม 40 KB และฟันเสมายังคุมด้วย CSS ของเราได้) */
+  function buildWall(){
     if (TK.wall){
       const TEETH = 9, TOOTH = 3.4;
       for (const line of TK.wall){
@@ -208,11 +224,133 @@ TK.map = (function(){
   /* สลับแผ่น — คลาสเดียวคุมทั้ง: ซ่อน jpg · ซ่อนกรอบปิด WEI/SHU/WU · ดันความทึบของเขต
      (บนพื้นมืด .38 ทำให้เขียว/น้ำเงิน/แดงแยกกันยาก — DECISIONS §14 เฟส 2) */
   function setPlate(useNew){
-    plateNew = !!useNew && !!TK.plateWater;
+    plateNew = !!useNew && (artOn || !!TK.plateWater);
     document.getElementById('stage').classList.toggle('plate-new', plateNew);
     return plateNew;
   }
   let plateNew = false;
+
+  /* ══ ★★★ ชั้นภาพจากฝั่ง Codex (รุ่น 03 · เจ้าของสั่งเสียบ 2026-09-08) ═══════════
+     `assets/map-art/` — ภูมิประเทศ + น้ำ + กำแพง ที่วาดขึ้นบนกรอบพิกัด 1650×1950
+     ชุดเดียวกับทั้งโปรเจกต์ · **ไม่มีเมือง ไม่มีชื่อ ไม่มีถนนฝังอยู่ในภาพ**
+     (`map-package.json` ประกาศ `containsCities/Labels/Roads: false` — ตรวจแล้ว)
+     ชั้นข้อมูลทั้งหมดยังเป็นของเรา: หมุด สัญลักษณ์ ป้ายไทย ลูกศร works timeline
+
+     ★ ทำไมมันไม่ขัดกับข้อห้าม "ห้ามวาดแผ่นเอง" (§14 เฟส 5) — ข้อนั้นปิด*ทางที่เราวาดเอง*
+       เพราะเราพิสูจน์ความถูกต้องไม่ได้ · รอบนี้ **น้ำถูกลอกจากหมึกของ map.jpg เอง**
+       และภูเขาถูกตัดด้วยหน้ากากที่สร้างจากหมึกภูเขาเขียวของแผ่น → ไม่มีภูมิศาสตร์ใหม่
+       ถูกประดิษฐ์ขึ้น มีแต่การ *วาดของเดิมให้สวยขึ้น* · เจ้าของเป็นผู้เปิดเรื่องนี้เอง
+
+     ⚠⚠ ที่ต้องระวังที่สุด: **ห้ามวางภาพแผ่นพิมพ์เดิมทับลงมาอีก** เมื่อเปิดโหมดนี้
+       (`.plate-new` ซ่อน `#basemap` ให้แล้ว) — ไม่งั้นได้ชื่ออังกฤษสองชุดซ้อนกัน
+     ⚠ `art.terrain` กับ `art.water` ต้องอยู่ **คนละชั้น** โดยตั้งใจ:
+       terrain อยู่ใต้สีเขต (`#L-plate`) · water อยู่เหนือสีเขต (`#L-water`)
+       ไม่งั้นแม่น้ำจะจมหายทุกครั้งที่เขตทึบขึ้น — บทเรียนเดิมจาก §14 เฟส 2  */
+  let artOn = false, artObj = null, artLoading = null;
+  const ART_BASE = 'assets/map-art/';
+
+  /* ══ ★★★ สองทางโหลด — เพราะ `file://` บล็อกทางเดิมทั้งเส้น ═══════════════════
+     เจ้าของทัก 2026-09-08: *"ทำไมกด Index เดิมมันไม่ขึ้นแผนที่ใหม่ล่ะ"*
+
+     ★ วัดจริงบน `file://` ด้วย Chrome จริง (headless --dump-dom) ก่อนแก้:
+       | กลไก | file:// |
+       |---|---|
+       | `import()` ES module | **FAIL** — Failed to fetch dynamically imported module |
+       | `fetch()` | **FAIL** — Failed to fetch |
+       | `<script src>` ธรรมดา | **OK** |
+       | `<img>` / raster | **OK** (อ่าน terrain-art.png ได้ 1153×1364) |
+
+     → บล็อกแค่ **สองกลไกที่เป็น CORS** เท่านั้น ไม่ได้บล็อกทั้งโปรโตคอล
+       ทางแก้จึงไม่ใช่ไฟล์ base64 4 MB ที่ HANDOFF เคยเสนอไว้ (ทางเลือก "ค")
+       แค่ห่อ *ข้อความ* ของ SVG สองไฟล์เป็นสคริปต์ธรรมดา **316 KB**
+       และ **PNG ไม่ต้องฝัง** เพราะ raster โหลดผ่าน file:// ได้อยู่แล้ว
+
+     ⚠ ไฟล์ฝังถูก **สร้าง** ด้วย `tools/build_map_inline.js` จากไฟล์ของ Codex ตรง ๆ
+       ไม่ใช่สำเนาที่แก้มือ — วันที่เขาส่งรุ่น 04 มา ให้รันเครื่องมือใหม่ จบ
+     ⚠ ทาง http ยังเป็น `import()` เหมือนเดิมทุกประการ **ไม่ได้แตะ**
+       คนที่เปิดผ่านเซิร์ฟเวอร์จึงไม่ต้องโหลด 316 KB ที่ตัวเองไม่ได้ใช้ */
+  function getLoader(){
+    if (location.protocol !== 'file:')
+      /* import() ทำให้ไม่ต้องแตะลำดับ <script> ใน index.html เลย (ไม่มี build step — กฎ 2) */
+      return import('../' + ART_BASE + 'load-map-layers.js').then(m => m.loadMapLayers);
+
+    if (window.TK_MAP_ART_INLINE) return Promise.resolve(window.TK_MAP_ART_INLINE.loadMapLayers);
+    return new Promise((ok, no) => {
+      const s = document.createElement('script');
+      s.src = ART_BASE + 'map-art-inline.js';
+      s.onload  = () => window.TK_MAP_ART_INLINE
+        ? ok(window.TK_MAP_ART_INLINE.loadMapLayers)
+        : no(new Error('map-art-inline.js โหลดแล้วแต่ไม่ได้ตั้ง window.TK_MAP_ART_INLINE'));
+      s.onerror = () => no(new Error('เปิดผ่าน file:// แต่ไม่มี ' + ART_BASE +
+        'map-art-inline.js — สร้างด้วย `node tools/build_map_inline.js`'));
+      document.head.append(s);
+    });
+  }
+
+  function loadArt(){
+    if (artObj) return Promise.resolve(artObj);
+    if (artLoading) return artLoading;
+    artLoading = getLoader()
+      .then(loadMapLayers => loadMapLayers(svg, {
+        assetBase: new URL(ART_BASE, document.baseURI),
+        includeWall: false,          /* กำแพงใช้ของเราเอง (TK.wall) — HANDOFF ให้เลือกอย่างใดอย่างหนึ่ง */
+        prefix: 'tk-art-v3-',
+        theme: 'day'
+      }))
+      .then(art => {
+        /* ย้ายสองชั้นเข้าช่องของ renderer จริง แล้วเอากล่องเปล่าที่ loader สร้างไว้ออก
+           ★ ของเราเองที่เคยวาดไว้ในสองชั้นนี้ (plate_water) ถูกซ่อนด้วย CSS ไม่ได้ลบทิ้ง
+             — `check_water.js` ยังต้องใช้ `data/plate_water.js` เป็นข้อมูลอยู่ */
+        layers.plate.append(art.terrain);
+        layers.water.append(art.water);
+        art.group.remove();
+
+        /* ★★★ แยก **ภาพนูน** ออกจากชั้นพื้น แล้วยกขึ้นไปทับสีเขตแบบ multiply
+           ═══════════════════════════════════════════════════════════════════
+           HANDOFF ของ Codex ให้วางภูมิประเทศไว้ล่างสุดแล้วให้สีเขตโปร่งพอมองทะลุ
+           ลองแล้ววัดด้วยตา: **มันเลือกได้อย่างเดียว** — ตั้งสีเขตให้อ่านออก ภูเขาก็หาย
+           ตั้งให้เห็นภูเขา เขียว/น้ำเงิน/แดงก็แยกกันไม่ออก · และในเรื่องนี้
+           **เจ้าของพื้นที่สำคัญกว่าภูมิประเทศเสมอ** (ทั้งเล่มคือเรื่องแผ่นดินเปลี่ยนมือ)
+
+           ทางออกคือวิธีมาตรฐานของแผนที่: เงาเขา (hillshade) วางทับสีพื้นแบบคูณ
+           สีของแผ่นดินจึงรอด และภูเขาก็ยังอ่านออกเพราะมันทำหน้าที่ *ทำให้มืดลง*
+           ไม่ใช่ *ทาสีทับ* · ต้องถอดสีของภาพออกก่อน (grayscale) ไม่งั้นภาพสีน้ำตาล
+           จะไปย้อมแผ่นดินจนสีฝ่ายเพี้ยน — ตรงนี้เป็นการ *เรนเดอร์* ฝั่งเรา ไม่ได้แก้ไฟล์เขา
+           ★ กระดาษกับเกรนยังอยู่ที่ `#L-plate` ล่างสุดเหมือนเดิม ย้ายเฉพาะ <image> */
+        const relief = art.terrain.querySelector('image');
+        if (relief){
+          const g = mk('g',{id:'L-relief', 'data-art-layer':'relief', 'pointer-events':'none'});
+          g.append(relief);
+          svg.insertBefore(g, layers.regions.nextSibling);
+          layers.relief = g;
+        }
+        artObj = art;
+        return art;
+      })
+      .catch(err => { artLoading = null; console.warn('[map-art] โหลดไม่สำเร็จ:', err); throw err; });
+    return artLoading;
+  }
+  /* คืนค่าเป็น Promise<boolean> — ผู้เรียกรอได้ถ้าอยากรู้ว่าเปิดสำเร็จจริงไหม
+     ⚠ ปิดโหมดแล้ว **ไม่ถอด DOM ทิ้ง** — CSS (`:not(.plate-new) #L-plate/#L-water`)
+       ซ่อนให้อยู่แล้ว · การถอดแล้วโหลดใหม่ทุกครั้งที่กดปุ่มคือการดาวน์โหลด 2.7 MB ซ้ำ */
+  function setArt(on){
+    if (!on){
+      artOn = false;
+      document.getElementById('stage').classList.toggle('art-on', false);
+      setPlate(false);
+      return Promise.resolve(false);
+    }
+    return loadArt().then(() => {
+      artOn = true;
+      document.getElementById('stage').classList.toggle('art-on', true);
+      setPlate(true);
+      return true;
+    }).catch(() => { artOn = false; setPlate(false); return false; });
+  }
+  /* กลางวัน/กลางคืน — loader ของ Codex คุมเอง (filter บนสองชั้น) ไม่ใช่ CSS ของเรา */
+  function setArtTheme(theme){
+    if (artObj && artObj.setTheme) artObj.setTheme(theme === 'night' ? 'night' : 'day');
+  }
 
   function buildRegions(){
     for (const id in TK.regions){
@@ -281,6 +419,79 @@ TK.map = (function(){
        พิมพ์แบบนี้อยู่แล้ว) · ส่วน *ภูมิประเทศ* ภูเขาเป็นคนละชั้น ยังไม่ได้ทำ (เฟส 4) */
     mountain: { px:30, fill:['M2,21.5 L12,6 L22,21.5 Z'] }
   };
+
+  /* ══ ★★★ ไอคอนชุดใหม่จากฝั่ง Codex (เจ้าของเคาะ "ใช้ไอคอนใหม่เลย" 2026-09-08) ══
+     ต้นฉบับ: `prototypes/codex-2026-09-06/icons/*.svg` · viewBox 0 0 24 24 ชุดเดียวกับ GLYPH เดิม
+     ★ ต่างจากของเดิมตรง **แต่ละ path พกสีของตัวเองมา** (เงาสองระดับ: พื้น + ด้านมืด + ไฮไลต์)
+       ของเดิมเป็นรูปทึบสีเดียวแล้วให้ CSS ทาสีตามชนิดสถานที่
+     ⚠⚠ Codex เตือนไว้เองว่า *"ห้ามใส่ใน GLYPH ตรง ๆ แล้วใช้ CSS ที่ override fill ทุก path
+       เพราะจะเสียเงาสองระดับ"* — ซึ่ง CSS ของเราทำอยู่พอดี
+       → ทางออก: วาดด้วย **inline style** ซึ่งชนะ selector ทุกตัว โดยไม่ต้องรื้อกฎ CSS เดิม
+         (กฎเดิมยังต้องอยู่ เพราะชนิดที่ยังไม่มีไอคอนใหม่ใช้มันอยู่)
+     ★ สีที่เขาเลือกมาเข้าชุดกับที่เราเพิ่งเปลี่ยนพอดี — ภูเขา #b9c2ce ตรงกับ css ของเราเป๊ะ
+     f = fill · s = stroke · w = stroke-width (ไม่ใส่ = 0.8)                              */
+  const ART = {
+    capital: [
+      {d:"M3 17H21V22H3Z",                  f:"#ead9ae", s:"#29333a"},
+      {d:"M6 10H18V16H6Z",                  f:"#e5cc95", s:"#29333a"},
+      {d:"M1 17Q4 16 5 13H19Q20 16 23 17Z", f:"#8f7955", s:"#29333a"},
+      {d:"M4 10Q8 9 9 5H15Q16 9 20 10Z",    f:"#a38a59", s:"#29333a"},
+      {d:"M12 1V5 M9 3H15",                 f:"none",    s:"#29333a"},
+      {d:"M10 22V18Q12 16 14 18V22",        f:"#39423f", s:"#29333a"},
+      {d:"M8 11V13 M12 11V13 M16 11V13",    f:"none",    s:"#eadab2"}
+    ],
+    city: [
+      {d:"M3 14H21V22H3Z",               f:"#eee5d4", s:"#29333a"},
+      {d:"M7 9H17V14H7Z",                f:"#e1d5bc", s:"#29333a"},
+      {d:"M4 10Q7 9 8 6H16Q17 9 20 10Z", f:"#8c806d", s:"#29333a"},
+      {d:"M1 15L4 12H20L23 15Z",         f:"#b2a58d", s:"#29333a"},
+      {d:"M10 22V18Q12 16 14 18V22",     f:"#39423f", s:"#29333a"},
+      {d:"M5 17H7 M17 17H19",            f:"none",    s:"#7c786d", w:0.9}
+    ],
+    /* ★ ด่านยังเว้นช่องกลางให้ถนนลอด — กติกาเดิมของเรา เขารักษาไว้ */
+    pass: [
+      {d:"M2 9H8V22H2Z M16 9H22V22H16Z",        f:"#d9c9a8", s:"#29333a"},
+      {d:"M1 9L3 5H7L9 9Z M15 9L17 5H21L23 9Z", f:"#84775f", s:"#29333a"},
+      {d:"M8 10H16V13H8Z",                      f:"#b7a27c", s:"#29333a"},
+      {d:"M4 12H6V15H4Z M18 12H20V15H18Z",      f:"#4c514d", s:"#29333a"},
+      {d:"M3 18H7 M17 18H21",                   f:"none",    s:"#b09e7b"}
+    ],
+    fort: [
+      {d:"M2 12H5V9H8V12H16V9H19V12H22V22H2Z", f:"#c9cfd6", s:"#29333a"},
+      {d:"M9 6H15V12H9Z",                      f:"#aeb9c3", s:"#29333a"},
+      {d:"M7 6L12 2L17 6Z",                    f:"#758492", s:"#29333a"},
+      {d:"M10 22V18Q12 16 14 18V22",           f:"#3f4950", s:"#29333a"},
+      {d:"M4 16H7 M17 16H20",                  f:"none",    s:"#818d99"}
+    ],
+    /* ★ กระโจมยังโค้ง ไม่ใช่สามเหลี่ยม — กันชนกับภูเขา (เจ้าของจับได้ 2026-09-02) */
+    camp: [
+      {d:"M3 19C3 7 21 7 21 19Z",                          f:"#e4d6a7", s:"#29333a"},
+      {d:"M12 9Q17 14 17 19H12Z",                          f:"#b6a374", s:"none"},
+      {d:"M9 19V14Q12 12 15 14V19",                        f:"#4e5147", s:"#29333a"},
+      {d:"M1 20H23 M3 20V23 M7 20V23 M17 20V23 M21 20V23", f:"none",    s:"#807655", w:1.1},
+      {d:"M12 4V9 M12 4H18L16 6H12",                       f:"#c9b486", s:"#29333a"}
+    ],
+    /* ★ ปากหุบเขา — ไอคอนรุ่น 04 (8 ก.ย. 2026) · ต้นฉบับ `icons/valley_mouth.svg`
+       หน้าผาสองฝั่งเว้นช่องทางเดินคดตรงกลาง · แทนสามเหลี่ยมสองอันของ GLYPH เดิม
+       ⚠ เส้นสีดินตรงกลางคือ *ทาง* ไม่ใช่ลำน้ำ — ห้ามเปลี่ยนเป็นเส้นหยัก จะไปชนกับท่าข้าม
+       (กติกาเดิมที่เขียนไว้ที่ `farm` ข้างบน: เส้นหยัก = น้ำ) */
+    valley_mouth: [
+      {d:"M1 22L2 15L5 13L5 8L8 3L10 5L10 11L8 14L8 19L6 22Z",     f:"#b9c2ce", s:"#29333a"},
+      {d:"M8 3L10 5L10 11L8 14L8 19L6 22L6 15L8 10Z",              f:"#8193a4", s:"none"},
+      {d:"M15 22L16 17L14 13L15 8L18 4L20 6L20 13L22 16L23 22Z",   f:"#b9c2ce", s:"#29333a"},
+      {d:"M18 4L20 6L20 13L22 16L23 22H20L18 16L18 10Z",           f:"#8193a4", s:"none"},
+      {d:"M9 22Q13 19 12 15L12 12",                                f:"none",    s:"#ae9569", w:1.2},
+      {d:"M3 17L5 16 M16 10L17 8",                                 f:"none",    s:"#e7ecec", w:0.7}
+    ],
+    mountain: [
+      {d:"M1 22L8 10L11 14L16 4L23 22Z",   f:"#b9c2ce", s:"#29333a"},
+      {d:"M16 4L16 22H23Z",                f:"#8193a4", s:"none"},
+      {d:"M8 10L8 22H14Z",                 f:"#95a6b6", s:"none"},
+      {d:"M13 10L16 4L19 12L16 10L15 12Z", f:"#e7ecec", s:"#29333a", w:0.5}
+    ]
+  };
+  for (const k in ART) if (GLYPH[k]) GLYPH[k].art = ART[k];
+
 
   /* ★★ LOD ของ *สัญลักษณ์* — **ห้ามใช้ `RANK` ของ labeler** ถึงจะมีอยู่แล้วก็ตาม
      สองตารางนี้จัดลำดับด้วยเหตุผลคนละอย่างและขัดกันโดยตรง:
@@ -430,10 +641,23 @@ TK.map = (function(){
              **หมึกดำของแผ่นเอง** ว่ารูปทับตัวหนังสือกี่พิกเซล แล้วหาที่วางที่ทับน้อยสุด
              ⚠ ส่วนใหญ่เป็นการเลื่อน *ขึ้น* เพราะรูปที่ขยับข้างจะไปนั่งใกล้เมืองอื่นแทน */
           const sdx = p.sdx || 0, sdy = p.sdy || 0;
-          symBox[id] = { x:p.x - GLYPH[ty].px*f*mu/2 + sdx, y:p.y - GLYPH[ty].px*f*mu + sdy,
-                         w:GLYPH[ty].px*f*mu, h:GLYPH[ty].px*f*mu };
+          /* ★★★ `anchor:'center'` — **รูปนั่งทับจุด ไม่ใช่ยืนบนจุด** (เจ้าของสั่ง 2026-09-06:
+             *"แก้ประตูด่านให้ ... เอาให้มันทับกับรูปด่านเก่าในรูปเดิมได้เลย ไม่งั้นมันจะดู
+              เหมือนด่าน Duplicate"*)
+
+             แผ่นพิมพ์รูปประตูด่าน (门) ไว้เองทุกด่าน · รูปของเราที่ *ยืนบนจุด* จึงลอยอยู่
+             เหนือรูปของแผ่นราว 5–7 หน่วยเสมอ = อ่านออกมาเป็นด่านสองบาน
+             ★ ค่าคงที่ 22 คือ "ฐานรูปอยู่ที่จุด" (กล่องรูปสูง 24) · 12 คือ "กึ่งกลางรูปอยู่ที่จุด"
+             ⚠ ต้องเป็น **กึ่งกลาง** ไม่ใช่การใส่ `sdy` ชดเชย เพราะระยะ 22→12 คิดเป็น
+               *หน่วยของกล่องรูป* ซึ่งหดขยายตามซูม ส่วน `sdy` เป็นหน่วยแผนที่ซึ่งไม่หด
+               ถ้าชดเชยด้วย `sdy` รูปจะเลื่อนหลุดจากรูปของแผ่นทันทีที่เปลี่ยนระยะซูม   */
+          const ay = p.anchor === 'center' ? 12 : 22;
+          const sz = GLYPH[ty].px * f * mu;
+          symBox[id] = { x:p.x - sz/2 + sdx,
+                         y:(p.anchor === 'center' ? p.y - sz/2 : p.y - sz) + sdy,
+                         w:sz, h:sz };
           sym.setAttribute('transform',
-            `translate(${(p.x+sdx).toFixed(2)},${(p.y+sdy).toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-22)`);
+            `translate(${(p.x+sdx).toFixed(2)},${(p.y+sdy).toFixed(2)}) scale(${k.toFixed(4)}) translate(-12,-${ay})`);
         }
       }
       const rg = g.querySelector('.pin-role');
@@ -475,7 +699,8 @@ TK.map = (function(){
        ไม่ใช่สัญลักษณ์บนจอ                                                        */
   /* ⚠ แผ่นบีบระยะ — edge 180 ลี้ (tianshui–jieting) ยาวแค่ ~58 หน่วยบนแผ่น
      ระยะป้อมจึงต้องคิดจาก *หน่วยแผ่น* ไม่ใช่จากลี้ ไม่งั้นได้ป้อมสองหลังทั้งโซ่ */
-  const FORT_STEP = 11, FORT_SIZE = 4.2, FENCE_STEP = 7, FENCE_TOOTH = 3.6;
+  /* ⚠ FORT_STEP 11 → 9 พร้อมกับเปลี่ยนวิธีวาง (2026-09-06) — ดูคอมเมนต์ที่ลูปวาดป้อม */
+  const FORT_STEP = 9, FORT_SIZE = 4.2, FENCE_STEP = 7, FENCE_TOOTH = 3.6;
   function buildWorks(){
     const list = TK.works || [];
     if (!list.length) return;
@@ -505,9 +730,27 @@ TK.map = (function(){
       g.append(mk('path',{class:'works-spine', d}));
 
       if (w.kind === 'fortchain'){
-        /* ป้อมเป็นสี่เหลี่ยมเล็ก ๆ เรียงตามถนน — "แต่ละป้อมมองเห็นป้อมถัดไป" (c7-01) */
-        for (let s = s0; s <= s1 + 0.01; s += FORT_STEP){
-          const p = probe.getPointAtLength(Math.min(s, s1));
+        /* ป้อมเป็นสี่เหลี่ยมเล็ก ๆ เรียงตามถนน — "แต่ละป้อมมองเห็นป้อมถัดไป" (c7-01)
+
+           ★★★ **ตะแกรงร่วมของทั้ง edge** (เจ้าของทัก 2026-09-06: *"โซ่ป้อมมันวางตัว
+             ไม่สวย สี่เหลี่ยมมันทับกัน"*)
+           ของเดิมนับจาก `s0` ของ **ชิ้นตัวเอง** → ป้อมของสองชิ้นที่ต่อกันบน edge เดียวกัน
+           (ป้อมเจียงเหวย 256 จบที่ t=0.15 · 257 เริ่มที่ t=0.15) ตกห่างกันแค่ 4.3 หน่วย
+           ทั้งที่ตัวป้อมกว้าง 4.2 = **ซ้อนกันพอดี** และมันเกิดที่รอยต่อเสมอ ไม่ใช่บังเอิญ
+           ★ ใหม่: วางบนตะแกรงที่นับจาก **ต้น edge** (s = 0, 9, 18, …) แล้วเก็บเฉพาะตัวที่
+             ตกในช่วง from–to ของชิ้นนี้ → ทุกชิ้นบนถนนเส้นเดียวกันใช้ตะแกรงเดียวกัน
+             ระยะห่างจึงเท่ากันหมดและไม่มีทางซ้อน ต่อให้แบ่งชิ้นกันตรงไหน
+           ⚠ ช่วงที่สั้นกว่าหนึ่งช่วงตะแกรงจะไม่ได้ป้อมเลย — ใส่ตัวกลางให้หนึ่งหลัง
+             ไม่งั้นโซ่ป้อมที่ประกาศไว้จะกลายเป็นเส้นเปล่า */
+        let n = 0;
+        for (let s = Math.ceil(s0 / FORT_STEP) * FORT_STEP; s <= s1 + 0.01; s += FORT_STEP){
+          const p = probe.getPointAtLength(s);
+          g.append(mk('rect',{class:'works-fort', x:(p.x-FORT_SIZE/2).toFixed(1),
+            y:(p.y-FORT_SIZE/2).toFixed(1), width:FORT_SIZE, height:FORT_SIZE}));
+          n++;
+        }
+        if (!n){
+          const p = probe.getPointAtLength((s0 + s1) / 2);
           g.append(mk('rect',{class:'works-fort', x:(p.x-FORT_SIZE/2).toFixed(1),
             y:(p.y-FORT_SIZE/2).toFixed(1), width:FORT_SIZE, height:FORT_SIZE}));
         }
@@ -539,23 +782,54 @@ TK.map = (function(){
     });
   }
 
+  /* วาดไอคอนชุดใหม่ — **สีไปทาง inline style ไม่ใช่ attribute**
+     เพราะ CSS ของเรามีกฎทาสีทุก path ตามชนิดสถานที่อยู่ (`.pin.t-city .pin-sym path`)
+     ซึ่งชนะ presentation attribute เสมอ · inline style ชนะกฎเหล่านั้นอีกที
+     → เงาสองระดับของไอคอนรอด โดยไม่ต้องรื้อ CSS เดิมที่ชนิดอื่นยังใช้อยู่
+     ⚠ `class:'art'` มีไว้ให้ `.pin.hot` เล็งได้ และให้คนอ่านโค้ดรู้ว่านี่คนละระบบ */
+  function paintArt(sym, list){
+    for (const o of list){
+      const p = mk('path',{d:o.d, class:'art', 'stroke-width':o.w || 0.8,
+                           'stroke-linecap':'round', 'stroke-linejoin':'round'});
+      p.style.fill   = o.f || 'none';
+      p.style.stroke = o.s || 'none';
+      sym.append(p);
+    }
+  }
+
+  /* ผู้รับสัญญาณคลิกหมุด — ui.js เป็นคนตั้ง (ดูคอมเมนต์ที่ buildPins) */
+  let placeClick = null;
+  function setPlaceClick(fn){ placeClick = fn; }
+
   function buildPins(){
     for (const id in TK.places){
       const p = TK.places[id];
       const g = mk('g',{class:'pin t-'+p.type});
       g.dataset.id = id;
+      /* ★★ คลิกดูข้อมูลจุดได้ (เจ้าของถามหา 2026-09-08: *"เมืองที่เป็น Interactive
+         หายไปไหนหมด"*) — ของที่เขาเห็นในหน้าต้นแบบคือ **หมุดของเราเอง** ที่ฝั่ง Codex
+         ดึงไปเรนเดอร์พร้อมการ์ดข้อมูล · ที่ขาดคือการ์ด ไม่ใช่เมือง
+         ⚠ ตัวจัดการอยู่ที่ ui.js — ชั้นนี้แค่ยิงสัญญาณออกไป ไม่รู้จักหน้าตาของการ์ด */
+      g.style.cursor = 'pointer';
+      g.addEventListener('click', ev => {
+        ev.stopPropagation();
+        if (placeClick) placeClick(id, p);
+      });
       /* จุดกลม — ยังอยู่ ไม่ได้ถอด: มันคือระดับ LOD ต่ำสุดตอนซูมออก (สเปก §3
          "9px ทั้งคู่อ่านไม่ออก → ขนาดนั้นต้องตัดเหลือจุดกลม ห้ามย่อสัญลักษณ์ลงไป") */
       g.append(mk('circle',{cx:p.x, cy:p.y, r: p.type==='capital' ? 6 : 4, class:'pin-dot'}));
       const spec = GLYPH[p.type];
       if (spec){
         const sym = mk('g',{class:'pin-sym'});
-        (spec.fill   || []).forEach(d => sym.append(mk('path',{d, 'fill-rule':'evenodd'})));
-        (spec.stroke || []).forEach(o => {
-          const a = {d:o.d, class:'gs', 'stroke-width':o.w};
-          if (o.dash) a['stroke-dasharray'] = o.dash;
-          sym.append(mk('path', a));
-        });
+        if (spec.art) paintArt(sym, spec.art);
+        else {
+          (spec.fill   || []).forEach(d => sym.append(mk('path',{d, 'fill-rule':'evenodd'})));
+          (spec.stroke || []).forEach(o => {
+            const a = {d:o.d, class:'gs', 'stroke-width':o.w};
+            if (o.dash) a['stroke-dasharray'] = o.dash;
+            sym.append(mk('path', a));
+          });
+        }
         g.append(sym);
       }
       /* ★ `role` — ป้ายเสริมข้าง ๆ รูปหลัก ไม่ใช่ตัวแทนมัน
@@ -1071,7 +1345,7 @@ TK.map = (function(){
      และมันคือเหตุผลที่เราไปเลื่อนรูปหนีชื่อเมือง ซึ่งทำให้ตำแหน่งเมืองเพี้ยน (ถอยกลับแล้ว)
      ★ ต้องเรียก **หลัง** scalePins ของฉากนี้ ไม่งั้น symBox ยังเป็นของฉากก่อน */
   function fitPinsToSymbols(){
-    layers.pins.querySelectorAll('.pin.hot').forEach(p => p.classList.remove('hot'));
+    clearHot();
     layers.markers.querySelectorAll('.mk-pin[data-place]').forEach(g => {
       const id = g.dataset.place, s = symBox[id];
       if (!s) return;                                  /* ไม่มีรูป — ใช้หมุดกลมแบบเดิม */
@@ -1085,7 +1359,22 @@ TK.map = (function(){
       }
       if (dot) dot.style.display = 'none';             /* รูปเป็นหมุดแล้ว ไม่ต้องมีจุด */
       const pin = layers.pins.querySelector('.pin[data-id="' + id + '"]');
-      if (pin) pin.classList.add('hot');
+      /* ★★ สีของเหตุการณ์เดินทางจาก marker → ตัวรูปบนแผ่น (ชั้นคนละชั้นกัน)
+         `--ev` คือสีเดียวที่ CSS ของ `.pin.hot` ใช้ทั้งขอบรูปและออร่า */
+      if (pin){
+        pin.classList.add('hot');
+        if (g.dataset.ev)  pin.dataset.ev = g.dataset.ev;
+        if (g.dataset.evc) pin.style.setProperty('--ev', g.dataset.evc);
+      }
+    });
+  }
+  /* ถอดสถานะ "ฉากชี้มาที่นี่" ให้หมดจด — ต้องลบ `--ev` ด้วย ไม่งั้นสีของฉากก่อน
+     ค้างอยู่บน element เดิม แล้วโผล่กลับมาตอนฉากหน้าทำให้มันร้อนอีกครั้ง */
+  function clearHot(){
+    layers.pins.querySelectorAll('.pin.hot').forEach(p => {
+      p.classList.remove('hot');
+      p.style.removeProperty('--ev');
+      delete p.dataset.ev;
     });
   }
 
@@ -1095,11 +1384,66 @@ TK.map = (function(){
     layers.markers.replaceChildren();
     /* ผีของโหมดสองเอกภพตายพร้อมฉาก — สีแผ่นดินไม่ต้องคืนที่นี่
        เพราะ render() ของฉากใหม่เรียก setOwners ของมันเองเสมอ */
-    layers.pins.querySelectorAll('.pin.hot').forEach(p => p.classList.remove('hot'));
+    clearHot();
     mirrorSnap = null; mirrorG = null;
   }
 
-  function setMarkers(markers, animate){
+  /* ══ ★★★ "ฉากนี้ชี้มาที่นี่ **เพราะอะไร**" — ชนิดของเหตุการณ์ ═══════════════════
+     เจ้าของสั่ง 2026-09-06: *"การใช้ Highlight เมืองที่มีเหตุการณ์เป็นติดไฟเป็นสีทอง
+      และวงกระเพื่อมพองรอบ อยากให้เปลี่ยนซะใหม่ ไม่งั้นทุกอย่างจะเหมือนเมืองหลวงไปหมด
+      เราต้องแยกมันตามเหตุการณ์ · การสู้รบเป็นสีนึง การเล่าเรื่องเน้นตรงนั้นเป็นสีนึง"*
+
+     ★★ ชนิดถูก **อ่านจากสิ่งที่ฉากประกาศไว้เอง** ไม่ใช่การเดา — นี่คือเงื่อนไขเดียว
+        ที่ทำให้มันไม่กลายเป็น "แหล่งความจริงที่สอง" (§14) · สี่สัญญาณที่ใช้:
+          clash ที่จุดนั้น        → รบ
+          mapDelta แตะเขตของจุดนั้น → ธงพลิก
+          ปลายลูกศร `supply`     → เสบียงถึง
+          ปลายลูกศรทัพ / `strength` → ทหารยืนอยู่
+        ที่เหลือ = ฉากชี้ให้ดูด้วยเหตุผลที่ไม่ใช่การทหาร (ท้องพระโรง · ความตาย · ภูมิประเทศ)
+     ⚠ `ev:'...'` บน marker เขียนทับได้เสมอ — ใช้เมื่อฉากรู้ดีกว่าสัญญาณอัตโนมัติ
+     ⚠ **สีฝ่ายยังเป็นของ "ใคร" เหมือนเดิม** — สองแบบท้าย (ทหาร/ชี้ให้ดู) จึงใช้สีฝ่าย
+        หรือสีทองแบบวันนี้เป๊ะ ๆ · ของที่เปลี่ยนคือสามแบบแรกได้สีของตัวเอง
+        และ **ตัวรูปไม่เป็นสีทองอีกต่อไป** (ทองเป็นของเมืองหลวงอย่างเดียว — css §hot)  */
+  /* ทองของทั้งโปรเจกต์อยู่ที่ `--gold` ใน style.css — ค่านี้ต้องตรงกับมันเป๊ะ ๆ
+     (อ่านจาก CSS ตอนรันไม่ได้ เพราะ halo ต้องได้สีตอนสร้าง ก่อนเข้า DOM) */
+  const GOLD = '#d9b169';
+  const EV_COLOR = {
+    battle: '#D93A1E',   /* ชาดไฟ — ไม่ใช่แดงอิฐของง่อ (#C2413A) สดกว่าและส้มกว่าชัดเจน */
+    flip:   '#7B4FBF',   /* ม่วง — ทั้งแผ่นไม่มีสีนี้อยู่เลย จึงอ่านว่า "ของใหม่" ทันที */
+    supply: '#B07E1C'    /* ทองเมล็ดข้าว เข้มกว่าป้ายยุ้ง (#EBC77A) หนึ่งขั้นเพื่อให้เห็นบนกระดาษ */
+  };
+  /* ปลายทางของเส้นทางเดินทัพเป็น **ชื่อ node** ไม่ใช่พิกัด — ต้องอ่านจาก marches
+     (routeEnd() คืนพิกัด ใช้เทียบกับ m.place ตรง ๆ ไม่ได้) */
+  function marchEnd(routeId, back){
+    const mr = TK.marches && TK.marches[routeId];
+    if (!mr || !mr.path || !mr.path.length) return null;
+    return back ? mr.path[0] : mr.path[mr.path.length - 1];
+  }
+  function evScan(markers, delta){
+    const clashAt = new Set(), armyEnd = new Set(), supplyEnd = new Set();
+    const flips = new Set(Object.keys(delta || {}));
+    for (const m of (markers || [])){
+      if (m.echo) continue;
+      if (m.type === 'clash' && m.place) clashAt.add(m.place);
+      if (m.type === 'arrow'){
+        const e = marchEnd(m.route, !!m.reverse);
+        if (e) (m.supply ? supplyEnd : armyEnd).add(e);
+      }
+    }
+    return function kindOf(m){
+      if (m.ev) return m.ev;                       /* ฉากรู้ดีกว่า — เขียนทับได้ */
+      if (clashAt.has(m.place)) return 'battle';
+      if (flips.size){
+        const p = TK.places[m.place];
+        if (p){ const r = regionAt(p.x, p.y); if (r && flips.has(r)) return 'flip'; }
+      }
+      if (supplyEnd.has(m.place)) return 'supply';
+      if (armyEnd.has(m.place) || m.strength) return 'force';
+      return 'focus';
+    };
+  }
+
+  function setMarkers(markers, animate, delta){
     clearMarkers();
     forceLabels = new Set();
     quietLabels = new Set();
@@ -1119,6 +1463,15 @@ TK.map = (function(){
        ⚠ ต้องเรียง marker ตามคลื่นในอาร์เรย์ด้วย — ตัวนับเดินหน้าอย่างเดียว */
     let waveNow = 0, waveGate = 0, waveEnd = 0;
     if (!markers){ flushOwners(); return; }
+    /* ★ ต้องสแกนทั้งฉากก่อนวาดหมุดตัวแรก — หมุดตัวแรกอาจเป็นตัวที่ clash/ลูกศร
+       ที่อยู่ *ท้าย* อาร์เรย์เป็นคนตัดสินชนิดให้ (ลำดับใน markers ไม่ใช่ลำดับของเหตุ)
+       ⚠⚠ ถ้าไม่ได้ส่ง `delta` มา ให้ถามจากฉากที่ setFocus บอกไว้ — **ห้ามปล่อยว่าง**
+         เจอ 2026-09-06: `tools/shot.ps1` เรียก setMarkers ซ้ำเองโดยไม่ส่ง delta
+         ภาพตรวจงานจึงไม่มีหมุด 'flip' สักอันทั้งที่แอปจริงมี = เครื่องมือที่โกหก
+         (บทเรียนเดียวกับที่เขียนไว้ในหัว shot.ps1 เอง) · ทางแก้อยู่ฝั่งนี้ดีกว่าไปไล่แก้
+         ทุกเครื่องมือ เพราะเครื่องมือตัวหน้าจะลืมอีก */
+    if (delta === undefined) delta = focusBeat && focusBeat.mapDelta;
+    const evKind = evScan(markers, delta);
 
     markers.forEach((m, idx) => {
       /* ── echo — เพิ่ม 2026-08-22 สำหรับ "โหมดทั้งฤดู" ใน ui.js ────────────────
@@ -1151,14 +1504,23 @@ TK.map = (function(){
            ถ้าหมุดใส่เลขไม่ได้ กองรักษาการณ์จะไร้น้ำหนักทุกฉาก — โปรเจกต์ 2 วัดไว้แล้วว่า
            12 จาก 16 ฉากรบวาดกองทัพไว้ฝ่ายเดียวเพราะเหตุนี้ */
         const col = m.side && TK.factions[m.side] ? TK.factions[m.side].color : null;
-        const g = mk('g',{class:'mk-pin', 'data-place':m.place});
+        /* ★★ ชนิดของเหตุการณ์ → สีของวงกระเพื่อมกับขอบรูป (ดูคอมเมนต์ยาวที่ evScan)
+           สองแบบท้าย (force/focus) ไม่มีสีของตัวเอง มันคืนไปใช้ **สีฝ่าย** หรือ **ทอง**
+           เหมือนที่เคยเป็นทุกประการ — การเปลี่ยนครั้งนี้จึงเพิ่มของ ไม่ได้รื้อของเดิม */
+        const kind = evKind(m);
+        const evc  = EV_COLOR[kind] || col || GOLD;
+        const g = mk('g',{class:'mk-pin ev-' + kind, 'data-place':m.place,
+                          'data-ev':kind, 'data-evc':evc});
         const halo = mk('circle',{cx:p.x, cy:p.y, r:13, class:'mk-halo'});
         const dot  = mk('circle',{cx:p.x, cy:p.y, r:5,  class:'mk-dot'});
         /* ⚠ `.style.fill` ไม่ใช่ `setAttribute('fill')` — style.css มี `.mk-halo{fill:var(--gold)}`
            กับ `.mk-dot{fill:var(--gold)}` อยู่ และ **กฎใน CSS ชนะ presentation attribute เสมอ**
            โปรเจกต์ 2 เขียน D13 ไว้แล้วหมุดยังเป็นทองหมดอยู่หลายเดือน ตรวจเจอด้วยภาพจริงเท่านั้น
-           (BUGS_SEEN §B4) · inline style ชนะ CSS class */
-        if (col){ halo.style.fill = col; dot.style.fill = col; }
+           (BUGS_SEEN §B4) · inline style ชนะ CSS class
+           ★ วง = สีเหตุการณ์ · จุดกลม = สีฝ่าย (จุดกลมเป็นหมุดสำรองตอนไม่มีรูป
+             มันจึงยังต้องตอบคำถาม "ของใคร" เหมือนเดิม) */
+        halo.style.fill = evc;
+        if (col) dot.style.fill = col;
         g.append(halo); g.append(dot);
         layers.markers.append(g);
         blockAt(p.x, p.y, 15);                 // วงฮาโลที่เต้นถึง r19 บนจอ
@@ -1674,6 +2036,8 @@ TK.map = (function(){
      ห้ามให้ที่อื่นแก้ ไม่งั้นตารางสัญลักษณ์จะมีสองแหล่ง (§14) */
   const api = { init, setOwners, flyTo, resetView, setMarkers, relayout, setFocus, setRoads, setYear,
                 setPlate, get plateNew(){ return plateNew; }, get hasPlate(){ return !!TK.plateWater; },
+                setArt, setArtTheme, get artOn(){ return artOn; },
+                setPlaceClick,
                 get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };

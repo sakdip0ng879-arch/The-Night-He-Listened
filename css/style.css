@@ -413,6 +413,18 @@ rect.sp-none{fill:#6b7285}
 }
 .plabel.hot{fill:var(--gold)}
 
+/* ★★ ชื่อมณฑล — ชั้น "ภาพรวม" ของแผ่นวาดใหม่ (เจ้าของสั่ง 2026-09-08)
+   ต้องอ่านออกว่าเป็นคนละชนิดกับชื่อเมืองตั้งแต่แวบแรก จึงใช้ภาษาคนละแบบ:
+   **จางกว่า · ตัวห่าง · ไม่ขาวจัด** ตามคอนเวนชันแผนที่จริง (ชื่อภูมิภาคถอยให้ชื่อจุด)
+   ⚠ ห้ามทำให้เด่นเท่าชื่อเมือง — มันเป็นฉากหลัง ไม่ใช่สิ่งที่ฉากกำลังชี้
+   ⚠ ฮาโลต้องหนากว่า `.plabel` นิดหน่อย เพราะตัวห่างทำให้เส้นขอบขาดเป็นช่วง ๆ
+      บนพื้นภูเขาที่มีลายเยอะ (ค่า stroke-width ตั้งใน strategic.js ตามขนาดตัวอักษร) */
+.rlabel{
+  fill:rgba(255,255,255,.62); font-weight:700; paint-order:stroke;
+  stroke:rgba(11,13,18,.78); stroke-linejoin:round; pointer-events:none;
+  dominant-baseline:alphabetic;
+}
+
 /* หมุด/ลูกศร/ปะทะ ของฉากปัจจุบัน */
 .mk-halo{fill:var(--gold); opacity:.22; animation:pulse 2.2s ease-in-out infinite}
 .mk-dot{fill:var(--gold); stroke:#0b0d12; stroke-width:1.5}

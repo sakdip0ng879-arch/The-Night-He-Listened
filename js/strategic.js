@@ -352,6 +352,82 @@ TK.map = (function(){
     if (artObj && artObj.setTheme) artObj.setTheme(theme === 'night' ? 'night' : 'day');
   }
 
+  /* ══ ★★★ ชื่อมณฑลบนแผ่น (เจ้าของสั่ง 2026-09-08) ═══════════════════════════
+     > *"ในแผนที่เก่ามันมีเมืองทุกเมืองเขียนชื่อบอกหมด ของเราปัจจุบันมันยังโล้น
+     >  และอยากให้เพิ่มพวกมณฑลเข้าไปด้วย แบบ Jing Zhou, Liang Zhou
+     >  เป็นคำอ่านพินอินตามแบบฉบับของเรา"*
+
+     ★★ **ข้อมูลมีครบอยู่แล้วทั้ง 33 มณฑล** — `geo.js` มี `label` (ไทย) · `py` · และ
+        **`labelAt` จุดวางชื่อ** มาตั้งแต่ต้น · แต่ `labelAt` **ไม่เคยถูกวาดในแอปเลย**
+        มีแต่ `build_geo.js` กับ `board_preview.js` (เครื่องมือ) ที่อ่านมัน
+        → ตระกูลเดียวกับบทเรียน `li` (LOG 2026-09-02) และ `type` ของ places:
+          **ข้อมูลถูกดูแลมาหลายเดือนเพื่อการแสดงผลที่ไม่เคยเขียน**
+
+     ★ ชื่อที่ใช้คือ `r.label` ซึ่งเป็นไทย-ถอดพินอินตาม DECISIONS §11 อยู่แล้ว
+       ("จิงโจวตะวันตก" · "อวี้โจว (สวี่ชาง)") — ไม่ต้องแปลอะไรใหม่
+
+     ⚠ **วาดเฉพาะโหมดแผ่นวาดใหม่** — แผ่นต้นฉบับพิมพ์ชื่อมณฑลอังกฤษไว้เองแล้ว
+       ใส่ทับเข้าไปจะได้ข้อความสองชุดซ้อน (บทเรียนเดียวกับหัวไฟล์ `labeler.js`)
+     ⚠ **ซ่อนตอนซูมเข้าใกล้** — ชื่อมณฑลเป็นชั้น "ภาพรวม" ไม่ใช่ชั้นรายละเอียด
+       พอกล้องแคบกว่า RNAME_MIN_VB มันกลายเป็นตัวหนังสือยักษ์พาดกลางจอ  */
+  const RNAME_MIN_VB = 430;   /* กว้างกว่านี้ (หน่วยแผนที่) ถึงจะโชว์ชื่อมณฑล */
+  const RNAME_PX     = 15;    /* ขนาดบนจอ — คงที่ทุกระดับซูมเหมือนป้ายเมือง */
+  const RNAME_TRACK  = 0.14;  /* ระยะห่างตัวอักษร (em) — ★ ต้องใช้ค่าเดียวกันทั้งตอนวัดและตอนวาด */
+
+  /* คืนกล่องของชื่อมณฑลที่จะวาด เพื่อให้ `labeler` เอาไปหลบ (ชื่อเมืองสำคัญกว่า) */
+  function regionNameBoxes(vb, screenW, avoid){
+    if (!artOn || vb.w < RNAME_MIN_VB) return [];
+    const mu = vb.w / screenW, fMU = RNAME_PX * mu;
+    const m = vb.w * 0.04;
+    const cand = [];
+    for (const id in TK.regions){
+      const r = TK.regions[id];
+      if (!r.labelAt || !r.label) continue;
+      const [x, y] = r.labelAt;
+      if (x < vb.x - m || x > vb.x + vb.w + m || y < vb.y - m || y > vb.y + vb.h + m) continue;
+      /* วัดด้วยไม้บรรทัดตัวเดียวกับ labeler — ภาษาไทยเดาจากจำนวนตัวอักษรไม่ได้ */
+      /* ⚠⚠ ต้องบวก `letter-spacing` เข้าไปเอง — canvas `measureText` ไม่รู้จักมัน
+         ชื่อมณฑลตัวห่าง 0.14em × 20 ตัวอักษร = กว้างกว่าที่วัดได้เกือบ 3 เท่าของขนาดอักษร
+         ไม่บวกแล้วกล่องเล็กกว่าจริง → ตรวจชนไม่เจอ → ได้ชื่อสองมณฑลพิมพ์ทับกัน
+         (เจอจริง 2026-09-08: "อวี้โจว (สวี่ชาง)หวยหนานเหนือ (โช่วชุน)") */
+      const wPx = TK.labeler.textWidth(r.label, RNAME_PX,
+                    '"Leelawadee UI","Segoe UI",Tahoma,sans-serif')
+                  + Math.max(0, r.label.length - 1) * RNAME_PX * RNAME_TRACK;
+      const wMU = wPx * mu * 1.06;
+      cand.push({ id, x: x - wMU/2, y: y - fMU*0.8, w: wMU, h: fMU*1.5,
+                  cx:x, cy:y, fMU, label:r.label });
+    }
+    /* ★★ ชื่อมณฑล **ขยับไม่ได้** — มันผูกกับ `labelAt` ซึ่งเป็นใจกลางของเขต
+       ต่างจากชื่อเมืองที่ labeler ลองได้ 8 ตำแหน่งรอบหมุด
+       → ชนแล้วทำได้อย่างเดียวคือ **ซ่อน** · เก็บอันที่มาก่อน ทิ้งอันที่ชน
+       ⚠ ไม่มีข้อนี้จะได้ชื่อสองมณฑลพิมพ์ทับกันเป็นคำเดียว
+         (เจอจริง: "อวี้โจว (สวี่ชาง)หวยหนานเหนือ (โช่วชุน)" — 2026-09-08)
+       ★ เรียงตามชื่อสั้นก่อน: ชื่อยาวกินที่มากและมักเป็นเขตที่มีวงเล็บกำกับเมือง
+         ยอมให้ชื่อสั้นได้ที่ก่อน ทั้งแผ่นจึงมีชื่อครบกว่า */
+    const hit = (a,b) => a.x < b.x+b.w && b.x < a.x+a.w && a.y < b.y+b.h && b.y < a.y+a.h;
+    cand.sort((A,B) => A.w - B.w);
+    const out = [];
+    for (const c of cand){
+      if (out.some(o => hit(c,o))) continue;
+      if (avoid && avoid.some(o => o && o.w > 0 && hit(c,o))) continue;   /* ป้ายของฉากมาก่อน */
+      out.push(c);
+    }
+    return out;
+  }
+
+  /* วาดชื่อมณฑลลงใน `#L-labels` **ก่อน** ชื่อเมือง — ชั้นเดียวกันแต่เรียงก่อน = อยู่ล่าง
+     (ได้พฤติกรรมเฟดตอนกล้องเคลื่อนของชั้นนั้นมาฟรีด้วย — §17 ข้อ 5) */
+  function paintRegionNames(boxes){
+    for (const b of boxes){
+      const t = mk('text',{x:b.cx, y:b.cy, 'text-anchor':'middle', class:'rlabel'});
+      t.style.fontSize   = b.fMU + 'px';
+      t.style.strokeWidth = (b.fMU * 0.19) + 'px';
+      t.style.letterSpacing = (b.fMU * RNAME_TRACK) + 'px';
+      t.textContent = b.label;
+      layers.labels.append(t);
+    }
+  }
+
   function buildRegions(){
     for (const id in TK.regions){
       const r = TK.regions[id];
@@ -1840,8 +1916,20 @@ TK.map = (function(){
         }
       }
     }
+    /* ★ ชื่อมณฑลจองที่ก่อน แล้วให้ชื่อเมืองหลบ — เมืองเจาะจงกว่า จึงเป็นฝ่ายได้ที่
+       แต่ชื่อมณฑลวางตายตัวที่ `labelAt` ขยับไม่ได้ จึงต้องเป็นฝ่ายจอง */
+    const rBoxes = regionNameBoxes(vb, screenW, avoid);
+    for (const b of rBoxes) avoid.push({x:b.x, y:b.y, w:b.w, h:b.h});
     const res = TK.labeler.layout(TK.places, vb, screenW, {
       force: forceLabels, quiet: quietLabels, fontPx: FONT_PX, pinR: 4, avoid,
+      /* ★★ แผ่นวาดใหม่ไม่มีชื่อพิมพ์มาให้เลยสักตัว — ต้องบอก labeler ตรง ๆ
+         ไม่งั้นมันกรองด้วย `!p.map` ตามเดิมแล้วเงียบไป 94 จาก 107 จุด
+         (เหตุผลเต็มอยู่หัวไฟล์ labeler.js และที่ opts.plateNames) */
+      plateNames: !artOn,
+      /* ปล่อยอันดับรองเพิ่มบนแผ่นที่ไม่มีชื่อพิมพ์ — ค่านี้เจ้าของเป็นคนเคาะจากภาพ */
+      rankBonus: artOn ? 1 : 0,
+      /* เพดานป้าย: แผ่นเก่าพิมพ์ชื่อไว้ให้แล้วจึงพอที่ 26 · แผ่นใหม่โล้น ต้องมากกว่า */
+      maxLabels: artOn ? 44 : 26,
       pinBox: (id) => symBox[id],      /* ★ กล่องจริงของรูป ไม่ใช่วงกลม 4px */
       fontFamily: '"Leelawadee UI","Segoe UI",Tahoma,sans-serif'
     });
@@ -1857,6 +1945,7 @@ TK.map = (function(){
     applyPinVisibility();
 
     layers.labels.replaceChildren();
+    paintRegionNames(rBoxes);   /* ก่อนชื่อเมือง = อยู่ชั้นล่างกว่า */
     for (const L of res.labels){
       const t = mk('text',{x:L.x, y:L.y, 'text-anchor':L.anchor,
         class:'plabel' + (forceLabels.has(L.id) ? ' hot' : '')});

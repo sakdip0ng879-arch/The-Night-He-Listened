@@ -96,11 +96,23 @@ TK.labeler = (function(){
     const fontPx     = opts.fontPx || 12;
     const fontFamily = opts.fontFamily || '"Leelawadee UI",sans-serif';
     const pinRpx     = opts.pinR || 5;
+    /* ★★★ แผ่นพื้นพิมพ์ชื่อเมืองไว้ให้หรือเปล่า (เพิ่ม 2026-09-08)
+       ค่าเริ่มต้น = true คือพฤติกรรมเดิมเป๊ะ (map.jpg พิมพ์ชื่อไว้ 94/107 จุด)
+       ⚠ **แผ่นวาดใหม่ของ Codex ไม่มีชื่อพิมพ์เลยสักตัว** (`containsLabels:false`)
+         เหตุผลทั้งหมดที่หัวไฟล์นี้เขียนไว้ว่า "เลิกแข่งกับแผนที่พื้น" จึงเป็นโมฆะบนแผ่นนั้น
+         — ถ้ายังกรองด้วย `!p.map` อยู่ ผู้อ่านจะได้แผ่นที่สวยแต่ **โล้น ไม่มีชื่อเมืองเลย**
+         (เจ้าของทัก 2026-09-08: *"แผนที่เก่ามันมีเมืองทุกเมืองเขียนชื่อบอกหมด ของเราปัจจุบันมันยังโล้น"*) */
+    const plateNames = opts.plateNames !== false;
 
     const mu     = vb.w / screenW;          // map-unit ต่อ 1 screen px
     const fontMU = fontPx * mu;             // ป้ายมีขนาดคงที่บนจอทุกระดับซูม
     const lineMU = fontMU * 1.15;
-    const limit  = maxRank(vb.w);
+    /* ★ `rankBonus` — ปล่อยอันดับรองเพิ่มกี่ขั้น (เพิ่ม 2026-09-08)
+       แผ่นเก่าพิมพ์ชื่อ *ทุกเมือง* ไว้ในภาพ และชื่อพวกนั้น **ย่อ-ขยายตามแผนที่**
+       ตอนซูมออกมันเลยเล็กลงแต่ยังอยู่ครบ · ป้ายของเราขนาด **คงที่บนจอ**
+       ปล่อยครบ 107 อันตอนซูมออก = ทับกันจนอ่านไม่ออก LOD จึงยังต้องมี
+       — bonus นี้คือปุ่มปรับว่าจะใจกว้างกว่าเดิมกี่ขั้นบนแผ่นที่ไม่มีชื่อพิมพ์มาให้ */
+    const limit  = maxRank(vb.w) + (opts.rankBonus || 0);
     const pad    = fontMU * 0.28;
 
     /* คัดเฉพาะที่อยู่ในกรอบภาพ (เผื่อขอบไว้กันป้ายกระพริบตอนแพน) */
@@ -118,7 +130,7 @@ TK.labeler = (function(){
          2. แผนที่พื้นไม่มีชื่อให้ (p.map เป็น null) — ของเราเป็นแหล่งเดียวที่มี
             กรณีนี้ยังคิด LOD อยู่ ไม่งั้นตอนซูมออกสุดจะมีจุดลอยไร้บริบท */
     const shown = visible.filter(([id,p]) =>
-      force.has(id) || (!p.map && (RANK[p.type] || 4) <= limit));
+      force.has(id) || ((plateNames ? !p.map : true) && (RANK[p.type] || 4) <= limit));
 
     /* ★★ 2026-09-05 — หมุดไม่ใช่จุดกลม 4px อีกแล้ว
        ตั้งแต่มีสัญลักษณ์สถานที่ (§3) รูปที่วาดจริงสูงได้ถึง ~34px และ **ยึดที่ฐาน**
@@ -188,5 +200,5 @@ TK.labeler = (function(){
     return { labels, pins: shown.map(s => s[0]), hidden, limit };
   }
 
-  return { layout, RANK, maxRank };
+  return { layout, RANK, maxRank, textWidth };
 })();

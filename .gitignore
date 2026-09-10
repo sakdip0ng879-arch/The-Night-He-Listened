@@ -37,6 +37,9 @@ tools/_*.png
 tools/_*.rle
 # รายงานที่ตัวสร้างเขียนใหม่ทุกครั้ง (_cuts.json ของ cut_sheet/invented_sheet)
 tools/_*.json
+# ★ ของที่ `tools/plate_dots.js --json` สร้างให้หน้าสแกนอ่าน — regenerate ได้ตลอด
+#   ไม่ควร track เพราะมันคือ *ผลของการอ่านหมึกแผ่น* ไม่ใช่ข้อมูลของโปรเจกต์
+tools/_*.js
 
 # วัตถุดิบ Natural Earth — หลายเมกะไบต์ ใช้ตอน build เท่านั้น
 # ผลลัพธ์ที่ commit คือ data/rivers.js ที่เล็กกว่ามาก (ดู tools/build_rivers.js)

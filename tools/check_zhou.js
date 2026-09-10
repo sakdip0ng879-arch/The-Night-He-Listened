@@ -29,33 +29,21 @@ const GW = Math.ceil(W / CELL), GH = Math.ceil(H / CELL);
 const DUMP = process.argv.includes('--dump');
 
 /* ── ที่คาดว่าเมืองไหนอยู่มณฑลไหน ─────────────────────────────────────────
-   ที่มา: บัญชีกุ๋นของฮั่นตะวันออก ปรับตามผังวุยปี 220–221 (ดู data/provinces.js)
-   ★ เอาเฉพาะจุดที่ **สังกัดไม่เป็นที่ถกเถียง** — จุดกำกวมไม่ต้องใส่ ดีกว่าใส่แล้วเดา
-   ⚠ จุดที่ตั้งอยู่ *บนแนวแบ่ง* จริง ๆ (เช่น ผูปั่นอยู่ริมลำน้ำเหลืองพอดี) อยู่ใน SOFT */
-const EXPECT = {
-  liang: ['zhangye','jiuquan','xijun','wuwei','xiping','jincheng','baohan'],
-  yong : ['didao','longxi','tianshui','jicheng','shangbang','nanan','anding','xiaoguan',
-          'chencang','sanpass','fufeng','wugong','mei','xianyang','changan','weinan',
-          'lantian','zhouzhi','beiyuan','wuzhang','qinchuang','jieting','mumen','zhaoyang',
-          'wudu','xiabian','qishan','yinping'],
-  yi   : ['chengdu','fucheng','zitong','langzhong','jiangzhou','dangqu','hanzhong','dingjun',
-          'yangping','baishui','baocheng','qigu','hanshou','wuxia','baidi','yongan'],
-  si   : ['luoyang','hedong','wenxi','pingyang','hongnong','hangu','shanxian','mianchi',
-          'caoyang','tongguan','huayin','taolin'],
-  bing : ['jinyang','shangdang'],
-  ji   : ['yecheng','handan'],
-  you  : ['fanyang','zhuojun'],
-  yu   : ['xuchang','runan'],
-  jing : ['wancheng','xinye','xiangyang','fancheng','jiangling','dangyang','changban',
-          'xiling','jiangxia','xiakou','wuchang','shangyong','fangling','baling'],
-  yang : ['shouchun','hefei','ruxu','jianye','dantu','kuaiji','chaisang','jiujiang'],
-  xu   : ['guangling']
-};
+   ★★ **ตารางนี้ไม่มีอยู่ในไฟล์นี้อีกแล้ว** — สังกัดอยู่ในช่อง `province` ของ
+   `data/places.js` จุดเดียว (ย้ายมา 2026-09-10) · ก่อนหน้านี้มีสองที่: ตาราง
+   94 ชื่อในไฟล์นี้ กับช่อง `province` ของ 24 จุดที่เพิ่งสอบเทียบ — สองที่แปลว่า
+   คนเพิ่มหมุดใหม่ไม่รู้ว่าต้องไปเพิ่มที่ไหน และตัวตรวจก็โตไม่ทันข้อมูล
+   ที่มาของสังกัด: บัญชีกุ๋นของฮั่นตะวันออก ปรับตามผังวุยปี 220–221 (ดู data/provinces.js)
+   ⚠ จุดที่ตั้งอยู่ *บนแนวแบ่ง* จริง ๆ (เช่น ผูปั่นอยู่ริมลำน้ำเหลืองพอดี) อยู่ใน SOFT
+     และ **ต้องไม่มีช่อง `province`** ในข้อมูล — ตัวตรวจข้อ 5 บังคับข้อนี้ */
+const EXPECT = {};
+for (const [id, p] of Object.entries(P)) if (p.province) (EXPECT[p.province] ||= []).push(id);
 /* จุดที่ *ตั้งอยู่บนเส้น* โดยธรรมชาติ — ผิดไม่ได้แต่ก็ไม่ควรบังคับให้ตกฝั่งใดฝั่งหนึ่ง
-   ผูปั่น/ผูโจว = ท่าข้ามลำน้ำเหลืองซึ่ง *คือ* เส้นแบ่งยง/ซือเอง */
-// เมืองที่สอบเทียบใหม่ต้องเข้าการตรวจด้วย ไม่ใช่เพิ่มหมุดโดยไม่มีข้อยืนยันฝั่ง
-for(const [id,p] of Object.entries(P))if(p.province)(EXPECT[p.province] ||= []).push(id);
-const SOFT = new Set(['puban','puzhou','lueyang','xiegupass','luogu','ziwugu','wuguan']);
+   ผูปั่น/ผูโจว = ท่าข้ามลำน้ำเหลืองซึ่ง *คือ* เส้นแบ่งยง/ซือเอง
+   ค่ายในเรื่อง (hanying · weizhai) **จงใจไม่ใส่สังกัด** — เราเป็นคนวางเองทั้งคู่
+   เอามาตรวจเส้นก็เท่ากับเอาคำตอบมาตรวจตัวเอง (ดู zhou_evidence.js หัวข้อ "หลักฐานวน") */
+const SOFT = new Set(['puban','puzhou','lueyang','xiegu','xiegupass','luogu','ziwugu','wuguan',
+                      'yangxi','hanying','weizhai']);
 
 /* ── ผนัง ─────────────────────────────────────────────────────────────── */
 const wall = new Uint8Array(GW * GH);
@@ -178,8 +166,23 @@ for (const rid in TK.regions){
   if (got !== want) regionWarn.push([rid, want, got + '  @' + la.join(',')]);
 }
 
+/* ── 5 · ข้อมูลสังกัดเองถูกรูปแบบไหม ────────────────────────────────────
+   ★ ตั้งแต่ย้ายตารางเข้า `places.js` ไฟล์ข้อมูลกลายเป็นแหล่งเดียว → ต้องมีตัวตรวจ
+   ที่เฝ้า *ตัวข้อมูล* ไม่ใช่เฝ้าแค่ผลลัพธ์ ไม่งั้นพิมพ์ `province:"yng"` ผิดตัวเดียว
+   จุดนั้นจะเงียบหายออกจากการตรวจโดยไม่มีใครรู้ */
+const dataBad = [];
+for (const [id, p] of Object.entries(P)){
+  if (p.province && !Z.list[p.province]) dataBad.push(id + ' มี province:"' + p.province + '" ซึ่งไม่ใช่มณฑลใน provinces.js');
+  if (p.province && SOFT.has(id))        dataBad.push(id + ' อยู่ใน SOFT (ตั้งอยู่บนเส้น) จึงต้องไม่มีช่อง province');
+}
+
 /* ── รายงาน ───────────────────────────────────────────────────────────── */
 let fail = 0;
+if (dataBad.length){
+  fail++;
+  console.log('⛔ ช่อง province ในข้อมูลผิดรูป ' + dataBad.length + ' จุด');
+  for (const s of dataBad) console.log('   ' + s);
+}
 if (leaks.length){
   fail++;
   /* จับกลุ่มตามคู่มณฑล จะได้อ่านออกว่ารั่วระหว่างใครกับใคร ไม่ใช่พิมพ์หมื่นบรรทัด */

@@ -21,19 +21,19 @@ window.TK = window.TK || {};
 window.TK.places = {
 
   /* ══════════ ราชธานีและหัวเมืองหลัก ══════════ */
-  chengdu:   { label:"เฉิงตู",     py:"Chengdu",   map:"Cheng Du",  x:267,  y:987, type:"capital"},
-  changan:   { label:"ฉางอาน",    py:"Chang'an",  map:"Chang An",  x:643,  y:644, type:"capital"},
-  luoyang:   { label:"ลั่วหยาง",    py:"Luoyang",   map:"Luo Yang",  x:901,  y:602, type:"capital"},
-  yecheng:   { label:"เย่",        py:"Yecheng",   map:"Ye Cheng",  x:1047, y:488, type:"capital" },
-  xuchang:   { label:"สวี่ชาง",     py:"Xuchang",   map:"Xu Chang",  x:1039, y:654, type:"capital"},
-  jianye:    { label:"เจี้ยนเย่",     py:"Jianye",    map:"Jian Ye",   x:1428, y:847, type:"capital"},
-  wuchang:   { label:"อู่ชาง",      py:"Wuchang",   map:"Wu Chang",  x:1088, y:1059, type:"capital" },
+  chengdu:   { label:"เฉิงตู",     py:"Chengdu",   map:"Cheng Du",  x:267,  y:987, type:"capital", province:"yi"},
+  changan:   { label:"ฉางอาน",    py:"Chang'an",  map:"Chang An",  x:643,  y:644, type:"capital", province:"yong"},
+  luoyang:   { label:"ลั่วหยาง",    py:"Luoyang",   map:"Luo Yang",  x:901,  y:602, type:"capital", province:"si"},
+  yecheng:   { label:"เย่",        py:"Yecheng",   map:"Ye Cheng",  x:1047, y:488, type:"capital", province:"ji" },
+  xuchang:   { label:"สวี่ชาง",     py:"Xuchang",   map:"Xu Chang",  x:1039, y:654, type:"capital", province:"yu"},
+  jianye:    { label:"เจี้ยนเย่",     py:"Jianye",    map:"Jian Ye",   x:1428, y:847, type:"capital", province:"yang"},
+  wuchang:   { label:"อู่ชาง",      py:"Wuchang",   map:"Wu Chang",  x:1088, y:1059, type:"capital", province:"jing" },
 
   /* ══════════ ถนนจินหนิว — เฉิงตูขึ้นฮั่นจง ══════════
      เส้นที่ทัพหลวงเคลื่อนขึ้นในราชโองการฉบับแรกของปี 221 · เป็นเส้นเดียวที่ใช้ได้จริง
      และเป็นเหตุผลที่เสบียงจากอี้โจวต้องใช้เวลาเป็นเดือนกว่าจะถึงแนวหน้า */
-  fucheng:   { label:"ฝูเฉิง",      py:"Fucheng",   map:"(Mian Yang) Pei Cheng", x:275, y:876, type:"town" },
-  zitong:    { label:"จื่อถง",      py:"Zitong",    map:"Zi Tong",   x:311, y:868, type:"town"},
+  fucheng:   { label:"ฝูเฉิง",      py:"Fucheng",   map:"(Mian Yang) Pei Cheng", x:275, y:876, type:"town", province:"yi" },
+  zitong:    { label:"จื่อถง",      py:"Zitong",    map:"Zi Tong",   x:311, y:868, type:"town", province:"yi"},
   /* ══ ★★★ ด่าน — `anchor:"center"` + `sdx/sdy` วางทับ **รูปประตูด่านที่แผ่นพิมพ์ไว้เอง**
      เจ้าของสั่ง 2026-09-06: *"เอาให้มันทับกับรูปด่านเก่าในรูปเดิมได้เลย ไม่งั้นมันจะดู
       เหมือนด่าน Duplicate"* — ชี้ Yang Ping · Bai Shui · San · Xie Gu · Tong · Wu
@@ -48,7 +48,7 @@ window.TK.places = {
      ⚠ ต้องมี `anchor:"center"` ด้วย ห้ามชดเชยด้วย `sdy` อย่างเดียว — เหตุผลอยู่ที่
        `scalePins` ใน strategic.js (ระยะ 22→12 เป็นหน่วยกล่องรูปซึ่งหดตามซูม)
   ══ */
-  baishui:   { label:"ด่านไป๋สุ่ย",   py:"Baishui Pass", map:"Bai Shui Pass", x:407, y:807, type:"pass",
+  baishui:   { label:"ด่านไป๋สุ่ย",   py:"Baishui Pass", map:"Bai Shui Pass", x:407, y:807, type:"pass", province:"yi",
                anchor:"center", sdx:-2, sdy:2.5 },    /* รูปด่านของแผ่น (405, 809.5) */
 
   /* ══════════ ฮั่นจงและทางขึ้นเหนือ ══════════ */
@@ -56,16 +56,16 @@ window.TK.places = {
      ออกลงปากหุบเซียมาที่นี่ (_part8.js ข้อ ②)
      ⚠ `type` ยังเป็น `city` เพราะมันเป็นเมืองจริง ๆ ด้วย — **`role` เป็นป้ายเสริม
      ไม่ใช่ตัวแทน `type`** (ถ้าเปลี่ยน type จะเสียทั้งรูปเมืองและอันดับป้าย) */
-  hanzhong:  { label:"ฮั่นจง",      py:"Hanzhong",  map:"Han Zhong (Nan Zhen)", x:477, y:805, type:"city", role:"depot"},
-  yangping:  { label:"ด่านหยางผิง", py:"Yangping Pass", map:"Yang Ping Pass", x:396, y:776, type:"pass",
+  hanzhong:  { label:"ฮั่นจง",      py:"Hanzhong",  map:"Han Zhong (Nan Zhen)", x:477, y:805, type:"city", province:"yi", role:"depot"},
+  yangping:  { label:"ด่านหยางผิง", py:"Yangping Pass", map:"Yang Ping Pass", x:396, y:776, type:"pass", province:"yi",
                anchor:"center", sdx:2.5, sdy:7.5 },   /* รูปด่านของแผ่น (398.5, 783.5) */
-  baocheng:  { label:"เป่าเฉิง",     py:"Baocheng",  map:"Bao Cheng", x:450, y:795, type:"town" },
-  langzhong: { label:"หลางจง",    py:"Langzhong", map:"Ba Xi (Lang Zhong)", x:393, y:893, type:"city"},
-  dangqu:    { label:"ตางฉวี",     py:"Dangqu",    map:"Dang Qu",   x:492, y:1024, type:"town",
+  baocheng:  { label:"เป่าเฉิง",     py:"Baocheng",  map:"Bao Cheng", x:450, y:795, type:"town", province:"yi" },
+  langzhong: { label:"หลางจง",    py:"Langzhong", map:"Ba Xi (Lang Zhong)", x:393, y:893, type:"city", province:"yi"},
+  dangqu:    { label:"ตางฉวี",     py:"Dangqu",    map:"Dang Qu",   x:492, y:1024, type:"town", province:"yi",
                note:"ที่จางเฟยล่อจางเหอเข้าหุบแคบปี 218 (ของจริง — ภาคผนวก) · ร้อยแก้ว"+
                     "ภาคสองอ้างถึงเป็นแม่แบบของกลที่เซี่ยเปี้ยน · dot บนแผ่น (492,1024)" },
-  baidi:     { label:"ไป๋ตี้เฉิง",     py:"Baidicheng",map:"(Yong An) Bai Di Cheng", x:721, y:976, type:"city" },
-  dingjun:   { label:"เขาติ้งจวิน",  py:"Mt. Dingjun", map:"Mount. Ding Jun", x:432, y:755, type:"mountain" },
+  baidi:     { label:"ไป๋ตี้เฉิง",     py:"Baidicheng",map:"(Yong An) Bai Di Cheng", x:721, y:976, type:"city", province:"yi" },
+  dingjun:   { label:"เขาติ้งจวิน",  py:"Mt. Dingjun", map:"Mount. Ding Jun", x:432, y:755, type:"mountain", province:"yi" },
 
   /* ══════════ บันไดขั้นแรก — อู่ตู / อินผิง (ปี 221) ══════════ */
   /* ★ ทั้งสองจุดเคย "ลอยอยู่ในตัวหนังสือ" ไม่ใช่บน dot — สอบเทียบด้วยการอ่านพิกเซลของแผ่น
@@ -73,9 +73,9 @@ window.TK.places = {
        wudu    วงกลม 5×5 ที่ x 363–367 · y 681–685  → กึ่งกลาง (365,683)   เดิม (362,658) = กลางคำว่า "Wu"
        xiabian วงกลม 5×5 ที่ x 398–402 · y 699–703  → กึ่งกลาง (400,701)   เดิม (416,705) = ในกรอบป้าย "Xia Bian"
      ปลาย d ของ xiabian–zhaoyang ขยับตามแล้ว (§4 ปลายเส้นต้องตรง node เป๊ะ) */
-  wudu:      { label:"อู่ตู",        py:"Wudu",      map:"Wu Du",     x:365, y:683, type:"town"},
-  xiabian:   { label:"เซี่ยเปี้ยน",    py:"Xiabian",   map:"Xia Bian",  x:400, y:701, type:"town" },
-  yinping:   { label:"อินผิง",      py:"Yinping",   map:"Yin Ping",  x:328, y:720, type:"town" },
+  wudu:      { label:"อู่ตู",        py:"Wudu",      map:"Wu Du",     x:365, y:683, type:"town", province:"yong"},
+  xiabian:   { label:"เซี่ยเปี้ยน",    py:"Xiabian",   map:"Xia Bian",  x:400, y:701, type:"town", province:"yong" },
+  yinping:   { label:"อินผิง",      py:"Yinping",   map:"Yin Ping",  x:328, y:720, type:"town", province:"yong" },
   /* ★ 2026-08-27 — โรคเดียวกับ wudu/xiabian ข้างบน จับได้ตอนสอบเส้นถนนเฉินชาง:
        (388,743) คือ **กึ่งกลางกรอบป้าย** "Lue Yang" ไม่ใช่ dot
        dot จริงเป็นวงกลมเปิดอยู่ทางขวาของกรอบ ที่ x 405–409 · y 756–760 → (407,758)
@@ -96,10 +96,10 @@ window.TK.places = {
        **วงกระเพื่อมของฉากจะย้ายตามไปด้วย** (fitPinsToSymbols ยึดตำแหน่งจากกล่องรูป)
        แล้ว c7-01 ที่ปักฉีซานว่า "ปลายโซ่ใต้" จะเรืองแสงห่างจากปลายโซ่จริง 59 หน่วย
        — ทำได้ ถ้าเจ้าของยังต้องการ แต่ขอเคาะก่อน */
-  qishan:    { label:"ฉีซาน",      py:"Qishan",    map:"Qi Shan",   x:270, y:705, type:"mountain",
+  qishan:    { label:"ฉีซาน",      py:"Qishan",    map:"Qi Shan",   x:270, y:705, type:"mountain", province:"yong",
                sdy:-10 },
-  longxi:    { label:"หลงซี",      py:"Longxi",    map:"Long Xi",   x:295, y:570, type:"city" },
-  jicheng:   { label:"จี้เฉิง",       py:"Jicheng",   map:"Yi Cheng",  x:316, y:617, type:"city",
+  longxi:    { label:"หลงซี",      py:"Longxi",    map:"Long Xi",   x:295, y:570, type:"city", province:"yong" },
+  jicheng:   { label:"จี้เฉิง",       py:"Jicheng",   map:"Yi Cheng",  x:316, y:617, type:"city", province:"yong",
                note:"★ นครหลวง Longxi (冀縣) — เมืองที่ครอบครัว Ma Chao ถูกฆ่าปี 213 และที่ "+
                     "Liu Bei สิ้นปี 226 · **ห้ามเรียก \"จี้\" เปล่า ๆ บนแผนที่** เพราะชนกับจี้โจว "+
                     "มณฑลใหญ่ทางเหนือคนละที่กัน (DECISIONS §11) · แผ่นพิมพ์ว่า Yi Cheng — "+
@@ -114,7 +114,7 @@ window.TK.places = {
        สักสามหน่วย อย่าขยับหมุดกลับ เพราะหมุดตรงกับแผ่นแล้ว)
        ผลบนเรื่อง: c4-10 ลูกศรจ้าวหยุนออกตัวจากดินฮั่นแทนดินวุ่ย — `check_map` ข้อ 5
        เลิกเตือนหนึ่งรายการ และอ่านถูกกว่าเดิม (จุดตั้งต้นการบุกควรเป็นดินตัวเอง) */
-  shangbang: { label:"ช่างกุย",     py:"Shanggui",  map:"Shang Bang", x:346, y:626, type:"town", role:"depot", roleYear:233, roleGone:239},
+  shangbang: { label:"ช่างกุย",     py:"Shanggui",  map:"Shang Bang", x:346, y:626, type:"town", province:"yong", role:"depot", roleYear:233, roleGone:239},
                /* ★★ ยุ้งข้าว [233, 239) — เจ้าของเสนอช่วง 232–234 หลักฐานชี้ที่ **233**
                   ปี 232 แอ่งเทียนสุ่ยยังเป็นของวุ่ย (พลิกไปวุ่ยที่ c6-12 ปี 231)
                   แล้วพลิกกลับเป็นฮั่นที่ **c7-05 ปี 233** ซึ่งชื่อฉากคือ "เกวียนข้าวคันแรก"
@@ -123,17 +123,17 @@ window.TK.places = {
                      ที่เดียวที่ไฟไหม้จริง") เพราะช่วงนี้ละเอียดแค่ระดับ *ปี*
                      ถ้าปิดที่ 238 ยุ้งจะหายไปตั้งแต่ต้นปี = **หายก่อนฉากที่มันถูกเผา**
                      คนอ่านต้องเห็นมันอยู่ตอนถูกเผา แล้วค่อยหายในปีถัดมา */
-  tianshui:  { label:"เทียนสุ่ย",     py:"Tianshui",  map:"Tian Shui Qin Zhou", x:356, y:607, type:"city"},
-  nanan:     { label:"หนานอาน",   py:"Nan'an",    map:null,        x:330, y:640, type:"city", chk:true },
+  tianshui:  { label:"เทียนสุ่ย",     py:"Tianshui",  map:"Tian Shui Qin Zhou", x:356, y:607, type:"city", province:"yong"},
+  nanan:     { label:"หนานอาน",   py:"Nan'an",    map:null,        x:330, y:640, type:"city", province:"yong", chk:true },
   /* ★ เพิ่ม 2026-08-26 (รีวิวรอบสามบทที่ 4) — จุดยืนของม้าเชียงตอนกันกัวหวยจากอานติ้ง
      (c4-10) · เดิมหมุดไปซ้อนกับจุดออกตัวของจ้าวหยุนที่ช่างกุย เจ้าของทัก "ถ้ากันทัพจาก
      อานติ้ง มันต้องอยู่จุดอื่นไหม" — ฉินชวงอยู่กลางทุ่งบนระเบียงเทียนสุ่ย–อานติ้งพอดี
      dot วัดจากแผ่นจริง (crop map.jpg x360-580 y420-600 @4x · An Ding ในครอปเดียวกัน
      วัดได้ (466,449) ตรงค่าสอบเทียบ (468,445) — ความคลาดวิธีวัด ±3) */
-  qinchuang: { label:"ฉินชวง",     py:"Qinchuang", map:"Qin Chuang", x:419, y:545, type:"town" },
+  qinchuang: { label:"ฉินชวง",     py:"Qinchuang", map:"Qin Chuang", x:419, y:545, type:"town", province:"yong" },
   /* สอบเทียบแล้ว 2026-08-26 — dot จริงบนแผ่นคือวงกลม 4×5 ที่ x 466–469 · y 445–449
      ห่างจากค่าที่ประกาศไว้ 2 หน่วย = ตรงอยู่แล้ว จึงถอด chk ออก (ไม่ต้องขยับ) */
-  anding:    { label:"อานติ้ง",     py:"Anding",    map:"An Ding",   x:468, y:445, type:"city" },
+  anding:    { label:"อานติ้ง",     py:"Anding",    map:"An Ding",   x:468, y:445, type:"city", province:"yong" },
   /* ★★ 2026-08-27 — โรคเดียวกับ wudu/xiabian/lueyang **ตัวที่สี่** เจอตอนเจ้าของสั่งเปิด
        บทที่ 6 แก้หางกระดกของ c6-14 · (311,636) เดิม **ไม่ได้อยู่บนอะไรเลย** — สุ่มพิกเซล
        ได้ RGB(251,255,255) ขาวล้วน มันคือที่ว่างทางซ้ายของคำว่า "Mu"
@@ -142,12 +142,12 @@ window.TK.places = {
      ⚠ ตรงกับภูมิศาสตร์จริงกว่าเดิมมาก: มู่เหมินเต้าอยู่**ตะวันออกเฉียงใต้ของจี้เฉิง**
        บนถนนเทียนสุ่ย–ฉีซาน ไม่ใช่ตะวันตก · เขตยังเป็น longxi เหมือนเดิม (ตรวจแล้ว)
        ปลาย d ของ tianshui–mumen · mumen–qishan · weigu–mumen ขยับตามครบทั้งสาม */
-  mumen:     { label:"ด่านมู่เหมิน",  py:"Mumen",     map:"Mu Men",    x:339, y:641, type:"pass" },
-  jieting:   { label:"เจียถิง",      py:"Jieting",   map:"Jie Ting",  x:348, y:549, type:"pass",
+  mumen:     { label:"ด่านมู่เหมิน",  py:"Mumen",     map:"Mu Men",    x:339, y:641, type:"pass", province:"yong" },
+  jieting:   { label:"เจียถิง",      py:"Jieting",   map:"Jie Ting",  x:348, y:549, type:"pass", province:"yong",
                note:"★ คอขวดของถนนสันเขา Long ซึ่งเป็นถนน *เสบียง* สายเดียวจาก Longyou เข้ากวานจง "+
                     "(อีกสายคือหุบเขาแม่น้ำ Wei ที่เกวียนผ่านไม่ได้) — แกนของศึกปี 231 ทั้งศึก" },
-  didao:     { label:"ตี๋เต้า",       py:"Didao",     map:"Di Dao",    x:294, y:505, type:"town" },
-  zhaoyang:  { label:"จ้าวหยาง",    py:"Zhaoyang",  map:"Zhao Yang", x:245, y:605, type:"town",
+  didao:     { label:"ตี๋เต้า",       py:"Didao",     map:"Di Dao",    x:294, y:505, type:"town", province:"yong" },
+  zhaoyang:  { label:"จ้าวหยาง",    py:"Zhaoyang",  map:"Zhao Yang", x:245, y:605, type:"town", province:"yong",
                note:"เมืองต้นน้ำเถา ประตูแดนเชียงฝั่งตะวันตกเฉียงใต้ของหลงซี — จุดชุมนุมเผ่า"+
                     "ของหม่าเชา ภาคสอง (c2-04) · dot บนแผ่นสอบเทียบ 2026-08-26" },
   /* ★ ย้าย 2026-08-26 ตอนเขียนบทที่ 6 — ตามคำสั่งที่ note เดิมเขียนไว้เอง
@@ -194,17 +194,17 @@ window.TK.places = {
                     " ที่เว่ยเหยียนใช้ออกทุ่งปี 230 — ไม่งั้นภาพอ่านว่าเขาเดินผ่านหน้ารั้วเฉย ๆ" },
 
   /* ══════════ ระเบียงเหอซี — "เส้นเดียว ไม่มีทางเลือก" ══════════ */
-  baohan:    { label:"เป่าฮั่น",     py:"Baohan",    map:"Bao Han",   x:250, y:471, type:"town",
+  baohan:    { label:"เป่าฮั่น",     py:"Baohan",    map:"Bao Han",   x:250, y:471, type:"town", province:"liang",
                note:"สอบเทียบ 2026-08-26: แผ่นพิมพ์ dot (250,471) — ค่าเดิม (262,512) เดาไว้"+
                     "และไปทับจินเฉิง (280,463) จนเส้นทางเหอซีเพี้ยน · ประตูขึ้นท่าข้ามแม่น้ำเหลือง" },
-  jincheng:  { label:"จินเฉิง",     py:"Jincheng",  map:"Jin Cheng", x:280, y:463, type:"ford",
+  jincheng:  { label:"จินเฉิง",     py:"Jincheng",  map:"Jin Cheng", x:280, y:463, type:"ford", province:"liang",
                note:"ท่าข้ามแม่น้ำเหลืองเดียวของทั้งเส้นทาง Hexi" },
-  wuwei:     { label:"อู่เวย",      py:"Wuwei",     map:"Liang Zhou Wu Wei (Xi Liang)", x:197, y:247, type:"city",
+  wuwei:     { label:"อู่เวย",      py:"Wuwei",     map:"Liang Zhou Wu Wei (Xi Liang)", x:197, y:247, type:"city", province:"liang",
                note:"⚠ เมือง ไม่ใช่ด่านอู่ (Wu Pass) และไม่ใช่เว่ยเหยียน (Wei Yan) · ต้นฉบับเขียน \"Wu Wei\" แยกคำ" },
-  zhangye:   { label:"จางเย่",      py:"Zhangye",   map:"Zhang Ye",  x:24,  y:183, type:"city",
+  zhangye:   { label:"จางเย่",      py:"Zhangye",   map:"Zhang Ye",  x:24,  y:183, type:"city", province:"liang",
                note:"ปลายทางที่ฮั่นไปถึง และไม่เคยเลยไปอีกก้าวเดียว — ไม่ใช่เพราะไม่จำเป็น "+
                     "แต่เพราะถูกเรียกกลับในปี 224 (ต้นฉบับภาคสี่)" },
-  xijun:     { label:"ซีจวิ้น",      py:"Xijun",     map:"Xi Jun",    x:82,  y:242, type:"town" },
+  xijun:     { label:"ซีจวิ้น",      py:"Xijun",     map:"Xi Jun",    x:82,  y:242, type:"town", province:"liang" },
   /* ★ จิ่วเฉวียนอยู่ *นอกแผ่น* จริง ๆ — แผ่นจบลงที่จางเย่ (ขอบกรอบพิมพ์อยู่ที่ x 0–3
      ตรวจพิกเซลแล้ว ไม่มีอะไรพิมพ์ไว้ทางตะวันตกของจางเย่เลย) แต่เมืองจริงอยู่ห่างจาก
      จางเย่ไปทางตะวันตกเฉียงเหนืออีกราว 220 กม.
@@ -217,22 +217,22 @@ window.TK.places = {
         ล้นออกนอกเฟรม 33 หน่วย — คำบรรยายหมุดวางกึ่งกลางหมุดเสมอ ขยับข้างไม่ได้
         (check_camera §"ล้นด้านข้าง = แก้ไม่ได้") · x=17 คือจุดที่ยังอยู่ทางตะวันตกของจางเย่
         และคำบรรยายสั้น ("จางจิ้น") ยังพอดีเฟรมของ c2-01 */
-  jiuquan:   { label:"จิ่วเฉวียน",    py:"Jiuquan",   map:null,        x:17,  y:166, type:"city",
+  jiuquan:   { label:"จิ่วเฉวียน",    py:"Jiuquan",   map:null,        x:17,  y:166, type:"city", province:"liang",
                note:"กบฏ Zhang Jin ปี 220–221 · จุดจริงอยู่นอกแผ่น หมุดวางที่ขอบบนแนวระเบียง" },
-  xiping:    { label:"ซีผิง",       py:"Xiping",    map:null,        x:230, y:430, type:"town", chk:true,
+  xiping:    { label:"ซีผิง",       py:"Xiping",    map:null,        x:230, y:430, type:"town", province:"liang", chk:true,
                note:"กบฏ Qu Yan ปี 220–221" },
-  qilian:    { label:"เทือกเขาฉีเหลียน", py:"Qilian", map:null,       x:120, y:288, type:"mountain", chk:true },
+  qilian:    { label:"เทือกเขาฉีเหลียน", py:"Qilian", map:null,       x:120, y:288, type:"mountain", province:"liang", chk:true },
 
   /* ══════════ ประตูกวานจง ══════════ */
   /* ★ `role:"depot"` — อีกปลายของข้าวค่ายนา "ขึ้นเฉินชางหลังโซ่ป้อม" (_part8.js ข้อ ②) */
   /* ★ roleYear:233 — ฮั่นเพิ่งยึดเฉินชางได้ปี 233 (c7-06) ก่อนหน้านั้นมันเป็นป้อมของวุ่ย
      ป้ายยุ้งจึงห้ามโผล่ก่อนปีนั้น (ฮั่นจงไม่ต้อง gate — เป็นคลังตั้งแต่ราชโองการฉบับแรก 221) */
-  chencang:  { label:"เฉินชาง",    py:"Chencang",  map:"Chen Cang", x:451, y:637, type:"city", role:"depot", roleYear:233,
+  chencang:  { label:"เฉินชาง",    py:"Chencang",  map:"Chen Cang", x:451, y:637, type:"city", province:"yong", role:"depot", roleYear:233,
                note:"กุญแจดอกเดียวที่เปิดกวานจงจากทิศตะวันตก · Hao Zhao ยันไว้ 22 วันปี 228 "+
                     "· แตกปี 233 เมื่อถูกบีบสองทาง" },
-  sanpass:   { label:"ด่านซ่าน",    py:"San Pass",  map:"San Pass",  x:444, y:661, type:"pass",
+  sanpass:   { label:"ด่านซ่าน",    py:"San Pass",  map:"San Pass",  x:444, y:661, type:"pass", province:"yong",
                anchor:"center", sdx:0, sdy:2 },       /* รูปด่านของแผ่น (444, 663) */
-  qigu:      { label:"หุบเขาจี",    py:"Ji Valley", map:"Qi Gu",     x:461, y:751, type:"valley_mouth" },
+  qigu:      { label:"หุบเขาจี",    py:"Ji Valley", map:"Qi Gu",     x:461, y:751, type:"valley_mouth", province:"yi" },
   xiegu:     { label:"หุบเขาเซีย",   py:"Xie Valley",map:"Xie Gu",    x:486, y:689, type:"valley_mouth"},
   xiegupass: { label:"ด่านเซียกู่",   py:"Xiegu Pass",map:"Xie Gu Pass", x:518, y:686, type:"pass",
                anchor:"center", sdx:-1, sdy:2.5 },    /* รูปด่านของแผ่น (517, 688.5) */
@@ -244,13 +244,13 @@ window.TK.places = {
   /* ★ 2026-08-29 (เจ้าของทัก c10-13: "จากเหมยไปฉางอานได้โดยตรง ไม่ต้องผ่านหลานเถียน")
      ถูก — แผ่นพิมพ์ dot ของ Zhou Zhi ไว้บนถนนฝั่งใต้ลำเว่ยพอดี ระหว่างเหมยกับนคร
      สอบเทียบด้วยการอ่านพิกเซล (ครอป 520,620 140×70 @8x) → วง ○ กึ่งกลาง (566,668) */
-  zhouzhi:   { label:"โจวจื้อ",     py:"Zhouzhi",   map:"Zhou Zhi",  x:566, y:668, type:"town",
+  zhouzhi:   { label:"โจวจื้อ",     py:"Zhouzhi",   map:"Zhou Zhi",  x:566, y:668, type:"town", province:"yong",
                note:"ถนนฝั่งใต้ลำเว่ย เหมย→นคร — เส้นตรงที่ขบวนเสด็จปี 262 ใช้ (c10-13)" },
-  mei:       { label:"เหมย",       py:"Mei",       map:"Mei",       x:516, y:663, type:"town" },
+  mei:       { label:"เหมย",       py:"Mei",       map:"Mei",       x:516, y:663, type:"town", province:"yong" },
   /* ★ 2026-09-02 `camp` → `farm` — ทั้งเล่มเรียกมันว่า **ค่ายนา-ทหาร** ไม่ใช่ค่ายเฉย ๆ
      (ค่ายนาถาวรตั้งแต่ c7-12/c7-15 · หัวไฟล์ _part8.js ข้อ ②) และมันคือครึ่งหนึ่งของ
      วิทยานิพนธ์เล่มนี้ — ข้าวที่ปลูกในทุ่งของศัตรู ไม่ใช่ข้าวที่เดินมาจากเฉิงตู */
-  wuzhang:   { label:"อู่จ้างหยวน",  py:"Wuzhangyuan", map:"Wu Zhang Yuan", x:503, y:661, type:"farm", year:233, gone:243,
+  wuzhang:   { label:"อู่จ้างหยวน",  py:"Wuzhangyuan", map:"Wu Zhang Yuan", x:503, y:661, type:"farm", province:"yong", year:233, gone:243,
                /* ★ gone:243 (เจ้าของเคาะ 2026-09-06) — เรื่องพูดถึงค่ายนาครั้งสุดท้าย
                   c9-02 ปี 242 · หลังจากนั้นไม่มีฉากไหนยืนอยู่บนทุ่งนี้อีก */
                /* ★ year:233 ไม่ใช่ 234 — c7-07/c7-08 (233) ปักหมุดที่นี่แล้ว (ค่ายหลวง ไฟดับสองคืน)
@@ -258,15 +258,15 @@ window.TK.places = {
                note:"⚠ ห่างจาก Mei แค่ 13 หน่วย และ beiyuan อยู่ตรงข้ามแม่น้ำห่าง 21 หน่วย — "+
                     "**วงปะทะสองอันในย่านนี้จะพันกันเป็นก้อนเดียว** (BUGS_SEEN §B3) "+
                     "ภาคเจ็ดใช้สามจุดนี้ติดกันหลายฉาก: clash ได้ทีละอัน ที่เหลือเป็น pin" },
-  fufeng:    { label:"ฝูเฟิง",      py:"Fufeng",    map:"Fu Feng (Kui Li)", x:528, y:620, type:"town" },
-  wugong:    { label:"อู่กง",       py:"Wugong",    map:"Wu Gong",   x:557, y:607, type:"town",
+  fufeng:    { label:"ฝูเฟิง",      py:"Fufeng",    map:"Fu Feng (Kui Li)", x:528, y:620, type:"town", province:"yong" },
+  wugong:    { label:"อู่กง",       py:"Wugong",    map:"Wu Gong",   x:557, y:607, type:"town", province:"yong",
                note:"สอบเทียบ 2026-08-26: แผ่นพิมพ์ dot ไว้ (557,607) **ฝั่งเหนือแม่น้ำ Wei** "+
                     "(ประวัติศาสตร์เมืองอยู่ฝั่งใต้ แต่กฎ 4 ให้ยึดแผ่น) — ท่าข้ามของเมืองจึงอยู่ใต้เมือง "+
                     "~(555,643)" },
   /* ★ ลบรายการ xianyang ซ้ำ 2026-08-27 — ไฟล์เคยประกาศ xianyang สองครั้ง (ที่นี่ (568,623)
      "เสียนหยาง" กับข้างล่าง (618,609) "เซียนหยาง") — JS เอาตัวหลังทับตัวแรกเงียบ ๆ ถนนทั้งชุด
      จึงยึด (618,609) มาตลอด · dot เมืองบนแผ่นวัดจริง ≈ (584,624) — จดไว้ใน note ข้างล่าง */
-  beiyuan:   { label:"เป่ยหยวน",   py:"Beiyuan",   map:"Bei Yuan",  x:505, y:638, type:"town",
+  beiyuan:   { label:"เป่ยหยวน",   py:"Beiyuan",   map:"Bei Yuan",  x:505, y:638, type:"town", province:"yong",
                note:"★ เจ้าของเคาะ 2026-08-26: **ใช้ตำแหน่งประวัติศาสตร์ — ที่ราบฝั่งเหนือแม่น้ำ Wei "+
                     "ตรงข้าม Wuzhangyuan** (ศึกจริงปี 234 ที่ Guo Huai หยุด Zhuge Liang) "+
                     "ซึ่งต้นฉบับ ¶534/¶538 ชี้ทางนี้เอง (\"ฝั่งตรงข้ามแม่น้ำ\" + \"ที่ราบผืนนี้คือที่ที่ "+
@@ -277,10 +277,10 @@ window.TK.places = {
                     "พร้อมกันในย่านนี้ (BUGS_SEEN §B3) ค่ายอู่จ้างเป็น pin เสมอ · "+
                     "ป้าย \"Bei Yuan\" ที่พิมพ์บนแผ่น (302,595 แถว Longxi) อยู่ผิดที่ชัดเจน "+
                     "— โปรเจกต์ 1 เคยลอกจุดนั้นมา" },
-  weinan:    { label:"เว่ยหนาน",   py:"Weinan",    map:"Wei Nan",   x:686, y:622, type:"town" },
-  huayin:    { label:"หัวอิน",      py:"Huayin",    map:"Hua Yin",   x:714, y:639, type:"town" },
-  lantian:   { label:"หลานเถียน",  py:"Lantian",   map:"Lan Tiao",  x:673, y:672, type:"town" },
-  xiaoguan:  { label:"ด่านเซียว",   py:"Xiao Pass", map:null,        x:408, y:432, type:"pass", chk:true},
+  weinan:    { label:"เว่ยหนาน",   py:"Weinan",    map:"Wei Nan",   x:686, y:622, type:"town", province:"yong" },
+  huayin:    { label:"หัวอิน",      py:"Huayin",    map:"Hua Yin",   x:714, y:639, type:"town", province:"si" },
+  lantian:   { label:"หลานเถียน",  py:"Lantian",   map:"Lan Tiao",  x:673, y:672, type:"town", province:"yong" },
+  xiaoguan:  { label:"ด่านเซียว",   py:"Xiao Pass", map:null,        x:408, y:432, type:"pass", province:"yong", chk:true},
   /* ★ เพิ่ม 2026-08-26 (รีวิวรอบสองบทที่ 6) — เจ้าของเสนอเองว่าให้ทัพวุ่ยปี 231
      "เคลื่อนไปทาง Xian Yang ก่อน" เพื่อให้สองสายแยกกันสะอาดไม่ตัดกัน
      ★ สอบเทียบ 2026-08-27: dot เมือง "Xian Yang" บนแผ่นอยู่ ≈(584,624) — จุดนี้**ไม่ใช่
@@ -288,7 +288,7 @@ window.TK.places = {
      ≈(615,620) พอดี) จึงเปลี่ยน type เป็น ford + label เป็น "ท่าเซียนหยาง" ตามแบบผู่ป่าน
      แทนการย้ายหมุดลง dot — พิกัดคือรอยต่อโค้งถนน wugong–changan เดิมเป๊ะ ๆ
      ถนนลากจริงสามเส้นยึดอยู่ · ถอด chk (คำถามตำแหน่งปิดแล้ว) */
-  xianyang:  { label:"ท่าเซียนหยาง", py:"Xianyang ford", map:"Xian Yang", x:618, y:609, type:"ford" },
+  xianyang:  { label:"ท่าเซียนหยาง", py:"Xianyang ford", map:"Xian Yang", x:618, y:609, type:"ford", province:"yong" },
   puban:     { label:"ท่าผู่ป่าน",    py:"Puban Ford",map:"Pu Ban",    x:740, y:559, type:"ford",
                note:"⚠ ท่าข้าม **แม่น้ำเหลือง** ไป Hedong ไม่ใช่แม่น้ำ Wei (ภาคผนวกเคยเขียนผิด แก้แล้ว)" },
   puzhou:    { label:"ผู่โจว",      py:"Puzhou",    map:"Pu Zhou",   x:712, y:570, type:"town" },
@@ -296,12 +296,12 @@ window.TK.places = {
                /* ⚠ ห่างที่สุดในกลุ่ม — หมุดถูกวางไว้กลาง *ชื่อ* ไม่ใช่ที่รูป (แผ่นพิมพ์ชื่อ
                   ไว้ใต้รูป) · รูปประตูอยู่เหนือชื่อขึ้นไป 17 หน่วย */
                anchor:"center", sdx:-4, sdy:-17 },    /* รูปด่านของแผ่น (739, 708) */
-  tongguan:  { label:"ด่านถง",     py:"Tong Pass", map:"Tong Pass", x:733, y:625, type:"pass",
+  tongguan:  { label:"ด่านถง",     py:"Tong Pass", map:"Tong Pass", x:733, y:625, type:"pass", province:"si",
                anchor:"center", sdx:-2, sdy:4.5,      /* รูปด่านของแผ่น (731, 629.5) */
                note:"ประตูบานเดียวที่ Zhuge Liang ไม่ได้ผ่าน · Jiang Wei ออกจากที่นี่ครั้งแรกปี 255" },
 
   /* ══════════ ★ ชะง่อนหานกู่ — เวทีศึกปี 244 ══════════ */
-  hangu:     { label:"ด่านหานกู่",   py:"Hangu Pass",map:"Han Gu Pass", x:777, y:633, type:"pass",
+  hangu:     { label:"ด่านหานกู่",   py:"Hangu Pass",map:"Han Gu Pass", x:777, y:633, type:"pass", province:"si",
                /* ★ ตัวที่เจ้าของบอกว่า "วางทับแนบสนิท" อยู่แล้ว — ค่านี้รักษาผลเดิมไว้เป๊ะ
                   หลังเปลี่ยนมาใช้ anchor กึ่งกลาง (ของเดิมแนบเพราะหมุดอยู่ใต้รูปพอดี 5 หน่วย) */
                anchor:"center", sdx:1, sdy:-4.5,      /* รูปด่านของแผ่น (778, 628.5) */
@@ -319,87 +319,87 @@ window.TK.places = {
        ของหมุดอย่างเดียว · การแยก edge tongguan–hangu เป็นสองท่อนจะบังคับให้ reroute
        การเดินทัพสิบเส้นในบทที่ปิดไปแล้ว โดยได้ภาพเท่าเดิม (ตัดสิน 2026-08-28) */
   taolin:    { label:"ช่องแคบชะง่อน", py:"Taolin — Xiao gorge narrows", map:null,
-               x:754, y:631, type:"pass",
+               x:754, y:631, type:"pass", province:"si",
                note:"หมื่นห้าของหวังผิงนั่งอยู่บนสองยอดเหนือจุดนี้ตลอดสองเดือน ไม่ลงมา "+
                     "· วันที่ลงมาคือวันที่แถวเจ็ดสิบลี้กำลังกลับหลังหัน (c9-09)" },
-  shanxian:  { label:"ส่านเซี่ยน",    py:"Shanxian",  map:"Xia",       x:792, y:621, type:"town",
+  shanxian:  { label:"ส่านเซี่ยน",    py:"Shanxian",  map:"Xia",       x:792, y:621, type:"town", province:"si",
                note:"สอบพิกเซลแล้ว 2026-09-01 (ครอป 740,612 · grid 20) — dot อยู่ที่ราว "+
                     "(790,624) ตรงกับค่าเดิมภายในความคลาดเคลื่อนของการวัด ถอด chk "+
                     "· เหลือ chk เฉพาะสี่จุดที่แผ่นไม่มี dot ให้ยึด" },
-  caoyang:   { label:"เฉาหยาง",    py:"Caoyang",   map:"Cao Yang",  x:822, y:608, type:"town" },
-  mianchi:   { label:"เหมี่ยนฉือ",    py:"Mianchi",   map:"Shen Chi",  x:846, y:609, type:"town" },
-  hongnong:  { label:"หงหนง",     py:"Hongnong",  map:"Hong Nong", x:804, y:642, type:"city" },
+  caoyang:   { label:"เฉาหยาง",    py:"Caoyang",   map:"Cao Yang",  x:822, y:608, type:"town", province:"si" },
+  mianchi:   { label:"เหมี่ยนฉือ",    py:"Mianchi",   map:"Shen Chi",  x:846, y:609, type:"town", province:"si" },
+  hongnong:  { label:"หงหนง",     py:"Hongnong",  map:"Hong Nong", x:804, y:642, type:"city", province:"si" },
 
   /* ══════════ เหอตง / ปิงโจว — ทางเหนือของแม่น้ำเหลือง ══════════ */
-  hedong:    { label:"เหอตง",      py:"Hedong",    map:"He Dong (An Yi)", x:775, y:561, type:"city" },
-  wenxi:     { label:"เหวินสี่",     py:"Wenxi",     map:"Wen Xi",    x:813, y:531, type:"town" },
-  pingyang:  { label:"ผิงหยาง",    py:"Pingyang",  map:"Ping Yang", x:834, y:465, type:"city" },
+  hedong:    { label:"เหอตง",      py:"Hedong",    map:"He Dong (An Yi)", x:775, y:561, type:"city", province:"si" },
+  wenxi:     { label:"เหวินสี่",     py:"Wenxi",     map:"Wen Xi",    x:813, y:531, type:"town", province:"si" },
+  pingyang:  { label:"ผิงหยาง",    py:"Pingyang",  map:"Ping Yang", x:834, y:465, type:"city", province:"si" },
   /* ★ 2026-08-27 — โรคเดียวกับ wudu/xiabian/lueyang/mumen (ตัวที่ห้า): (848,358) ตกอยู่บน
      ลำน้ำเฟินข้างตัวอักษร "Bing Z" ไม่ใช่ dot · สอบเทียบด้วยการอ่านพิกเซลของแผ่น
      (ครอป 820,325 ขนาด 70×60 ขยาย 10 เท่า) — วง ◉ ซ้อนกินพื้นที่ x 855.8–870.2 ·
      y 336.8–350.8 → กึ่งกลาง (863,344) · ถอด chk แล้ว
      c8-05 ใช้เป็นต้นทางของลูกศรกองแนวเหนือ (เจ้าของทัก 2026-08-27: "ไม่มีเส้นว่ามาจากไหน") */
-  jinyang:   { label:"จิ้นหยาง",     py:"Jinyang",   map:"Bing Zhou Jin Yang (Yang Qu)", x:863, y:344, type:"city"},
-  shangdang: { label:"ช่างต่าง",    py:"Shangdang", map:"Shang Dang",x:909, y:443, type:"city" },
-  handan:    { label:"หานตาน",    py:"Handan",    map:"Han Dan",   x:1022, y:412, type:"city" },
+  jinyang:   { label:"จิ้นหยาง",     py:"Jinyang",   map:"Bing Zhou Jin Yang (Yang Qu)", x:863, y:344, type:"city", province:"bing"},
+  shangdang: { label:"ช่างต่าง",    py:"Shangdang", map:"Shang Dang",x:909, y:443, type:"city", province:"bing" },
+  handan:    { label:"หานตาน",    py:"Handan",    map:"Han Dan",   x:1022, y:412, type:"city", province:"ji" },
   /* ★ 2026-08-29 สอบเทียบกับแผ่น (ครอป 1080,110 90×70 @9x) — วง ◉ กึ่งกลาง (1117,140)
      ของเดิม (1113,141) เพี้ยน 4 หน่วย · ถอด chk แล้ว · c10-11/13 ใช้ */
-  fanyang:   { label:"ฟ่านหยาง",   py:"Fanyang",   map:"You Zhou Fan Yang", x:1117, y:140, type:"city",
+  fanyang:   { label:"ฟ่านหยาง",   py:"Fanyang",   map:"You Zhou Fan Yang", x:1117, y:140, type:"city", province:"you",
                note:"ที่มั่นสุดท้ายของตระกูล Sima ปี 261–262" },
 
   /* ══════════ หนานหยาง / จิงโจว — พรมแดนกับง่อหลังปี 234 ══════════ */
-  wancheng:  { label:"หว่าน",      py:"Wancheng",  map:"Jing Zhou Nan Yang (Wan Cheng)", x:920, y:737, type:"city"},
-  xinye:     { label:"ซินเย่",       py:"Xinye",     map:"Xin Ye",    x:907, y:839, type:"town" },
-  xiangyang: { label:"เซียงหยาง",  py:"Xiangyang", map:"Xiang Yang",x:829, y:899, type:"city" },
-  fancheng:  { label:"ฝานเฉิง",     py:"Fancheng",  map:"Fan Cheng", x:837, y:877, type:"city"},
-  fangling:  { label:"ซินเฉิง",      py:"Xincheng",  map:"Fang Ling Xin Cheng", x:720, y:848, type:"town",
+  wancheng:  { label:"หว่าน",      py:"Wancheng",  map:"Jing Zhou Nan Yang (Wan Cheng)", x:920, y:737, type:"city", province:"jing"},
+  xinye:     { label:"ซินเย่",       py:"Xinye",     map:"Xin Ye",    x:907, y:839, type:"town", province:"jing" },
+  xiangyang: { label:"เซียงหยาง",  py:"Xiangyang", map:"Xiang Yang",x:829, y:899, type:"city", province:"jing" },
+  fancheng:  { label:"ฝานเฉิง",     py:"Fancheng",  map:"Fan Cheng", x:837, y:877, type:"city", province:"jing"},
+  fangling:  { label:"ซินเฉิง",      py:"Xincheng",  map:"Fang Ling Xin Cheng", x:720, y:848, type:"town", province:"jing",
                note:"ที่มั่นของ Meng Da · Sima Yi เดินทัพ 1,200 ลี้ใน 8 วันมาถึงที่นี่ปี 228" },
-  shangyong: { label:"ช่างยง",     py:"Shangyong", map:"Shang Yong",x:687, y:822, type:"city" },
-  dangyang:  { label:"ตางหยาง",   py:"Dangyang",  map:"Dang Yang", x:847, y:992, type:"town",
+  shangyong: { label:"ช่างยง",     py:"Shangyong", map:"Shang Yong",x:687, y:822, type:"city", province:"jing" },
+  dangyang:  { label:"ตางหยาง",   py:"Dangyang",  map:"Dang Yang", x:847, y:992, type:"town", province:"jing",
                note:"ที่ฝังร่างของ Guan Yu — ถูกเอ่ยครั้งเดียวในบทนำ" },
-  jiangling: { label:"เจียงหลิง",    py:"Jiangling", map:"Jing Zhou Nan Jun / Jiang Ling", x:882, y:1022, type:"city"},
-  xiling:    { label:"อี๋หลิง",       py:"Yiling",    map:"Yi Ling / Xi Ling", x:816, y:1003, type:"city",
+  jiangling: { label:"เจียงหลิง",    py:"Jiangling", map:"Jing Zhou Nan Jun / Jiang Ling", x:882, y:1022, type:"city", province:"jing"},
+  xiling:    { label:"อี๋หลิง",       py:"Yiling",    map:"Yi Ling / Xi Ling", x:816, y:1003, type:"city", province:"jing",
                note:"★ **ไม่มีอะไรเกิดขึ้นที่นี่ในเอกภพนี้** และนั่นคือทั้งเรื่อง — จุดนี้มีไว้ให้ "+
                     "ฉากที่ผู้เฝ้ามองเปรียบเทียบกับเอกภพของเราเท่านั้น" },
-  xiakou:    { label:"เซี่ยโข่ว",     py:"Xiakou",    map:"Xia Kou",   x:1039, y:1035, type:"town" },
-  jiangxia:  { label:"เจียงเซี่ย",     py:"Jiangxia",  map:"Jiang Xia", x:1050, y:1038, type:"city"},
+  xiakou:    { label:"เซี่ยโข่ว",     py:"Xiakou",    map:"Xia Kou",   x:1039, y:1035, type:"town", province:"jing" },
+  jiangxia:  { label:"เจียงเซี่ย",     py:"Jiangxia",  map:"Jiang Xia", x:1050, y:1038, type:"city", province:"jing"},
 
   /* ══════════ หวยหนาน — กบฏสามครั้ง และแนวที่ซือหม่าอี้ถูกส่งไปปี 232 ══════════ */
-  shouchun:  { label:"โช่วชุน",     py:"Shouchun",  map:"Huai Nan Shou Chun / Yang Zhou", x:1279, y:763, type:"city",
+  shouchun:  { label:"โช่วชุน",     py:"Shouchun",  map:"Huai Nan Shou Chun / Yang Zhou", x:1279, y:763, type:"city", province:"yang",
                note:"กบฏสามครั้ง — Wang Ling 251 · Guanqiu Jian 255 · Zhuge Dan 257–258 "+
                     "· ทัพง่อสามหมื่นถูกล้อมตายในนี้พร้อม Zhuge Dan" },
-  hefei:     { label:"เหอเฝย",     py:"Hefei",     map:"He Fei",    x:1250, y:812, type:"city",
+  hefei:     { label:"เหอเฝย",     py:"Hefei",     map:"He Fei",    x:1250, y:812, type:"city", province:"yang",
                note:"สอบพิกเซลแล้ว 2026-09-01 (ครอป 1244,806 · grid 4) — จุดตรงกับค่าเดิม "+
                     "ถอด chk · กองหนุนที่หกของการทัพปี 269 นั่งอยู่ที่นี่ 30,000 ไม่เคลื่อน" },
   /* ⚠ 2026-09-01 — เคยประกาศซ้ำสองครั้ง (fort 1327,880 · camp 1329,879) ตัวหลังชนะ
      เงียบ ๆ แล้วทิ้งพิกัดที่สอบพิกเซลแล้วกับ note ทั้งก้อน · โรคเดียวกับ xianyang
      (LOG ซ.15 ข้อ 4) · รวมเป็นก้อนเดียวแล้ว เก็บค่าที่สอบแล้วไว้ */
-  ruxu:      { label:"หรูซวี",      py:"Ruxu",      map:"Wu Xu Wu",  x:1327, y:880, type:"fort",
+  ruxu:      { label:"หรูซวี",      py:"Ruxu",      map:"Wu Xu Wu",  x:1327, y:880, type:"fort", province:"yang",
                note:"ป้อมหรูซวี (濡須塢) ปากน้ำใต้ทะเลสาบเฉา — จูหวนตีเฉาเหรินแตกที่นี่ 222–223 "+
                     "(ภาคสาม c3-01) · แผ่นสะกดป้ายว่า \"Wu Xu Wu\" ตามที่พิมพ์จริง ■ (1327,880)" },
-  runan:     { label:"หรูหนาน",    py:"Runan",     map:"Yu Zhou Ru Nan", x:1038, y:760, type:"city"},
-  guangling: { label:"กว่างหลิง",    py:"Guangling", map:"Guang Ling Jiang Du", x:1518, y:823, type:"city" },
+  runan:     { label:"หรูหนาน",    py:"Runan",     map:"Yu Zhou Ru Nan", x:1038, y:760, type:"city", province:"yu"},
+  guangling: { label:"กว่างหลิง",    py:"Guangling", map:"Guang Ling Jiang Du", x:1518, y:823, type:"city", province:"xu" },
 
   /* ══════════ ง่อ — เวทีปี 269–274 ══════════ */
-  yongan:    { label:"หย่งอาน",    py:"Yong'an",   map:"(Yong An) Bai Di Cheng", x:721, y:976, type:"city",
+  yongan:    { label:"หย่งอาน",    py:"Yong'an",   map:"(Yong An) Bai Di Cheng", x:721, y:976, type:"city", province:"yi",
                note:"⚠ จุดเดียวกับ baidi — แผ่นพิมพ์ชื่อคู่กัน · Luo Xian นำกองที่ห้าออกจากที่นี่ปี 269" },
-  wuxia:     { label:"ช่องผาอู",    py:"Wu Gorge",  map:"Wu Xia",    x:724, y:985, type:"mountain",
+  wuxia:     { label:"ช่องผาอู",    py:"Wu Gorge",  map:"Wu Xia",    x:724, y:985, type:"mountain", province:"yi",
                note:"ผาสามช่อง — กองเรือจากต้นน้ำล่องผ่านที่นี่ปี 269" },
-  jiangzhou: { label:"เจียงโจว",    py:"Jiangzhou", map:"Ba Jun (Jiang Zhou)", x:416, y:1121, type:"city" },
-  baling:    { label:"ปาหลิง",     py:"Baling",    map:"Ba Ling",   x:975, y:1113, type:"town" },
-  chaisang:  { label:"ไฉซาง",     py:"Chaisang",  map:"Chai Sang", x:1183, y:1098, type:"town"},
-  jiujiang:  { label:"จิ่วเจียง",     py:"Jiujiang",  map:"Jiu Jiang", x:1183, y:1085, type:"city" },
-  dantu:     { label:"ตานถู",      py:"Dantu",     map:"Dan Du (Nan Xu)", x:1488, y:859, type:"town" },
-  kuaiji:    { label:"ไคว่จี",       py:"Kuaiji",    map:"Hui Ji Shan Yin", x:1571, y:1054, type:"city" },
+  jiangzhou: { label:"เจียงโจว",    py:"Jiangzhou", map:"Ba Jun (Jiang Zhou)", x:416, y:1121, type:"city", province:"yi" },
+  baling:    { label:"ปาหลิง",     py:"Baling",    map:"Ba Ling",   x:975, y:1113, type:"town", province:"jing" },
+  chaisang:  { label:"ไฉซาง",     py:"Chaisang",  map:"Chai Sang", x:1183, y:1098, type:"town", province:"yang"},
+  jiujiang:  { label:"จิ่วเจียง",     py:"Jiujiang",  map:"Jiu Jiang", x:1183, y:1085, type:"city", province:"yang" },
+  dantu:     { label:"ตานถู",      py:"Dantu",     map:"Dan Du (Nan Xu)", x:1488, y:859, type:"town", province:"yang" },
+  kuaiji:    { label:"ไคว่จี",       py:"Kuaiji",    map:"Hui Ji Shan Yin", x:1571, y:1054, type:"city", province:"yang" },
 
   /* ══════════ อ้างถึงอย่างเดียว — ไม่มีฉากเกิดที่นี่ ══════════ */
-  changban:  { label:"ฉางป่าน",    py:"Changban",  map:null,        x:855, y:985, type:"town", chk:true,
+  changban:  { label:"ฉางป่าน",    py:"Changban",  map:null,        x:855, y:985, type:"town", province:"jing", chk:true,
                note:"ที่ Zhao Yun อุ้มลูกชายของ Liu Bei ฝ่าทัพออกมาปี 208 — ตำแหน่งที่แท้จริงของเขา" },
-  zhuojun:   { label:"จัวจวิ้น",     py:"Zhuojun",   map:null,        x:1120, y:160, type:"city", chk:true,
+  zhuojun:   { label:"จัวจวิ้น",     py:"Zhuojun",   map:null,        x:1120, y:160, type:"city", province:"you", chk:true,
                note:"บ้านเกิดของ Liu Bei · ถูกเอ่ยครั้งเดียวข้างเตียงปี 226" },
-  hanshou:   { label:"ฮั่นโช่ว",     py:"Hanshou",   map:null,        x:500, y:800, type:"town", chk:true,
+  hanshou:   { label:"ฮั่นโช่ว",     py:"Hanshou",   map:null,        x:500, y:800, type:"town", province:"yi", chk:true,
                note:"ที่ Fei Yi ถูกลอบสังหารปี 253 · **พิกัดยังเดา ต้องสอบเทียบ**" },
-  gaoping:   { label:"สุสานเกาผิง", py:"Gaoping",   map:null,        x:915, y:590, type:"camp", chk:true, year:249, gone:249,
+  gaoping:   { label:"สุสานเกาผิง", py:"Gaoping",   map:null,        x:915, y:590, type:"camp", province:"si", chk:true, year:249, gone:249,
                /* ⚠ **ยังไม่วาด** — ช่วง [249,249) ว่างเปล่าโดยตั้งใจ
                   มันเป็น *สุสาน* แต่ชุดสัญลักษณ์ไม่มีรูปสุสาน มีแต่ `camp` (กระโจม)
                   → ก่อนหน้านี้จึงมีรูปค่ายทหารตั้งค้างอยู่นอกลั่วหยางทั้งเรื่อง

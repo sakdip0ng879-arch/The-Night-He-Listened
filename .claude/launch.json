@@ -4,20 +4,38 @@
     {
       "name": "tk3",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["tools/serve.js", "8778"],
+      "runtimeArgs": [
+        "tools/serve.js",
+        "8778"
+      ],
       "port": 8778
     },
     {
       "name": "tk3b",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["tools/serve.js", "8779"],
+      "runtimeArgs": [
+        "tools/serve.js",
+        "8779"
+      ],
       "port": 8779
     },
     {
       "name": "tk3c",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["tools/serve.js", "8780"],
+      "runtimeArgs": [
+        "tools/serve.js",
+        "8780"
+      ],
       "port": 8780
+    },
+    {
+      "name": "tk3d",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "tools/serve.js",
+        "8781"
+      ],
+      "port": 8781
     }
   ]
 }

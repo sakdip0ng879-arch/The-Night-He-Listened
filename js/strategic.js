@@ -550,8 +550,16 @@ TK.map = (function(){
       /* ★ `note` ของข้อมูลกลายเป็น tooltip ตรง ๆ — ที่มาของเส้นอ่านได้จากบนแผ่นเลย
          ไม่ต้องเปิดไฟล์ (และถ้าวันหนึ่ง note เพี้ยน จะเห็นบนจอทันที) */
       const t = mk('title');
+      /* ★★ ข้อแม้ขึ้นบนแผนที่ด้วย ไม่ใช่อยู่แต่ในเทอร์มินัล (2026-09-10)
+         **เส้นที่วาดคมอ่านได้ว่าแน่นอน** ทั้งที่ชุดนี้เป็นแนวโดยประมาณ — ภาพก็เป็น
+         "สรุปสั้น" แบบหนึ่ง และกฎเดิมใช้กับมันเหมือนกัน: สรุปสั้นห้ามแข็งกว่าตัวข้อมูล
+         ที่มาของข้อความ: `TK.zhou.risks[*].short` · ตัวเลขหลักฐานรายเส้นดูที่
+         `node tools/zhou_evidence.js` */
+      const rk = [...(TK.zhou.riskAll || []), ...(e.risk || [])]
+                   .map(k => TK.zhou.risks[k] && TK.zhou.risks[k].short).filter(Boolean);
       t.textContent = TK.zhou.list[e.a].label + ' | ' + TK.zhou.list[e.b].label +
-                      (e.coarse ? ' (แนวหยาบ)' : '') + ' — ' + e.note;
+                      (e.coarse ? ' (แนวหยาบ)' : '') + ' — ' + e.note +
+                      (rk.length ? '\n⚠ ' + rk.join('\n⚠ ') : '');
       p.append(t);
       layers.zhou.append(p);
     }

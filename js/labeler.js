@@ -195,11 +195,17 @@ TK.labeler = (function(){
            วัดแล้วเกิดจริง 23 ฉาก กระจุกที่ด่านถง/ด่านหานกู่/เถาหลิน ซึ่งอยู่ชิดกันสามจุด
          ★ ทับนิดหน่อยยังอ่านออก · ไม่มีชื่อเลยอ่านไม่ออกแน่นอน — เลือกอย่างแรก */
       let fallback = null, fallbackCost = Infinity;
+      /* ★★ ลอง **ขยับออกห่างหมุด** ก่อนจะยอมให้ทับ — ที่แน่นมักแน่นเฉพาะวงในรอบหมุด
+         (ด่านถง–ด่านหานกู่–เถาหลิน อยู่กันในรัศมี 40 หน่วย) ถอยออกอีกนิดก็มีที่ว่างแล้ว
+         ⚠ ระยะ 1.0 คือพฤติกรรมเดิมเป๊ะ — ป้ายทั่วไปได้แค่รอบนี้รอบเดียว ไม่มีอะไรเปลี่ยน
+           สองระยะที่เหลือเปิดให้ **เฉพาะที่ที่ฉากชี้** ซึ่งเป็นจุดที่ยอมให้ชื่อหายไม่ได้ */
+      const SPREADS = force.has(id) ? [1, 1.6, 2.4] : [1];
+      for (const sp of SPREADS){
       for (const c of CANDIDATES){
-        const x = p.x + c.dx * (halfW + pad*1.6);
-        const y = c.dy < 0 ? bx.y - pad*1.2 + c.dy * lineMU * 0.1
-                : c.dy > 1 ? p.y + c.dy * lineMU        /* ล่าง — ไม่มีรูปขวาง */
-                :            p.y + c.dy * lineMU + (c.dx === 0 ? 0 : -upH * 0.35);
+        const x = p.x + c.dx * (halfW + pad*1.6) * sp;
+        const y = c.dy < 0 ? bx.y - pad*1.2 + c.dy * lineMU * 0.1 * sp
+                : c.dy > 1 ? p.y + c.dy * lineMU * sp   /* ล่าง — ไม่มีรูปขวาง */
+                :            p.y + c.dy * lineMU * sp + (c.dx === 0 ? 0 : -upH * 0.35);
         const boxX = c.anchor === 'start' ? x
                    : c.anchor === 'end'   ? x - wMU
                    :                        x - wMU/2;
@@ -212,7 +218,7 @@ TK.labeler = (function(){
           break;
         }
         if (force.has(id)){
-          /* พื้นที่ทับรวม — ตัวเลือกที่ทับน้อยที่สุดชนะ */
+          /* พื้นที่ทับรวม — ตัวเลือกที่ทับน้อยที่สุดชนะ · เก็บจากทุกระยะ */
           let cost = 0;
           for (const t of taken){
             const ow = Math.min(box.x+box.w, t.x+t.w) - Math.max(box.x, t.x);
@@ -221,6 +227,8 @@ TK.labeler = (function(){
           }
           if (cost < fallbackCost){ fallbackCost = cost; fallback = { id, x, y, anchor:c.anchor, fontMU, box }; }
         }
+      }
+      if (placed) break;
       }
       if (!placed && fallback){            /* ★ ทางลงของที่ที่ฉากชี้ — ทับน้อยที่สุดดีกว่าไม่มีชื่อ */
         taken.push(fallback.box);

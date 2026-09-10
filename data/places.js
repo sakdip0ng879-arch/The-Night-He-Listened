@@ -392,19 +392,8 @@ window.TK.places = {
   kuaiji:    { label:"ไคว่จี",       py:"Kuaiji",    map:"Hui Ji Shan Yin", x:1571, y:1054, type:"city", province:"yang" },
 
   /* ══════════ อ้างถึงอย่างเดียว — ไม่มีฉากเกิดที่นี่ ══════════ */
-  changban:  { label:"ฉางป่าน",    py:"Changban",  map:null,        x:855, y:985, type:"town", province:"jing", chk:true,
-               note:"ที่ Zhao Yun อุ้มลูกชายของ Liu Bei ฝ่าทัพออกมาปี 208 — ตำแหน่งที่แท้จริงของเขา" },
-  zhuojun:   { label:"จัวจวิ้น",     py:"Zhuojun",   map:null,        x:1120, y:160, type:"city", province:"you", chk:true,
-               note:"บ้านเกิดของ Liu Bei · ถูกเอ่ยครั้งเดียวข้างเตียงปี 226" },
   hanshou:   { label:"ฮั่นโช่ว",     py:"Hanshou",   map:null,        x:500, y:800, type:"town", province:"yi", chk:true,
                note:"ที่ Fei Yi ถูกลอบสังหารปี 253 · **พิกัดยังเดา ต้องสอบเทียบ**" },
-  gaoping:   { label:"สุสานเกาผิง", py:"Gaoping",   map:null,        x:915, y:590, type:"camp", province:"si", chk:true, year:249, gone:249,
-               /* ⚠ **ยังไม่วาด** — ช่วง [249,249) ว่างเปล่าโดยตั้งใจ
-                  มันเป็น *สุสาน* แต่ชุดสัญลักษณ์ไม่มีรูปสุสาน มีแต่ `camp` (กระโจม)
-                  → ก่อนหน้านี้จึงมีรูปค่ายทหารตั้งค้างอยู่นอกลั่วหยางทั้งเรื่อง
-                  โดยที่ไม่มีฉากไหนใช้มันเลยสักฉาก (check_pins 2026-09-06)
-                  ★ วันไหนมีฉากปี 249 ให้เพิ่ม glyph `tomb` แล้วเปิดช่วงนี้ */
-               note:"สุสานหลวงนอกเมือง Luoyang ที่ Sima Yi ก่อรัฐประหารปี 249 · พิกัดโดยประมาณ" },
   /* เมืองหลักและเมืองรองที่เติมจากแผ่นต้นแบบ — รายละเอียด CITY_REGISTRY_TH.md */
   linzi: {"label":"หลินจือ","py":"Linzi","map":"Lin Zi","x":1329,"y":385,"type":"city","province":"qing","source":"assets/map.jpg","note":"เมืองหลัก/เมืองรองสำคัญ อ่านจุดจากต้นแบบในรอบตรวจ 10 ก.ย. 2026"},
   beihai: {"label":"เป่ยไห่","py":"Beihai","map":"Bei Hai","x":1345,"y":403,"type":"city","province":"qing","source":"assets/map.jpg","note":"เมืองหลัก/เมืองรองสำคัญ อ่านจุดจากต้นแบบในรอบตรวจ 10 ก.ย. 2026"},

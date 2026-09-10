@@ -419,4 +419,25 @@ window.TK.places = {
   luling: {"label":"หลูหลิง","py":"Luling","map":"Lu Ling","x":1080,"y":1290,"type":"city","province":"yang","source":"assets/map.jpg","note":"เมืองหลัก/เมืองรองสำคัญ อ่านจุดจากต้นแบบในรอบตรวจ 10 ก.ย. 2026"},
   jianan: {"label":"เจี้ยนอาน","py":"Jianan","map":"Jian An","x":1397,"y":1360,"type":"city","province":"yang","source":"assets/map.jpg","note":"ใช้ชื่ออ้างอิงบนต้นแบบ ไม่ได้หมายความว่าจัดตั้งกุ๋นชื่อนี้แล้วตั้งแต่ปี221"},
   wujun: {"label":"อู๋จวิ้น","py":"Wujun","map":"Wu Jun","x":1546,"y":931,"type":"city","province":"yang","source":"assets/map.jpg","note":"เมืองหลัก/เมืองรองสำคัญ อ่านจุดจากต้นแบบในรอบตรวจ 10 ก.ย. 2026"},
+
+  /* ══ เมืองฝั่งตะวันออก/เหนือ — เติม 10 ก.ย. 2026 (เจ้าของสั่ง "เอาเลย ลงได้เลยๆ") ══
+     ★ พิกัดมาจาก `tools/plate_dots.js` ซึ่งอ่าน **จุดหมึกของแผ่นเอง** ไม่ได้กะจากเส้นกริด
+       (สอบเทียบกับ 20 จุดที่อ่านไว้ก่อนหน้า — ตรงทุกจุดภายใน 1.9 หน่วย)
+     ★★ สังกัดมาจากบัญชีกุ๋นมาตรฐาน **ไม่ได้ดูจากเส้นของเราเอง** — จงใจ เพราะจุดพวกนี้
+        มีหน้าที่ *ตรวจ* เส้น ถ้าเอาเส้นมากำหนดสังกัดก็เป็นหลักฐานวน
+     ⚠ ไท่ซาน (泰山 = เหยี่ยนโจว) กับ หลางเหยีย (琅邪 = สวีโจว) **ตกผิดฝั่งบนเส้นชุดปัจจุบัน**
+        — นั่นคือประโยชน์ทั้งหมดของการลงจุดพวกนี้: มันฟ้องว่าเส้นไหนผิด  ══ */
+  zhongshan: {"label":"จงซาน","py":"Zhongshan","map":"Zhong Shan Guo","x":1036,"y":217,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  bohai: {"label":"ปั๋วไห่","py":"Bohai","map":"Bo Hai","x":1193,"y":249,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  zhaoguo: {"label":"จ้าวกั๋ว","py":"Zhaoguo","map":"Zhao Guo","x":1014,"y":333,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  julu: {"label":"จวี้ลู่","py":"Julu","map":"Ju Lu (Ying Tao)","x":1060,"y":339,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  qinghe: {"label":"ชิงเหอ","py":"Qinghe","map":"Qing He","x":1125,"y":366,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  guangping: {"label":"กว่างผิง","py":"Guangping","map":"Guang Ping","x":1060,"y":410,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  weijun: {"label":"เว่ยจวิ้น","py":"Weijun","map":"Wei Jun","x":1040,"y":465,"type":"city","province":"ji","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  lean: {"label":"เล่ออาน","py":"Le'an","map":"Le An","x":1282,"y":335,"type":"city","province":"qing","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  donglai: {"label":"ตงไหล","py":"Donglai","map":"Dong Lai","x":1433,"y":342,"type":"city","province":"qing","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  changyi: {"label":"ชางอี้","py":"Changyi","map":"Chang Yi","x":1374,"y":398,"type":"city","province":"qing","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  jibei: {"label":"จี่เป่ย","py":"Jibei","map":"Qi Bei (濟北)","x":1184,"y":413,"type":"city","province":"yan","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  taishan: {"label":"ไท่ซาน","py":"Taishan","map":"Tai Shan","x":1266,"y":414,"type":"city","province":"yan","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
+  langya: {"label":"หลางเหยีย","py":"Langya","map":"Lang Ya","x":1418,"y":441,"type":"city","province":"xu","source":"assets/map.jpg","note":"จับพิกัดด้วย tools/plate_dots.js (อ่านจุดหมึกของแผ่นตรง ๆ ไม่ได้กะด้วยตา) · อ่านชื่อจากแผ่น 10 ก.ย. 2026"},
 };

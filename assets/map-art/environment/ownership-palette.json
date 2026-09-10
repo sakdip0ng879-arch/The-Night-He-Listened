@@ -1,0 +1,34 @@
+{
+  "palette": {
+    "han": {
+      "name": "ฮั่น",
+      "color": "#4F735E",
+      "symbol": "◆"
+    },
+    "wei": {
+      "name": "วุย",
+      "color": "#526A86",
+      "symbol": "■"
+    },
+    "wu": {
+      "name": "ง่อ",
+      "color": "#A46C50",
+      "symbol": "▲"
+    },
+    "none": {
+      "name": "ไม่ระบุ",
+      "color": "#857C6B",
+      "symbol": "○"
+    }
+  },
+  "defaultMode": "frontier",
+  "fillOpacity": {
+    "frontier": 0.045,
+    "tint": 0.17,
+    "selected": 0.22
+  },
+  "borderOpacity": 0.8,
+  "changeEffectMs": 1800,
+  "reducedMotion": "Instant state update; no pulse or sweep",
+  "notes": "Faction color belongs to ownership/UI, never in environment texture. Read HANDOFF_TH.md."
+}

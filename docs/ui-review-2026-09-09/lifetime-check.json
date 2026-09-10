@@ -1,0 +1,114 @@
+{
+  "run": "lifetime-final-studio",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "scene destination",
+      "pass": true
+    },
+    {
+      "check": "search",
+      "pass": true
+    },
+    {
+      "check": "place card",
+      "pass": true
+    },
+    {
+      "check": "short captions",
+      "pass": true
+    },
+    {
+      "check": "expand map",
+      "pass": true
+    },
+    {
+      "check": "interrupt camera with click",
+      "pass": true
+    },
+    {
+      "check": "wheel keeps map point under cursor",
+      "pass": true,
+      "errorMapUnits": 0.04358444394829419
+    },
+    {
+      "check": "mobile fits",
+      "pass": true
+    },
+    {
+      "check": "no premature or expired place dots and names in all 132 scenes",
+      "pass": true,
+      "checked": 449,
+      "bad": []
+    },
+    {
+      "check": "forward camp boundaries and reverse scrubbing",
+      "pass": true,
+      "years": [
+        {
+          "year": 221,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 227,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 228,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 233,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 234,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 274,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 228,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 221,
+          "visible": false,
+          "active": false
+        }
+      ]
+    },
+    {
+      "check": "future camp excluded from search",
+      "pass": true
+    },
+    {
+      "check": "selected convoy retains event context",
+      "pass": true
+    },
+    {
+      "check": "mobile search panel opens",
+      "pass": true
+    }
+  ]
+}

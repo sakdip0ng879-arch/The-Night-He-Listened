@@ -90,6 +90,20 @@ TK.ui = (function(){
   try { placeAtLoad = localStorage.getItem('tk-place'); } catch {}
 
   function init(){
+    /* ★★ ซิงก์สีฝ่ายจาก `data/names.js` → ตัวแปร CSS (เพิ่ม 2026-09-08)
+       เดิม `--han/--wei/--wu` ถูกพิมพ์ค่าไว้ใน `:root` ของ style.css แยกจาก `TK.factions`
+       = **มีสีฝ่ายสองแหล่ง** · วันที่เปลี่ยนสีในข้อมูล (2026-09-08) แผนที่เปลี่ยนตาม
+       แต่ตารางสัญลักษณ์กับแกนสงครามยังใช้สีเก่า — สองที่โกหกกันเงียบ ๆ
+       ★ ทำให้ `data/names.js` เป็นแหล่งเดียว: CSS ยังใช้ `var(--han)` ได้เหมือนเดิมทุกที่
+         แค่ค่าถูกเขียนทับตอน init · ไม่ต้องไล่แก้ selector สิบกว่าที่
+       ⚠ ต้องทำ **ก่อน** สร้าง UI ใด ๆ ไม่งั้นของที่วาดไปแล้วยังถือสีเก่า */
+    {
+      const rs = document.documentElement.style;
+      for (const k of ['han','wei','wu']){
+        const f = TK.factions && TK.factions[k];
+        if (f && f.color) rs.setProperty('--' + k, f.color);
+      }
+    }
     E.beats.forEach((b, i) => {
       const k = seasonKey(b);
       if (!seasonMap.has(k)) seasonMap.set(k, []);
@@ -286,7 +300,9 @@ TK.ui = (function(){
   function scrollTo(i){
     const a = arts[i]; if (!a) return;
     programmatic = true;
-    a.scrollIntoView({ behavior:'smooth', block:'center' });
+    /* ปุ่มเลือกฉากต้องไปถึงฉากนั้นทันที ไม่ไล่ผ่านหลายฉากพร้อมกล้อง
+       โดยเฉพาะเครื่องช้า smooth scroll อาจใช้เวลานานกว่า timer ปลดล็อกเดิม */
+    a.scrollIntoView({ behavior:'instant', block:'start' });
     clearTimeout(scrollTo._t);
     scrollTo._t = setTimeout(() => { programmatic = false; }, 650);
     if (i !== E.index) E.goTo(i, 'jump');
@@ -373,7 +389,11 @@ TK.ui = (function(){
     /* the header says what the bars measure — without it readers had to guess */
     const head = document.createElement('div');
     head.className = 'hhead';
-    head.textContent = 'กำลังพลที่แผ่นดินของแต่ละฝ่ายเลี้ยงได้';
+    /* ★ ย่อจาก "กำลังพลที่แผ่นดินของแต่ละฝ่ายเลี้ยงได้" เหลือคำเดียว 2026-09-08
+       เพราะ HUD ย้ายมาอยู่แถวบนแล้วต้องแบ่งที่กับปุ่ม — ประโยคเต็มย้ายไป `title`
+       ⚠ ห้ามตัดทิ้งทั้งหัวข้อ: ถ้าไม่บอก คนอ่านเดาไม่ออกว่าหลอดเทียบกับอะไร */
+    head.textContent = 'กำลังพล';
+    head.title = 'กำลังพลที่แผ่นดินของแต่ละฝ่ายเลี้ยงได้';
 
     $('#hud').replaceChildren(head, ...['han','wei','wu'].map(k => {
       const f = TK.factions[k];
@@ -573,15 +593,35 @@ TK.ui = (function(){
           const svg = document.createElementNS(NS,'svg');
           svg.setAttribute('viewBox','0 0 24 24');
           svg.setAttribute('width','26'); svg.setAttribute('height','26');
-          (spec.fill || []).forEach(d => {
-            const p = document.createElementNS(NS,'path');
-            p.setAttribute('d', d); p.setAttribute('fill-rule','evenodd'); svg.append(p); });
-          (spec.stroke || []).forEach(o => {
-            const p = document.createElementNS(NS,'path');
-            p.setAttribute('d', o.d); p.setAttribute('class','gs');
-            p.setAttribute('stroke-width', o.w);
-            if (o.dash) p.setAttribute('stroke-dasharray', o.dash);
-            svg.append(p); });
+          /* ★★ ไอคอนชุดใหม่ของ Codex พก **สีของตัวเอง** มาทีละ path (เงาสองระดับ)
+             ต้องวาดด้วย inline style เหมือน `paintArt` ใน strategic.js เป๊ะ ๆ
+             ⚠ ถ้าปล่อยให้ตกไปทางเดิม ตารางสัญลักษณ์จะโชว์ *รูปทึบสีเดียวแบบเก่า*
+               ขณะที่แผนที่โชว์รูปใหม่ — คนอ่านเทียบไม่ตรงกัน ซึ่งคือหน้าที่เดียวของตารางนี้
+               (เจ้าของสั่ง 2026-09-08: *"อัพเดทสัญลักษณ์ใหม่ใน UI ซะ"*)
+             ⚠ ชนิดที่ยังไม่มีไอคอนใหม่ (ที่นา · ท่าข้าม · ยุ้ง · เมืองเล็ก · บ่อน้ำ)
+               ยังตกไปทางเดิมอยู่ — ตารางจึงยัง *ตรงกับแผนที่* ทุกแถวเสมอ */
+          if (spec.art){
+            for (const o of spec.art){
+              const pth = document.createElementNS(NS,'path');
+              pth.setAttribute('d', o.d);
+              pth.setAttribute('stroke-width', o.w || 0.8);
+              pth.setAttribute('stroke-linecap','round');
+              pth.setAttribute('stroke-linejoin','round');
+              pth.style.fill   = o.f || 'none';
+              pth.style.stroke = o.s || 'none';
+              svg.append(pth);
+            }
+          } else {
+            (spec.fill || []).forEach(d => {
+              const p2 = document.createElementNS(NS,'path');
+              p2.setAttribute('d', d); p2.setAttribute('fill-rule','evenodd'); svg.append(p2); });
+            (spec.stroke || []).forEach(o => {
+              const p2 = document.createElementNS(NS,'path');
+              p2.setAttribute('d', o.d); p2.setAttribute('class','gs');
+              p2.setAttribute('stroke-width', o.w);
+              if (o.dash) p2.setAttribute('stroke-dasharray', o.dash);
+              svg.append(p2); });
+          }
           box.append(row(svg, name, why));
         }
       }
@@ -643,52 +683,15 @@ TK.ui = (function(){
       $('#btnMirror').classList.toggle('on', !!on);
     });
 
-    /* ⚠ เคยมีสามระดับ — `faint` ถูกตัดทิ้ง 2026-08-22
-       มันมีไว้ตอนป้ายภาษาไทยของเราต้องสู้กับชื่ออังกฤษที่พิมพ์มากับ map.jpg ต้องฟอกแผนที่พื้น
-       ให้ซีดจนตัวหนังสือของเราชนะ — ปัญหานั้นตายไปพร้อมการแปลทั้งเล่มเป็นอังกฤษเมื่อ 2026-08-09
-       และป้ายก็มีฮาโลของตัวเองแล้ว มันเป็นซากของปัญหาที่แก้ไปแล้ว
-       เจ้าของบอกเองว่า "ไม่มั่นใจว่าจะกดเองไหม ส่วนตัวกดแต่ Rich" — ค่าเริ่มต้นจึงเป็น rich */
-    const MODES = [{cls:'',label:'ปกติ'},{cls:'map-rich',label:'เข้ม'}];
-    /* ⚠ ค่าที่เก็บไว้ใน localStorage คือ **ดัชนีของอาร์เรย์** ซึ่งแปลว่ามันผูกกับความยาว
-       ของอาร์เรย์ ณ วันที่เก็บ ไม่ใช่กับความหมาย — พอ 2026-08-22 ตัด `faint` ออกจากสามเหลือสอง
-       ผู้อ่านที่เคยกด rich ไว้ (เก็บเลข 2) เปิดหน้ามาแล้ว MODES[2] เป็น undefined
-       → TypeError กลาง bindControls() → ซึ่งถูกเรียก *ก่อน* E.on('beat') กับ E.goTo()
-       → **แผนที่ไม่เคยสมัครรับ event และไม่เคยวาดเลยทั้งหน้า** เพราะปุ่มปุ่มเดียว
-       ต้องหนีบเสมอ ห้ามเชื่อค่าที่เก็บไว้ว่ายังอยู่ในช่วง — และ check_click ก็จับไม่ได้
-       เพราะมันเปิด Chrome ด้วยโปรไฟล์ใหม่ทุกครั้ง จึงไม่เคยเห็นสภาพของคนที่กลับมาอ่านซ้ำ */
-    let mi = MODES.length - 1;                       // ค่าเริ่มต้น = rich
-    /* ⚠⚠ บั๊กเก่าที่เพิ่งจับได้ 2026-09-05 (ตอนทำเฟส 4) — **`+null` เท่ากับ `0`**
-       โค้ดเดิมเขียน `const v = +localStorage.getItem(...)` แล้วเช็ค `Number.isInteger(v)`
-       คนอ่านหน้าใหม่ที่ยังไม่มีคีย์นี้จะได้ `getItem` คืน null → `+null` = 0 → ผ่านทุกเงื่อนไข
-       → `mi = 0` = "ปกติ" **ค่าเริ่มต้น "เข้ม" ที่ตั้งใจไว้จึงไม่เคยทำงานกับใครเลย**
-       (เจ้าของเขียนไว้เองข้างบนว่า "ส่วนตัวกดแต่ Rich" — แต่คนอ่านใหม่ไม่เคยได้เห็น)
-       ต้องแยก "ไม่มีค่า" ออกจาก "มีค่าเป็นศูนย์" ก่อนแปลงเป็นตัวเลขเสมอ */
-    try {
-      const raw = localStorage.getItem('tk-mapmode');
-      const v = (raw === null || raw === '') ? NaN : +raw;
-      if (Number.isInteger(v) && v >= 0 && v < MODES.length) mi = v;
-    } catch {}
-    /* ★ ชั้นภาพรุ่นใหม่ไม่ได้ใช้ CSS ของเราคุมความเข้ม — loader ของมันคุมด้วย filter
-       จึงต้องซิงก์ตรงนี้ **ในตัว applyMode เอง** ห้ามไปผูก handler ใหม่ที่ปุ่ม
-       ⚠ `tap()` ใช้ `el.onclick =` ซึ่ง **ทับ handler เดิมทิ้ง** — เรียก tap ซ้ำที่ปุ่มเดียวกัน
-         = ฆ่าปุ่มนั้น (เกือบพลาดมาแล้ว 2026-09-08) */
-    let artBaseOn = false;
-    const applyMode = () => {
-      const st = $('#stage');
-      if (!(mi >= 0 && mi < MODES.length)) mi = MODES.length - 1;
-      MODES.forEach(m => m.cls && st.classList.remove(m.cls));
-      if (MODES[mi].cls) st.classList.add(MODES[mi].cls);
-      $('#mapmode').textContent = 'แผนที่: ' + MODES[mi].label;
-      /* ⚠⚠ **แผ่นวาดใหม่ใช้ธีมกลางวันเสมอ** — อย่าเอา "เข้ม" ไปแมปกับ `night` ของ loader
-         มันคือ `brightness(.24)` ซึ่งออกแบบมาสำหรับแอปพื้นดำ · แผ่นนี้เป็นกระดาษ
-         พอจับคู่กันแล้วได้แผนที่มืดขุ่นทั้งใบ ภูเขาหายหมด (เจอ 2026-09-08)
-         ปุ่ม "แผนที่: ปกติ/เข้ม" ยังทำงานอยู่ — มันไปคุม *ความเข้มของสีเขตของเรา* ผ่าน
-         คลาส `map-rich` ใน css แทน ซึ่งเป็นสิ่งที่มันควรคุมตั้งแต่แรกบนแผ่นสว่าง */
-      if (artBaseOn && TK.map.setArtTheme) TK.map.setArtTheme('day');
-      try { localStorage.setItem('tk-mapmode', mi); } catch {}
-    };
-    tap('#mapmode', () => { mi = (mi + 1) % MODES.length; applyMode(); });
-    applyMode();
+    /* ⛔⛔ **ปุ่ม "แผนที่: ปกติ/เข้ม" ถูกถอดออกถาวร 2026-09-08** (เจ้าของสั่ง)
+       > *"จากที่ไปเล่นมาเอาโหมดแผนที่ เข้ม กับ ปกติ ออกไปเลย ตั้งเป็นเข้มตลอดเวลา"*
+       ★ ประวัติของปุ่มนี้คือประวัติของการหดตัว: เคยมีสามระดับ → ตัด `faint` ทิ้ง 2026-08-22
+         (มันมีไว้ฟอกแผ่นให้ป้ายไทยชนะชื่ออังกฤษ ซึ่งเลิกเป็นปัญหาไปตั้งแต่แปลทั้งเล่ม)
+         → เหลือสองระดับ และเจ้าของบอกเองว่า *"ส่วนตัวกดแต่ Rich"* → ตอนนี้เหลือระดับเดียว
+       ★ `map-rich` ถูกใส่ไว้ที่ `#stage` ใน `index.html` ตรง ๆ แล้ว — ไม่มี JS มายุ่งอีก
+       ⚠ ล้างคีย์ `tk-mapmode` ทิ้งด้วย ไม่งั้นเบราว์เซอร์ที่เคยกด "ปกติ" ค้างค่าไว้ตลอดกาล
+         (บทเรียน §E21 — คีย์ที่ไม่มีใครอ่านแล้วต้องล้าง ไม่ใช่ปล่อยทิ้ง) */
+    try { localStorage.removeItem('tk-mapmode'); } catch {}
 
     /* ⛔ คีย์เก่าของโครงการ "แผ่นที่เราวาดเอง" ที่ปิดถาวร 2026-09-06 — ล้างทิ้งต่อไป
        ไม่งั้นเบราว์เซอร์ที่เคยเปิดแผ่นเก่าจะถือคีย์ที่ไม่มีความหมายไว้ตลอดกาล (§E21)
@@ -716,9 +719,11 @@ TK.ui = (function(){
         busy = true; paint();
         Promise.resolve(TK.map.setArt(want)).then(ok => {
           baseOn = !!ok;
-          artBaseOn = baseOn;                 /* ให้ applyMode ซิงก์ความเข้มให้ */
           if (want && !ok) btn.title = 'โหลดชั้นภาพไม่สำเร็จ — ยังใช้แผ่นต้นฉบับอยู่';
-          if (baseOn) TK.map.setArtTheme('day');   /* กลางวันเสมอ — ดูเหตุผลที่ applyMode */
+          /* ⚠⚠ **แผ่นวาดใหม่ใช้ธีมกลางวันเสมอ** — ห้ามแมป "เข้ม" กับ `night` ของ loader
+             มันคือ `brightness(.24)` ที่ทำมาสำหรับแอปพื้นดำ · แผ่นนี้เป็นกระดาษ
+             จับคู่กันแล้วได้แผนที่มืดขุ่นทั้งใบ ภูเขาหายหมด (เจอ 2026-09-08) */
+          if (baseOn) TK.map.setArtTheme('day');
           try { localStorage.setItem('tk-base', baseOn ? '1' : '0'); } catch {}
         }).finally(() => { busy = false; paint(); });
       };
@@ -750,7 +755,7 @@ TK.ui = (function(){
     const b = ev.beat, i = ev.index;
     /* ⚠⚠ เก็บ **id ของฉาก** ไม่ใช่ดัชนี — ดัชนีผูกกับความยาวอาร์เรย์ ณ วันที่เก็บ
        ไม่ใช่กับความหมาย · โปรเจกต์นี้เคยโดนกับดักนี้มาแล้วครั้งหนึ่งกับ tk-mapmode
-       (ดูคอมเมนต์ยาวที่ MODES) แล้วผลคือแผนที่ไม่วาดเลยทั้งหน้า
+       (บทเรียนเดิมจากปุ่ม tk-mapmode ที่ถอดไปแล้ว) แล้วผลคือแผนที่ไม่วาดเลยทั้งหน้า
        ถ้าวันไหนมีการแทรกฉากใหม่ ดัชนีจะเลื่อนทั้งเล่ม แต่ id ไม่เลื่อน */
     try { localStorage.setItem('tk-place', b.id); } catch {}
     const chap = TK.chapters.find(c => c.n === b.chapter);
@@ -832,7 +837,11 @@ TK.ui = (function(){
              ทุกครั้งที่แตะบรรทัดนี้ **ต้องถ่ายภาพดู** ตัวตรวจไม่เห็นหน่วยที่หายไป */
       document.querySelector(`[data-num="${k}"]`).textContent =
         `${t[k]} เขต` + (s && s[k] && t[k]
-          ? ` · ประชากร ${s[k].pop} ล้าน · ทหาร ${Math.round(s[k].troops * 10).toLocaleString('en-US')}k` : '');
+          /* ★ ตัดคำว่า "ประชากร" ออก 2026-09-08 เพื่อให้ HUD พอดีแถวบน —
+             "ล้าน" บอกหน่วยอยู่แล้วว่าเป็นคน · **แต่คำว่า "ทหาร" ห้ามตัด**
+             เพราะ 182k กับ 1.7 ล้าน อยู่ติดกัน ถ้าไม่มีคำกำกับจะอ่านสลับกันได้
+             (บทเรียนหน่วยที่ HANDOFF §2.5 เจ็บมาแล้วสองรอบ) */
+          ? ` · ${s[k].pop} ล้าน · ทหาร ${Math.round(s[k].troops * 10).toLocaleString('en-US')}k` : '');
     });
 
     /* ★★ บรรทัดแนวตะวันตก — ตัวเลขชั้นกลางที่คนอ่านไม่เคยเห็น
@@ -883,7 +892,7 @@ TK.ui = (function(){
     const flipHold = (!scrub && ev.how !== 'init' && b.mapDelta &&
                       (b.markers || []).some(m => m.type === 'arrow'))
       ? new Set(Object.keys(b.mapDelta)) : null;
-    TK.map.setOwners(ev.owners, flipHold);
+    TK.map.setOwners(ev.owners, flipHold, !scrub && ev.how !== 'init');
     TK.map.setFocus(b);
 
     /* ══ กล้องกับ marker — ต่างกันสองโหมด ══

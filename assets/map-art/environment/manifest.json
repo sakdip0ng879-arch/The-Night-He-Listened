@@ -1,0 +1,81 @@
+{
+  "version": "environment-1.0",
+  "coordinateSystem": [
+    1650,
+    1950
+  ],
+  "nativeRaster": [
+    1153,
+    1364
+  ],
+  "rasterSha256": "3ec7c547df6a7606e0e9da53e341699188afb877442478bfc1403d853182bca7",
+  "source": "Built-in ImageGen exec-cb6b1c58-cc46-4a30-bc4a-86cc0070c86f.png",
+  "containsCities": false,
+  "containsText": false,
+  "containsRivers": false,
+  "containsOwnership": false,
+  "coverage": "Entire map rectangle; sea, lakes, rivers, mountain peaks, roads and marker clearings controlled by SVG mask.",
+  "ecology": "Regional artistic interpretation; not surveyed ancient forest extents.",
+  "productionSources": [
+    {
+      "file": "data/geo.js",
+      "sha256": "4d0d90fd4bcf9c63f935e84ad09a98a42405ef91f9e1302442d7464cd266fd5c"
+    },
+    {
+      "file": "data/geo_fill.js",
+      "sha256": "3455651d192ddd8a8e722fa692f95dddb64c628ddafbd556040129cc58a6020c"
+    },
+    {
+      "file": "data/places.js",
+      "sha256": "11b82db12f12ac42f81522a032d749399b24dcfc439236a0f3adad16919e6f94"
+    },
+    {
+      "file": "data/roads.js",
+      "sha256": "9aad66dcdbb422b75bdcd780a644f7b20b6a294a3aa99f17fc6e08d08f8af51f"
+    }
+  ],
+  "waterSha256": "938234b2df0cbc31a903ce88766cac3a8c3599fd44b7fa21aecb6456e689a728",
+  "productionModified": false,
+  "files": {
+    "environment-art.png": {
+      "bytes": 3195226,
+      "sha256": "3ec7c547df6a7606e0e9da53e341699188afb877442478bfc1403d853182bca7"
+    },
+    "environment-layer.svg": {
+      "bytes": 160819,
+      "sha256": "90d1dd7a80fd96022ce8104675c093bb5b8a6d78bcf813d64012681ba0b6e5bd"
+    },
+    "environment-layer.js": {
+      "bytes": 165400,
+      "sha256": "ba64f787512b74bd5b3de58fa89eb0777bae04ee8c713ea5e031987eb35c45e5"
+    },
+    "ownership-palette.json": {
+      "bytes": 746,
+      "sha256": "389b2f5fb2921509c0b3737cd57e8b17a009b7a8f696f357ad4192a7e41c01dd"
+    },
+    "HANDOFF_TH.md": {
+      "bytes": 15510,
+      "sha256": "0f8f44422f613d1ac56f463c6fe5c0c2f6b6a679ead3bed9ee1a71592545ae9d"
+    },
+    "PROMPT.md": {
+      "bytes": 4053,
+      "sha256": "5a40d654a632c22929ed42294e6522baac45e5bcd4e2c2de3bd9a282ba9eacd4"
+    },
+    "index.html": {
+      "bytes": 4774,
+      "sha256": "3b4645b166f59c754891dc5510db2572d74201010d692bec9a1fab06b10bf091"
+    },
+    "preview.css": {
+      "bytes": 3146,
+      "sha256": "e3beef4a25a10827ba016ceaabd2d4c43dbc6ab6fed1e6362cb831041dee3322"
+    },
+    "preview.js": {
+      "bytes": 8389,
+      "sha256": "0962fc0fe8e615dcb651b64d6c5ac3b800a33b1e7a9d6236a8ec32b883c5fd3e"
+    },
+    "preview-data.js": {
+      "bytes": 214967,
+      "sha256": "76cee30ff68b3a743e9728c4b16211a2a50caf9cac6c07de7f80da570f0ffdd5"
+    }
+  }
+}

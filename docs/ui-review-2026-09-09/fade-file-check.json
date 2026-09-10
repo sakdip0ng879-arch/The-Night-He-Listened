@@ -1,0 +1,31 @@
+{
+  "run": "fade-file",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "ownership crossfade has intermediate opacity",
+      "pass": true,
+      "opacity": 0.265879,
+      "animations": 1
+    },
+    {
+      "check": "interrupted fade restarts one transition",
+      "pass": true
+    },
+    {
+      "check": "scrub/init clears old ownership image",
+      "pass": true
+    }
+  ]
+}

@@ -12,6 +12,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["tools/serve.js", "8779"],
       "port": 8779
+    },
+    {
+      "name": "tk3c",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/serve.js", "8780"],
+      "port": 8780
     }
   ]
 }

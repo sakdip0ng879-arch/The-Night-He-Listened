@@ -17,7 +17,7 @@ TK.map = (function(){
   const mk = (n,a) => { const e = document.createElementNS(NS,n);
     for (const k in (a||{})) e.setAttribute(k,a[k]); return e; };
 
-  let svg, layers = {}, host;
+  let svg, layers = {}, host, cam;
   let vb = { x:0, y:0, w:W, h:H };
   let camCancel = null, scaleCache = null;
   let forceLabels = new Set();
@@ -61,20 +61,36 @@ TK.map = (function(){
     svg = mk('svg',{viewBox:`0 0 ${W} ${H}`, preserveAspectRatio:'xMidYMid meet', id:'tkmap'});
     host.append(svg);
 
+    /* ══ ★★★ กลุ่มกล้อง `#L-cam` — ทุกชั้นอยู่ในนี้ทั้งหมด (เพิ่ม 2026-09-08) ══════
+       ★ เหตุผลเดียว: **การเลื่อนแผนที่**
+         เดิมเลื่อนด้วยการเซ็ต `viewBox` ซึ่ง *ไม่ใช่การขยับภาพ* แต่เป็นการเปลี่ยน
+         ระบบพิกัดของทั้ง SVG → เบราว์เซอร์ทิ้งภาพเดิมแล้ววาดใหม่หมดทุกเฟรม
+         (วัดจริง 2026-09-08: ~148 ms/เฟรม ≈ 6.6 fps ที่ 973 path + ภาพ raster สองใบ)
+       ★ ทางแก้: ระหว่างลาก/บิน **ไม่แตะ `viewBox` เลย** แต่ขยับกลุ่มนี้ด้วย `transform`
+         ซึ่ง GPU ทำได้โดยไม่ต้องวาดใหม่ — แล้ว *commit* เป็น `viewBox` จริงทีเดียวตอนนิ่ง
+         → จาก 60 การวาดใหม่ต่อวินาที เหลือ 1 ครั้ง
+       ⚠⚠ **ของใหม่ทุกชิ้นต้องต่อเข้า `cam` ไม่ใช่ `svg`** ไม่งั้นมันจะค้างอยู่กับที่
+         ตอนคนอื่นเลื่อน (ชั้นภาพของ Codex · environment · หน้ากาก · เงาเขา ผ่านแล้วทั้งหมด)
+       ⚠ `toMap()` ต้องใช้ CTM ของ **cam** ไม่ใช่ของ svg — ระหว่างลาก สองอันนี้ต่างกัน */
+    cam = mk('g',{id:'L-cam'});
+    svg.append(cam);
+
     /* (marker #ahead ของเดิมถูกถอด 2026-08-25 — หัวลูกศรตอนนี้เป็น path ของเราเอง
        ที่โผล่ตอนเดินถึง (.mk-head ใน setMarkers) ตามแบบ ข ที่เจ้าของเคาะ) */
-    svg.append(mk('image',{href:'assets/map.jpg', x:0, y:0, width:W, height:H, id:'basemap'}));
+    cam.append(mk('image',{href:'assets/map.jpg', x:0, y:0, width:W, height:H, id:'basemap'}));
     /* ★★ แผ่นพื้นที่เราวาดเอง — อยู่ตรงที่เดียวกับ map.jpg เป๊ะ (DECISIONS §14 เฟส 4)
        เปิดทีละแผ่นด้วย setPlate() · ทั้งสองใช้กรอบพิกัด 1650×1950 ชุดเดียวกัน (กฎ 4) */
-    svg.append(layers.plate = mk('g',{id:'L-plate'}));
+    cam.append(layers.plate = mk('g',{id:'L-plate'}));
     /* ชั้น roads อยู่ใต้ routes เสมอ — กราฟถนนเป็นฉากหลัง การเดินทัพของฉากต้องอยู่ทับ
        (DECISIONS §15 "โหมดถนน · มาฟรีกับ §4" — ข้อมูลมาจาก TK.edges ไม่มีของใหม่)
 
        ★★★ `water` อยู่ **หลัง** `regions` โดยตั้งใจ — หมึกน้ำต้องทับสีเขต ไม่ใช่จมอยู่ใต้
        ปี 221 แผ่นดินมีเจ้าของครบทุกตารางนิ้ว ชั้นเขตจึงคลุมบกทั้งผืน · ถ้าน้ำอยู่ข้างใต้
        ทุกครั้งที่เพิ่มความทึบของเขตให้สีฝ่ายชัด แม่น้ำจะจมหายไปพร้อมกัน (DECISIONS §14 เฟส 2) */
-    for (const name of ['regions','water','wall','works','focus','roads','routes','markers','pins','labels'])
-      svg.append(layers[name] = mk('g',{id:'L-'+name}));
+    /* ★ 'zhou' (เส้นแบ่งมณฑล) อยู่เหนือน้ำ/กำแพง แต่ใต้ทุกอย่างที่เป็นของ *ฉาก* —
+       มันเป็นชั้นภูมิศาสตร์การปกครอง ไม่ใช่เหตุการณ์ ห้ามบังลูกศรเดินทัพหรือวงเน้น */
+    for (const name of ['regions','water','wall','zhou','works','focus','roads','routes','markers','pins','labels'])
+      cam.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
        แผ่นต้นฉบับพิมพ์ SHU เป็นแดงและ WU เป็นเขียว ซึ่งสลับกับคอนเวนชันสีของเรา
@@ -96,7 +112,7 @@ TK.map = (function(){
     [[560,470,165,82,1],[262,1195,215,95,.985],[1175,1450,180,95,.985]]
       .forEach(([x,y,w,h,op]) =>
         mask.append(mk('rect',{x,y,width:w,height:h, fill:'#eef1f4', opacity:op})));
-    svg.insertBefore(mask, layers.regions);
+    cam.insertBefore(mask, layers.regions);
 
     buildPlate();
     buildWall();          /* ★ ไม่ขึ้นกับแผ่นไหน — ต้องอยู่นอก buildPlate (ดูคอมเมนต์ที่ buildWall) */
@@ -291,7 +307,7 @@ TK.map = (function(){
     if (artObj) return Promise.resolve(artObj);
     if (artLoading) return artLoading;
     artLoading = getLoader()
-      .then(loadMapLayers => loadMapLayers(svg, {
+      .then(loadMapLayers => loadMapLayers(cam, {
         assetBase: new URL(ART_BASE, document.baseURI),
         includeWall: false,          /* กำแพงใช้ของเราเอง (TK.wall) — HANDOFF ให้เลือกอย่างใดอย่างหนึ่ง */
         prefix: 'tk-art-v3-',
@@ -321,10 +337,17 @@ TK.map = (function(){
         if (relief){
           const g = mk('g',{id:'L-relief', 'data-art-layer':'relief', 'pointer-events':'none'});
           g.append(relief);
-          svg.insertBefore(g, layers.regions.nextSibling);
+          cam.insertBefore(g, layers.regions.nextSibling);
           layers.relief = g;
         }
         artObj = art;
+        loadEnv();          /* ★ ชั้นป่า — ติดตั้งหลังชั้นภาพ จะได้แทรกใต้สีเขตได้ถูกที่ */
+        /* ★ mount เป็น async (รอรูป cache สองใบ) — พอเสร็จต้อง commit กล้องซ้ำหนึ่งที
+           เพื่อวาง transform ให้ชั้นพื้นครั้งแรก ไม่งั้นมันค้างอยู่มุมซ้ายบนจนกว่ากล้องจะขยับ */
+        if(new URLSearchParams(location.search).get('renderer')!=='svg')
+          window.TKMapSurface?.mount(cam,layers)
+            .then(() => commitVB())
+            .catch(e=>console.warn('Using SVG map surface:',e));
         return art;
       })
       .catch(err => { artLoading = null; console.warn('[map-art] โหลดไม่สำเร็จ:', err); throw err; });
@@ -333,6 +356,49 @@ TK.map = (function(){
   /* คืนค่าเป็น Promise<boolean> — ผู้เรียกรอได้ถ้าอยากรู้ว่าเปิดสำเร็จจริงไหม
      ⚠ ปิดโหมดแล้ว **ไม่ถอด DOM ทิ้ง** — CSS (`:not(.plate-new) #L-plate/#L-water`)
        ซ่อนให้อยู่แล้ว · การถอดแล้วโหลดใหม่ทุกครั้งที่กดปุ่มคือการดาวน์โหลด 2.7 MB ซ้ำ */
+  /* ══ ★★★ ชั้น Environment (ป่า/ดิน/พุ่ม) จากฝั่ง Codex — รุ่น 01 (8 ก.ย. 2026) ══════
+     `prototypes/codex-2026-09-06/environment/release-01/HANDOFF_TH.md`
+
+     ★ **ไม่มีการเมืองอยู่ในภาพเลย** — `manifest.json` ประกาศ `containsCities` ·
+       `containsText` · `containsRivers` · `containsOwnership` = false ทั้งสี่
+       และ *ป่าไม่ขาดตรงชายแดน* เพราะ mask ไม่ได้สร้างจาก region polygon
+       → แผ่นดินเปลี่ยนมือกี่ครั้ง ภาพป่าก็ไม่ต้องเปลี่ยน (สำคัญ: เราไม่ต้องรีเฟรชอะไรเลย)
+
+     ★★ **ตัวติดตั้งเป็น classic script ที่ฝังข้อความ SVG มาแล้ว ไม่มี `fetch`**
+        → ใช้ได้ทั้ง http และ `file://` **โดยไม่ต้องแตะ `tools/build_map_inline.js`**
+        (เราขอเรื่องนี้ไปเองใน `NOTES_FROM_CLAUDE_TH.md` §3 และเขาทำมาให้)
+        ⚠ ดังนั้น `EMBED` ของตัวสร้างไฟล์ฝัง **ห้ามใส่ environment เข้าไป** — ไม่จำเป็น
+          และจะทำให้ไฟล์ฝังโตขึ้นอีก 165 KB เปล่า ๆ
+
+     ⚠ ตำแหน่งชั้น — HANDOFF ของเขาแนะนำ *ภูเขา → Environment → สีครองพื้นที่ → น้ำ*
+       ซึ่งเราทำได้ตรงตัว **ยกเว้นเรื่องภูเขา** เพราะสถาปัตยกรรมของเราต่างจากที่เขาคิด:
+       เงาเขาของเราถูกยกขึ้นไป *เหนือ* สีเขตแบบ multiply (`#L-relief` — ดูเหตุผลที่นั่น)
+       ลำดับจริงจึงเป็น  กระดาษ → **Environment** → สีเขต → เงาเขา(คูณ) → น้ำ → กำแพง → หมุด
+       ผลที่ได้ตรงกับเจตนาของเขา: ป่าอยู่ใต้สีฝ่าย และเงาเขาคลุมทั้งคู่
+
+     ⚠ `data-art-layer="environment"` ที่ตัวติดตั้งใส่มาให้ **จำเป็น** — มันคือสิ่งที่กัน
+       กฎ `#tkmap path:not(.region):not([data-art-layer] *){fill:none}` ไม่ให้ไปฆ่า mask
+       (กับดักเดียวกับที่เคยฆ่าหน้ากากภูเขาทั้งแผ่นเมื่อ 2026-09-08 เช้า)  */
+  let envObj = null;
+  function loadEnv(){
+    if (envObj || !window.TKEnvironment) return envObj;
+    try {
+      envObj = TKEnvironment.mount(cam, {
+        before: layers.regions,                 /* ใต้สีเขต — ป่าเป็นพื้น สีฝ่ายเป็นข้อมูลทับ */
+        assetBase: new URL(ART_BASE + 'environment/', document.baseURI),
+        opacity: ENV_OPACITY,
+        theme: 'day'                            /* แผ่นนี้กลางวันเสมอ — ดูเหตุผลที่ setArtTheme */
+      });
+      layers.env = envObj.group;
+    } catch (e){
+      console.warn('[environment] ติดตั้งไม่สำเร็จ:', e);   /* ไม่ล้มทั้งแผ่นเพราะชั้นตกแต่ง */
+      envObj = null;
+    }
+    return envObj;
+  }
+  /* ค่าที่ Codex แนะนำใน HANDOFF · ยังไม่ได้เคาะด้วยตาเจ้าของ */
+  const ENV_OPACITY = 0.82;
+
   function setArt(on){
     if (!on){
       artOn = false;
@@ -351,78 +417,210 @@ TK.map = (function(){
   function setArtTheme(theme){
     if (artObj && artObj.setTheme) artObj.setTheme(theme === 'night' ? 'night' : 'day');
   }
+  /* ══ ★★★ มณฑล (州) — ชื่อ + เส้นแบ่ง (เจ้าของสั่ง 2026-09-08) ═══════════════
+     > *"อยากให้เพิ่มพวกมณฑลเข้าไปด้วย แบบ Jing Zhou, Liang Zhou"*
+     > *"เส้นแบ่งมณฑล ... ต้องไม่ทำเข้ม แค่เส้นประบาง ๆ ก็พอว่าแต่ละมณฑลแบ่งกันที่ตรงไหน
+     >  ซึ่งมันคนละแบบกับเขตที่เราเปลี่ยนสีนะ"*
 
-  /* ══ ★★★ ชื่อมณฑลบนแผ่น (เจ้าของสั่ง 2026-09-08) ═══════════════════════════
-     > *"ในแผนที่เก่ามันมีเมืองทุกเมืองเขียนชื่อบอกหมด ของเราปัจจุบันมันยังโล้น
-     >  และอยากให้เพิ่มพวกมณฑลเข้าไปด้วย แบบ Jing Zhou, Liang Zhou
-     >  เป็นคำอ่านพินอินตามแบบฉบับของเรา"*
+     ★★ **ไม่มีพิกัดใหม่ถูกประดิษฐ์ขึ้นเลย** — ตารางสังกัดอยู่ที่ `data/provinces.js`
+        รูปเขตมาจาก `geo.js` · เส้นพรมแดนมาจาก `TK.regionArcs` (`geo_fill.js`)
+        ซึ่งเก็บ arc พร้อมชื่อเขตสองฝั่ง → วาดเฉพาะ arc ที่สองฝั่ง **คนละมณฑล**
+     ★ และเพราะ `regionArcs` เก็บพรมแดนร่วมไว้ **เส้นเดียว** จึงวาดครั้งเดียว ไม่ซ้อนสองชั้น
+       — นี่คือข้อห้ามข้อเดียวกับที่ §17 เขียนไว้ และเป็นบั๊กที่เจ้าของจับได้เช้าวันเดียวกัน
 
-     ★★ **ข้อมูลมีครบอยู่แล้วทั้ง 33 มณฑล** — `geo.js` มี `label` (ไทย) · `py` · และ
-        **`labelAt` จุดวางชื่อ** มาตั้งแต่ต้น · แต่ `labelAt` **ไม่เคยถูกวาดในแอปเลย**
-        มีแต่ `build_geo.js` กับ `board_preview.js` (เครื่องมือ) ที่อ่านมัน
-        → ตระกูลเดียวกับบทเรียน `li` (LOG 2026-09-02) และ `type` ของ places:
-          **ข้อมูลถูกดูแลมาหลายเดือนเพื่อการแสดงผลที่ไม่เคยเขียน**
+     ⚠ **คนละภาษากับสีเขต** โดยตั้งใจ: สีเขต = *ใครถือแผ่นดิน* (เปลี่ยนทุกฉาก)
+       เส้นประมณฑล = *เขตการปกครอง* (ไม่เปลี่ยนตลอดเรื่อง) — จึงต้องจางและนิ่ง
+       ห้ามใช้สีฝ่ายกับเส้นนี้เด็ดขาด ไม่งั้นสองความหมายจะปนกัน  */
+  const ZHOU_MIN_VB  = 430;   /* กล้องแคบกว่านี้ไม่วาดมณฑล — มันเป็นชั้นภาพรวม */
+  /* ══ ★★★ เกณฑ์เดียวสำหรับ **ทั้งชั้นมณฑล** — ชื่อกับเส้นต้องมาและไปพร้อมกัน ══════
+     เจ้าของทัก 2026-09-10: *"เส้นประแบ่งมณฑล ... ดูแล้วรกแผนที่"*
+     ★ วัดของจริงก่อนแก้ (ไล่กล้องทีละระดับในเบราว์เซอร์):
+       | vb.w | เส้นมณฑล | ชื่อมณฑล |
+       | 1650 | โชว์ | 10 |   | 1100 | โชว์ | 8 |
+       | **900** | **โชว์** | **0** |   | 700 | โชว์ | 0 |   | 380 | โชว์ | 0 |
+     ⇒ ตั้งแต่ vb.w ต่ำกว่า 1100 ลงมา **เส้นยังวาดอยู่ทั้งที่ชื่อหายหมดแล้ว** —
+       และกล้องของฉากเกือบทุกฉากอยู่ในช่วงนั้นพอดี (650–860)
+       ผู้อ่านจึงเจอเส้นประพาดจอทุกฉาก โดยไม่มีชื่ออะไรบอกว่ามันแบ่งอะไรกับอะไร
+     ★ **นั่นคือความรกตัวจริง ไม่ใช่ความเข้ม** — เส้นที่ไม่มีป้ายกำกับคือลายพื้น ไม่ใช่ข้อมูล
+     → ผูกเส้นเข้ากับเกณฑ์เดียวกับชื่อ: เห็นชื่อ "ยงโจว/อี้โจว" เมื่อไหร่ ถึงเห็นเส้นที่คั่นมัน
+     ⚠ ฟังก์ชันเดียวใช้ทั้งสองที่ ห้ามแยกเลขไปคนละจุดอีก — ของเดิมแยกกัน (430 กับ 380)
+       แล้วไม่มีใครสังเกตว่ามันเลื่อนออกจากกันจนกล้องของฉากตกอยู่ระหว่างสองเลขนั้น */
 
-     ★ ชื่อที่ใช้คือ `r.label` ซึ่งเป็นไทย-ถอดพินอินตาม DECISIONS §11 อยู่แล้ว
-       ("จิงโจวตะวันตก" · "อวี้โจว (สวี่ชาง)") — ไม่ต้องแปลอะไรใหม่
+  /* ══ ★★★ ตาราง "ผิว" (skin) — ยุบการเช็คคลาสที่เคยกระจาย 17 จุด (2026-09-10) ══════
+     เจ้าของสั่ง: *"รื้อ ui-studio ให้เป็นพารามิเตอร์แทนการเช็คคลาสกระจาย ๆ"*
 
-     ⚠ **วาดเฉพาะโหมดแผ่นวาดใหม่** — แผ่นต้นฉบับพิมพ์ชื่อมณฑลอังกฤษไว้เองแล้ว
-       ใส่ทับเข้าไปจะได้ข้อความสองชุดซ้อน (บทเรียนเดียวกับหัวไฟล์ `labeler.js`)
-     ⚠ **ซ่อนตอนซูมเข้าใกล้** — ชื่อมณฑลเป็นชั้น "ภาพรวม" ไม่ใช่ชั้นรายละเอียด
-       พอกล้องแคบกว่า RNAME_MIN_VB มันกลายเป็นตัวหนังสือยักษ์พาดกลางจอ  */
-  const RNAME_MIN_VB = 430;   /* กว้างกว่านี้ (หน่วยแผนที่) ถึงจะโชว์ชื่อมณฑล */
-  const RNAME_PX     = 15;    /* ขนาดบนจอ — คงที่ทุกระดับซูมเหมือนป้ายเมือง */
-  const RNAME_TRACK  = 0.14;  /* ระยะห่างตัวอักษร (em) — ★ ต้องใช้ค่าเดียวกันทั้งตอนวัดและตอนวาด */
+     ⚠ ปัญหาของแบบเดิมไม่ใช่ความเร็ว แต่เป็น **ความมองไม่เห็น**:
+       เลข 14 · 2.8 · 3 · 1100 · รูปหัวลูกศรสองแบบ กระจายอยู่คนละบรรทัดทั่วไฟล์
+       ไม่มีที่ไหนบอกได้ว่า "หน้าสองแบบต่างกันตรงไหนบ้าง" ต้อง grep เอาเอง
+       และ **โหมดที่เป็นค่าเริ่มต้นคือ studio** แปลว่า `classic` คือเส้นทางที่ไม่มีใครเดิน
+       ทุกครั้งที่แก้จุดใดจุดหนึ่ง อีกโหมดจึงเงียบ ๆ เพี้ยนไปโดยไม่มีใครรู้
 
-  /* คืนกล่องของชื่อมณฑลที่จะวาด เพื่อให้ `labeler` เอาไปหลบ (ชื่อเมืองสำคัญกว่า) */
-  function regionNameBoxes(vb, screenW, avoid){
-    if (!artOn || vb.w < RNAME_MIN_VB) return [];
-    const mu = vb.w / screenW, fMU = RNAME_PX * mu;
-    const m = vb.w * 0.04;
-    const cand = [];
-    for (const id in TK.regions){
-      const r = TK.regions[id];
-      if (!r.labelAt || !r.label) continue;
-      const [x, y] = r.labelAt;
-      if (x < vb.x - m || x > vb.x + vb.w + m || y < vb.y - m || y > vb.y + vb.h + m) continue;
-      /* วัดด้วยไม้บรรทัดตัวเดียวกับ labeler — ภาษาไทยเดาจากจำนวนตัวอักษรไม่ได้ */
-      /* ⚠⚠ ต้องบวก `letter-spacing` เข้าไปเอง — canvas `measureText` ไม่รู้จักมัน
-         ชื่อมณฑลตัวห่าง 0.14em × 20 ตัวอักษร = กว้างกว่าที่วัดได้เกือบ 3 เท่าของขนาดอักษร
-         ไม่บวกแล้วกล่องเล็กกว่าจริง → ตรวจชนไม่เจอ → ได้ชื่อสองมณฑลพิมพ์ทับกัน
-         (เจอจริง 2026-09-08: "อวี้โจว (สวี่ชาง)หวยหนานเหนือ (โช่วชุน)") */
-      const wPx = TK.labeler.textWidth(r.label, RNAME_PX,
-                    '"Leelawadee UI","Segoe UI",Tahoma,sans-serif')
-                  + Math.max(0, r.label.length - 1) * RNAME_PX * RNAME_TRACK;
-      const wMU = wPx * mu * 1.06;
-      cand.push({ id, x: x - wMU/2, y: y - fMU*0.8, w: wMU, h: fMU*1.5,
-                  cx:x, cy:y, fMU, label:r.label });
+     ★ ตอนนี้ความต่างทั้งหมดอยู่ในตารางเดียวข้างล่างนี้ — อ่านจบใน 20 บรรทัด
+       เพิ่มความต่างใหม่ = **เพิ่มช่องในตาราง ห้ามกลับไปเช็คคลาสในโค้ดอีก**
+
+     ⚠ ต้องเป็น *ฟังก์ชันสร้าง* ไม่ใช่ object ตรง ๆ — ค่าอย่าง `ROUTE_PX`/`ZNAME_PX`
+       ประกาศทีหลังในไฟล์ ถ้าเขียนเป็น object ที่ประเมินทันทีจะชน TDZ
+     ⚠ คลาส `ui-studio` ถูกติดโดย `js/ui-studio.js` **หลัง** `TK.map.init()` จึงต้องอ่าน
+       ตอนใช้งาน ไม่ใช่ตอน init · แคชไว้ให้อ่าน classList เฉพาะตอนผิวเปลี่ยน ไม่ใช่ทุกเฟรม */
+  const SKINS = {
+    classic: () => ({
+      name         : 'classic',
+      zhouMinVB    : ZHOU_MIN_VB,                 /* กล้องต้องกว้างเท่าไรถึงโชว์ชั้นมณฑล */
+      zhouNamePx   : () => ZNAME_PX,              /* ขนาดชื่อมณฑล (มณฑลแคบใช้เล็กลงได้) */
+      zhouNudge    : false,                       /* ชื่อมณฑลขยับหลบที่ว่างได้ไหม */
+      zhouAvoidPins: false,                       /* ชื่อมณฑลต้องหลบกล่องของหมุดด้วยไหม */
+      fontPx       : 13.5,                        /* ขนาดชื่อเมืองบนจอ */
+      routePx      : ROUTE_PX,                    /* ความหนาลูกศรเดินทัพ */
+      arrowHead    : 'M 3,0 L -17,8.5 L -12,0 L -17,-8.5 Z',
+      marchGlyph   : null,                        /* null = ใช้ unitShape เดิม */
+      rankBonus    : 1,                           /* ปล่อยอันดับรองของชื่อเมืองเพิ่มกี่ขั้น */
+      maxLabels    : () => 44,                    /* เพดานจำนวนป้ายต่อจอ */
+      zoomTiers    : false,                       /* ใช้ LOD สามระดับของ placeAtZoom ไหม */
+      snapLabels   : false,                       /* ปัดตำแหน่งป้ายลงพิกเซลจอ */
+      coverFit     : false,                       /* "ขอเต็มแผ่น" = โหมดปก ปล่อยขอบว่างได้ */
+      twoSided     : false                        /* ยางยืดของกล้องยืดได้สองฝั่งไหม */
+    }),
+    studio: () => ({
+      name         : 'studio',
+      zhouMinVB    : 1100,
+      zhouNamePx   : key => ['yan','yu','si'].includes(key) ? 14 : ZNAME_PX,
+      zhouNudge    : true,
+      zhouAvoidPins: true,
+      fontPx       : 14,
+      routePx      : 2.8,
+      arrowHead    : 'M 2,0 L -12,5 L -8,0 L -12,-5 Z',
+      marchGlyph   : 'M -4,8 V -10 L 8,-7 L -4,-3 M -7,8 H 0',
+      rankBonus    : 3,
+      maxLabels    : (w, h) => Math.max(18, Math.min(72, Math.round(w * h / 18000))),
+      zoomTiers    : true,
+      snapLabels   : true,
+      coverFit     : true,
+      twoSided     : true
+    })
+  };
+  let skinCache = null, skinName = '';
+  function skin(){
+    const want = document.body.classList.contains('ui-studio') ? 'studio' : 'classic';
+    if (want !== skinName){ skinName = want; skinCache = SKINS[want](); }
+    return skinCache;
+  }
+  /* โหมดปกเป็น *สถานะชั่วคราว* ที่สลับได้ตลอดเวลา ไม่ใช่ผิว จึงไม่อยู่ในตาราง */
+  const galleryMode = () => document.body.classList.contains('studio-gallery');
+
+  const zhouMinVB = () => skin().zhouMinVB;
+  /* ★ โตขึ้นจาก 15 และตัวห่างขึ้นจาก .14 พร้อมกัน (2026-09-08 รอบสอง) — เจ้าของทักว่า
+     ชื่อมณฑล *"กลืนกับฉาก"* · ทางแก้คือแยกชนิดด้วย **รูปแบบ** ไม่ใช่ด้วยความจาง
+     (เหตุผลเต็มอยู่ที่ .zlabel ใน style.css) */
+  const ZNAME_PX     = 17;    /* ขนาดชื่อมณฑลบนจอ */
+  const ZNAME_TRACK  = 0.18;  /* ★ ต้องใช้ค่าเดียวกันทั้งตอนวัดและตอนวาด */
+
+  /* ══ ★★★ เส้นแบ่งมณฑล — กลับมาแล้ว 2026-09-08 (รอบสอง) ═══════════════════
+     ⛔ รอบแรกถูกถอดเพราะ **ที่มาผิด** — มันเอา `TK.regionArcs` (พรมแดนของเขตเราเอง
+        ซึ่งเป็นผลของ seed+BFS) มาวาด · เจ้าของทัก: *"นายใช้แนวที่ใช้ในการเปลี่ยนสีมาทำ
+        ซึ่งมันอาจไม่ถูกต้อง"* และบรรทัดที่เราเขียนทิ้งไว้ตอนถอยคือ **"ต้องมีข้อมูล
+        ขอบเขตจริงก่อน ไม่ใช่เอารูปเขตของเรามาใช้ซ้ำ"**
+     ★ รอบนี้ข้อมูลอยู่ที่ `data/zhou_lines.js` — พิกัดมาจากลำน้ำที่แผ่นวาดเอง
+       (`water.json`) + หมุดที่สอบเทียบแล้ว (`places.js`) + ชื่อที่แผ่นพิมพ์ไว้
+       **ไม่มีเส้นไหนมาจาก `regionArcs` อีกแล้ว** · `tools/check_zhou.js` ตรวจสามข้อ:
+       ผนังไม่รั่ว · แผ่นดินมีเจ้าของครบ · เมือง 94 จุดตกถูกฝั่ง
+
+     ⚠ **ไม่ใช้ relayout** — เส้นใช้ `vector-effect:non-scaling-stroke` ความหนากับจังหวะประ
+       จึงคงที่บนจอเองโดยไม่ต้องคำนวณใหม่ทุกครั้งที่กล้องขยับ (ต่างจาก .road/.mk-route)
+       สร้างครั้งเดียวแล้วซ่อน/โชว์ทั้งชั้น — 29 เส้นไม่คุ้มที่จะสร้างใหม่ */
+  /* ⛔ `ZLINE_MIN_VB = 380` ถูกถอด 2026-09-10 — ดูเหตุผลที่ `zhouMinVB` ข้างบน */
+  let zhouBuilt = false;
+  function buildZhouLines(){
+    if (zhouBuilt || !layers.zhou || !TK.zhou || !TK.zhou.edges) return;
+    zhouBuilt = true;
+    for (const e of TK.zhou.edges){
+      /* ⚠ วาด `pts` เท่านั้น — `close` เป็นจุดต่อปลายให้ผนังปิดสำหรับ *ตัวตรวจ*
+         มันวิ่งออกทะเลไปชนขอบแผ่น ถ้าวาดด้วยจะได้เส้นพาดกลางทะเล */
+      const d = e.pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' ');
+      /* ★★ **สองเส้นทับกัน: ปลอก(casing) สว่างข้างใต้ + แกนหมึกเข้มข้างบน**
+         เหตุผลเดียวกับวงเน้นพื้นที่ (§17 — "ไม่มีขอบมืดใต้เส้นทอง วงจะกลืนกับลายพิมพ์")
+         รอบแรกผมใช้เส้นเดียวสีเทาอมฟ้าจาง แล้ว **มันหายไปกับพื้นแผ่นที่สว่าง** —
+         ปัญหาเดียวกับที่เจ้าของทักเรื่องชื่อมณฑล "กลืนกับฉาก" เป๊ะ ๆ แต่คนละชั้น
+         ⚠ นี่ **ไม่ใช่** การ stroke พรมแดนร่วมสองครั้งที่ §17 ห้าม — ข้อนั้นห้าม
+           *สองเขตข้างเคียงต่างคนต่าง stroke เส้นเดียวกัน* (ได้เส้นหนาเป็นสองเท่าโดยไม่ตั้งใจ)
+           อันนี้คือคู่ปลอก+แกนบน path เดียว ซึ่งเป็นภาษาเดียวกับที่โปรเจกต์ใช้อยู่แล้ว */
+      layers.zhou.append(mk('path',{ d, fill:'none',
+        class:'zline-case' + (e.coarse ? ' coarse' : '') }));
+      const p = mk('path',{ d, fill:'none',
+        class:'zline' + (e.coarse ? ' coarse' : '') });
+      /* ★ `note` ของข้อมูลกลายเป็น tooltip ตรง ๆ — ที่มาของเส้นอ่านได้จากบนแผ่นเลย
+         ไม่ต้องเปิดไฟล์ (และถ้าวันหนึ่ง note เพี้ยน จะเห็นบนจอทันที) */
+      const t = mk('title');
+      t.textContent = TK.zhou.list[e.a].label + ' | ' + TK.zhou.list[e.b].label +
+                      (e.coarse ? ' (แนวหยาบ)' : '') + ' — ' + e.note;
+      p.append(t);
+      layers.zhou.append(p);
     }
-    /* ★★ ชื่อมณฑล **ขยับไม่ได้** — มันผูกกับ `labelAt` ซึ่งเป็นใจกลางของเขต
-       ต่างจากชื่อเมืองที่ labeler ลองได้ 8 ตำแหน่งรอบหมุด
-       → ชนแล้วทำได้อย่างเดียวคือ **ซ่อน** · เก็บอันที่มาก่อน ทิ้งอันที่ชน
-       ⚠ ไม่มีข้อนี้จะได้ชื่อสองมณฑลพิมพ์ทับกันเป็นคำเดียว
-         (เจอจริง: "อวี้โจว (สวี่ชาง)หวยหนานเหนือ (โช่วชุน)" — 2026-09-08)
-       ★ เรียงตามชื่อสั้นก่อน: ชื่อยาวกินที่มากและมักเป็นเขตที่มีวงเล็บกำกับเมือง
-         ยอมให้ชื่อสั้นได้ที่ก่อน ทั้งแผ่นจึงมีชื่อครบกว่า */
+  }
+  function applyZhouLines(){
+    if (!layers.zhou) return;
+    buildZhouLines();
+    layers.zhou.style.display = (vb.w >= zhouMinVB()) ? '' : 'none';
+  }
+
+  /* ชื่อมณฑล — คืนกล่องให้ `labeler` หลบ (ชื่อเมืองเจาะจงกว่า จึงได้ที่ก่อน) */
+  function zhouNameBoxes(vb, screenW, avoid){
+    const Z = TK.zhou;
+    if (!artOn || !Z || vb.w < zhouMinVB()) return [];
+    const mu = vb.w / screenW, m = vb.w * 0.04;
+    const cand = [];
+    for (const key in Z.list){
+      const z = Z.list[key];
+      if (!z.at || !z.label) continue;
+      const [x, y] = z.at;
+      const namePx=skin().zhouNamePx(key), fMU=namePx*mu;
+      if (x < vb.x - m || x > vb.x + vb.w + m || y < vb.y - m || y > vb.y + vb.h + m) continue;
+      /* ⚠⚠ `canvas.measureText` **ไม่รู้จัก letter-spacing** ต้องบวกเองทุกครั้ง
+         ไม่บวกแล้วกล่องเล็กกว่าจริง → ตรวจชนไม่เจอ → ชื่อสองมณฑลพิมพ์ทับกัน
+         (เจอจริง 2026-09-08 ตอนยังวาดชื่อระดับเขต) */
+      const wPx = TK.labeler.textWidth(z.label, namePx,
+                    '"Leelawadee UI","Segoe UI",Tahoma,sans-serif')
+                  + Math.max(0, z.label.length - 1) * namePx * ZNAME_TRACK;
+      const wMU = wPx * mu * 1.06;
+      /* ★ เผื่อ **ฮาโล** ของตัวหนังสือด้วย — `.zlabel` มี stroke หนา .19em รอบตัว
+         กล่องที่ไม่นับฮาโลจะเล็กกว่าที่ตาเห็น แล้วป้ายฉากมาทับได้ 3–4 px
+         (selfcheck จับได้ 4 ฉาก: c2-01 · c7-06 · c8-10 · c10-07 — 2026-09-08) */
+      const pad = fMU * 0.34;   /* ★ ฮาโลหนาขึ้นเป็น .24em แล้ว กล่องต้องเผื่อตาม */
+      cand.push({ x:x - wMU/2 - pad, y:y - fMU*0.8 - pad, w:wMU + pad*2, h:fMU*1.5 + pad*2,
+                  cx:x, cy:y, fMU, label:z.label });
+    }
+    /* ชื่อมณฑลขยับไม่ได้ (ผูกกับ `at`) ชนแล้วทำได้อย่างเดียวคือซ่อน — ชื่อสั้นได้ที่ก่อน */
     const hit = (a,b) => a.x < b.x+b.w && b.x < a.x+a.w && a.y < b.y+b.h && b.y < a.y+a.h;
     cand.sort((A,B) => A.w - B.w);
     const out = [];
     for (const c of cand){
+      if(skin().zhouNudge){
+        const cross=(a,b,p,q)=>{const turn=(u,v,w)=>(v.x-u.x)*(w.y-u.y)-(v.y-u.y)*(w.x-u.x);return turn(a,b,p)*turn(a,b,q)<0&&turn(p,q,a)*turn(p,q,b)<0;};
+        const options=[[0,0]];for(const r of [8,16,24,32,44,60,80,105,130])for(const [dx,dy] of [[0,-1],[0,1],[-1,0],[1,0],[-.7,-.7],[.7,-.7],[-.7,.7],[.7,.7]])options.push([dx*r,dy*r]);
+        for(const [dx,dy] of options){
+          const t={...c,x:c.x+dx*mu,y:c.y+dy*mu,cx:c.cx+dx*mu,cy:c.cy+dy*mu};
+          if(t.cx<0||t.cx>W||t.cy<0||t.cy>H)continue;
+          if(out.some(o=>hit(t,o))||(avoid||[]).some(o=>o&&o.w>0&&hit(t,o)))continue;
+          const crosses=(Z.edges||[]).some(e=>{const pts=[...(e.pts||[]),...(e.close||[])];return pts.slice(1).some((p,i)=>cross({x:c.cx,y:c.cy},{x:t.cx,y:t.cy},{x:pts[i][0],y:pts[i][1]},{x:p[0],y:p[1]}));});
+          if(crosses)continue;
+          out.push(t);break;
+        }
+        continue;
+      }
       if (out.some(o => hit(c,o))) continue;
-      if (avoid && avoid.some(o => o && o.w > 0 && hit(c,o))) continue;   /* ป้ายของฉากมาก่อน */
+      if (avoid && avoid.some(o => o && o.w > 0 && hit(c,o))) continue;
       out.push(c);
     }
     return out;
   }
 
-  /* วาดชื่อมณฑลลงใน `#L-labels` **ก่อน** ชื่อเมือง — ชั้นเดียวกันแต่เรียงก่อน = อยู่ล่าง
-     (ได้พฤติกรรมเฟดตอนกล้องเคลื่อนของชั้นนั้นมาฟรีด้วย — §17 ข้อ 5) */
-  function paintRegionNames(boxes){
+  /* วาดลง `#L-labels` **ก่อน** ชื่อเมือง = ชั้นเดียวกันแต่อยู่ล่างกว่า
+     และได้พฤติกรรมเฟดตอนกล้องเคลื่อนของชั้นนั้นมาด้วย (§17 ข้อ 5) */
+  function paintZhouNames(boxes){
     for (const b of boxes){
-      const t = mk('text',{x:b.cx, y:b.cy, 'text-anchor':'middle', class:'rlabel'});
-      t.style.fontSize   = b.fMU + 'px';
-      t.style.strokeWidth = (b.fMU * 0.19) + 'px';
-      t.style.letterSpacing = (b.fMU * RNAME_TRACK) + 'px';
+      const t = mk('text',{x:b.cx, y:b.cy, 'text-anchor':'middle', class:'zlabel'});
+      t.style.fontSize      = b.fMU + 'px';
+      t.style.strokeWidth   = (b.fMU * 0.24) + 'px';   /* ฮาโลหนาขึ้น = ชนะภูมิประเทศได้เอง */
+      t.style.letterSpacing = (b.fMU * ZNAME_TRACK) + 'px';
       t.textContent = b.label;
       layers.labels.append(t);
     }
@@ -580,6 +778,17 @@ TK.map = (function(){
      วัดความหนาแน่นจริงที่กล้องฉาก (vbw 766) ได้ 56 จุดในกรอบ: town 23 · pass 10 ·
      city 10 · valley 4 · camp 3 · capital 2 · mountain 2 · ford 2
      → **town คือตัวที่ทำให้รก และเป็นตัวที่มีข้อมูลน้อยที่สุด** จึงเป็นอันดับท้ายสุด */
+  // เมืองยุทธศาสตร์ในภาพรวม: ประตู/คลังของแนวรบหลัก ใช้ทะเบียนเดิมเท่านั้น
+  const overviewCities=new Set(['hanzhong','baidi','tianshui','chencang','xiangyang','jiangling','hefei','wancheng','wuwei','jinyang','fanyang','linzi','chenliu','pengcheng','nanhai','jianning']);
+  const mapLevel=()=>vb.w>=1100?'overview':vb.w>=700?'region':'local';
+  function placeAtZoom(id,p){
+    const level=mapLevel();
+    if(level==='overview'&&['xiling','shouchun'].includes(id))return false;
+    if(forceLabels.has(id))return true;
+    if(level==='overview')return p.type==='capital'||overviewCities.has(id);
+    if(level==='region')return p.type!=='town';
+    return true;
+  }
   const SYM_RANK = {
     capital:1, pass:1, ford:1, valley_mouth:1, camp:1, farm:1, depot:1, fort:1, mountain:1,
     city:2, town:3
@@ -680,7 +889,7 @@ TK.map = (function(){
       /* ★ สถานที่ที่ฉากชี้ให้ดู **ข้ามเพดาน LOD** — ตั้งแต่ 2026-09-06 รูปคือหมุดของฉาก
          ถ้ามันถูกซ่อนเพราะเพดาน ฉากก็จะไม่มีอะไรให้ชี้ (เดิมมีหมุดกลมสำรอง ตอนนี้ไม่มีแล้ว) */
       const isHot = forceLabels && forceLabels.has && forceLabels.has(id);
-      if (!g.querySelector('.pin-sym') || (!isHot && (SYM_RANK[ty] || 3) > cap)) return;
+      if (!g.querySelector('.pin-sym') || (skin().zoomTiers ? !placeAtZoom(id,TK.places[id]) : (!isHot && (SYM_RANK[ty] || 3) > cap))) return;
       if (!alive(TK.places[id].year, TK.places[id].gone)) return;   /* ยังไม่มี หรือหมดหน้าที่ไปแล้ว */
       cand.push({ id, ty, g,
                   pri: (forceLabels && forceLabels.has && forceLabels.has(id) ? 0 : 1),
@@ -762,7 +971,8 @@ TK.map = (function(){
       const sym = g.querySelector('.pin-sym');
       const dot = g.querySelector('.pin-dot');
       const symOn = !!sym && sym.dataset.lod === '1';
-      g.style.display = (symOn || labelPins.has(id)) ? '' : 'none';
+      const cityDot=skin().zoomTiers&&artOn&&placeAtZoom(id,TK.places[id])&&['capital','city','town'].includes(TK.places[id].type);
+      g.style.display = (alive(TK.places[id].year,TK.places[id].gone) && (symOn || labelPins.has(id) || cityDot)) ? '' : 'none';
       if (sym) sym.style.display = symOn ? '' : 'none';
       if (dot) dot.style.display = symOn ? 'none' : '';
     }
@@ -949,7 +1159,9 @@ TK.map = (function(){
     el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
   }
 
-  function setOwners(owners, hold){
+  function setOwners(owners, hold, animate=true){
+    layers.regions.dataset.fade=String(animate);
+    if(!animate)layers.regions.dispatchEvent(new Event('ownershipreset'));
     ownerHold = null;
     const wait = {};
     for (const id in owners){
@@ -968,16 +1180,97 @@ TK.map = (function(){
   /* ── กล้อง: tween viewBox ──
      applyVB ทำแค่เขียน attribute เดียว ห้ามเรียก relayout ที่นี่
      เพราะระหว่าง tween มันจะยิงวินาทีละ 60 ครั้ง × (122 หมุด + 26 ป้าย) = เครื่องตาย */
-  function applyVB(){
+  /* ══ ★★★ กล้องสองจังหวะ — `preview` ระหว่างเคลื่อน · `commit` ตอนนิ่ง ═════════
+     เจ้าของทัก 2026-09-08: *"ทำไมแผนที่มัน Lag จัง เลื่อนที่ กดดูฉากทีอย่างแลคเลย"*
+
+     ★ ต้นเหตุ: `viewBox` **ไม่ใช่การขยับภาพ** มันคือการเปลี่ยนระบบพิกัดของทั้ง SVG
+       เบราว์เซอร์จึงทิ้งภาพเดิมแล้ววาดใหม่ทั้ง 973 path + ภาพ raster สองใบ **ทุกเฟรม**
+       (วัดจริงด้วย CDP: ~148 ms/เฟรม ≈ 6.6 fps · ไม่มีชั้นไหนเป็น "ตัวการ" —
+        ตัวการคือทุกชั้นถูกวาดใหม่พร้อมกัน)
+
+     ★ ทางแก้: ระหว่างเคลื่อน **ปล่อย `viewBox` ไว้เฉย ๆ** แล้วขยับ `#L-cam` ด้วย
+       `transform` ซึ่ง GPU ขยับภาพที่ราสเตอร์ไว้แล้วได้โดยไม่ต้องวาดใหม่
+       พอนิ่งค่อย commit เป็น `viewBox` จริงทีเดียว แล้วล้าง transform
+
+     ── คณิตศาสตร์ (ที่มาของสูตร ไม่ใช่เลขที่จูนด้วยตา) ──
+       viewBox ที่ตั้งอยู่จริงคือ `vbBase` · viewBox ที่ *อยาก* ให้เห็นคือ `vb`
+       จุด p ถูกวาดที่  (p − base.xy) × (จอ / base.w)
+       เราอยากให้มันไปอยู่ที่ (p − vb.xy) × (จอ / vb.w)
+       ⇒ ต้องมี T ที่ทำให้  T(p) = s·p + (base.xy − s·vb.xy)   เมื่อ  s = base.w / vb.w
+       ⇒ `translate(tx,ty) scale(s)`
+       ★ ใช้ได้เพราะ `fitBox()` คุมสัดส่วนให้ base กับ vb เท่ากันเสมอ (w/h ตรงกัน)
+
+     ⚠⚠ **`toMap()` ต้องใช้ CTM ของ `cam` ไม่ใช่ของ `svg`** — ระหว่างลาก สองอันนี้
+       ต่างกันด้วย transform ที่เพิ่งใส่ ถ้าใช้ของ svg จุดยึดตอนหมุนล้อจะเพี้ยนทันที
+     ⚠ ระหว่างเคลื่อน หมุด/ไอคอน/เส้น จะ **โตตาม transform** แล้วสแนปตอน commit
+       ซึ่งเป็นพฤติกรรมเดียวกับที่โครงการรับไว้แล้วตอนกล้องบิน (ดูคอมเมนต์ที่ settleLabels)
+       — ไม่ใช่ของใหม่ที่ผู้อ่านต้องมาเรียนรู้  */
+  let vbBase = null;                 /* viewBox ที่ตั้งอยู่บน <svg> จริง ๆ ตอนนี้ */
+  let vbScreen = null;
+  let cameraMoving = false, cameraWaiters = [];
+
+  function cameraSettled(){
+    cameraMoving = false;
+    host.classList.remove('camera-moving');
+    /* ★★ **ปล่อย `will-change` ทันทีที่กล้องนิ่ง** (เพิ่ม 2026-09-10)
+       `will-change:transform` ที่ค้างไว้ = บอก Chrome ว่า "เตรียม texture ไว้เลย"
+       มันจึงแรสเตอร์ SVG ทั้งก้อนเก็บไว้ แล้วเวลาสเกลก็ยืดภาพนั้นแทนที่จะวาดเวกเตอร์ใหม่
+       → ตัวหนังสือเบลอแม้ตอนอยู่นิ่ง · เป็นตัวการที่สองคู่กับ `foreignObject`
+       (ตัวแรกแก้แล้วที่ map-surface.js — ดูหัวไฟล์นั้น)
+       ⚠ ห้ามถอด `will-change` ตอน *กำลัง* เคลื่อน — ตรงนั้นมันคือของที่ทำให้ลื่น */
+    svg.style.willChange = 'auto';
+    layers.labels.style.opacity = 1;
+    layers.focus.style.opacity = 1;
+    const ready = cameraWaiters; cameraWaiters = [];
+    ready.forEach(fn => fn());
+  }
+
+  function commitVB(){
     svg.setAttribute('viewBox',
       `${vb.x.toFixed(1)} ${vb.y.toFixed(1)} ${vb.w.toFixed(1)} ${vb.h.toFixed(1)}`);
+    cam.removeAttribute('transform');
+    svg.style.transform = '';
+    /* ⛔ เดิมตั้ง `willChange='transform'` ค้างไว้ตรงนี้ — ถอดแล้ว (ดู cameraSettled)
+       ตอน commit คือ "นิ่งแล้ว" จึงต้องคืนให้เบราว์เซอร์วาดเวกเตอร์ตามปกติ */
+    svg.style.willChange = 'auto';
+    vbBase = { x:vb.x, y:vb.y, w:vb.w, h:vb.h };
+    window.TKMapSurface?.sync(vb);          /* ★ ชั้นพื้นอยู่นอก SVG แล้ว ต้องบอกให้ตามมาเอง */
+    const sw=host.clientWidth, sh=host.clientHeight;
+    const k=Math.min(sw/vbBase.w,sh/vbBase.h);
+    vbScreen={k,ox:(sw-k*vbBase.w)/2,oy:(sh-k*vbBase.h)/2};
   }
+
+  function previewVB(){
+    if (!vbBase) return commitVB();          /* ยังไม่เคย commit — ตั้งฐานก่อน */
+    const s  = vbBase.w / vb.w;
+    const {k,ox,oy}=vbScreen; // ไม่มีการอ่าน layout ระหว่างเฟรมกล้อง
+    const tx = k * s * (vbBase.x - vb.x) + (1-s) * ox;
+    const ty = k * s * (vbBase.y - vb.y) + (1-s) * oy;
+    /* เลื่อนชั้นที่ compositor เก็บไว้ แทนการวาด SVG พร้อม mask ใหม่ทุกเฟรม
+       offset ต้องนับขอบว่างของ preserveAspectRatio="meet" ด้วย */
+    if(!cameraMoving){cameraMoving=true;host.classList.add('camera-moving');}
+    svg.style.willChange='transform';
+    window.TKMapSurface?.sync(vb);          /* ★ ชั้นพื้นเดินตามกล้องระหว่างลาก/บิน */
+    svg.style.transform = `translate3d(${tx}px,${ty}px,0) scale(${s})`;
+  }
+
+  /* ชื่อเดิม — ที่ไหนที่ต้องการผลทันทีและไม่ได้อยู่ในจังหวะเคลื่อน ให้เรียกอันนี้ */
+  function applyVB(){ commitVB(); }
 
   /* ระหว่างกล้องเคลื่อน ซ่อนป้ายไว้ก่อน แล้วค่อยจัดใหม่ตอนนิ่ง
      — เร็วกว่ามาก และดูดีกว่าปล่อยให้ป้ายวิ่งสะบัดตามกล้อง */
   let settleTimer = null;
-  function settleLabels(delay){
+  /* ★ `keepVisible` — commit + จัดป้ายใหม่ **โดยไม่ต้องซ่อนอะไรเลย**
+     ใช้ตอนลากด้วยมือเท่านั้น (เจ้าของทัก 2026-09-08: *"มันจะติด ๆ ขัด ๆ"*)
+     เหตุผลที่ทำได้เฉพาะตอนลาก: การลากคือ **เลื่อนล้วน สเกล = 1 เป๊ะ**
+     ป้ายจึงไม่บวมไม่หดตามระหว่างทาง มันแค่เลื่อนไปกับแผ่น = ไม่มีอะไรให้ซ่อน
+     (ตอนหมุนล้อ/กล้องบิน สเกล ≠ 1 ป้ายจะบวมจริง — ยังต้องซ่อนเหมือนเดิม) */
+  function settleLabels(delay, keepVisible){
     clearTimeout(settleTimer);
+    if (keepVisible){
+      settleTimer = setTimeout(() => { commitVB(); relayout(); updateWhere(); cameraSettled(); }, delay);
+      return;
+    }
     layers.labels.style.opacity = 0;
     /* ★★ **หมุดห้ามหาย** ระหว่างกล้องเคลื่อน (เจ้าของทัก 2026-09-06:
        *"ทำไมทุกครั้งที่กดเล่นฉาก หมุดสัญลักษณ์มันจะหายไปทุกครั้งแล้วค่อยกลับมา
@@ -991,10 +1284,14 @@ TK.map = (function(){
        ★ วงเน้นยังต้องซ่อน (§17 — วงของฉากเก่าห้ามค้างระหว่างบิน) */
     layers.focus.style.opacity  = 0;   // วงเน้นของฉากเก่าห้ามค้างระหว่างกล้องบิน (§17)
     settleTimer = setTimeout(() => {
+      /* ★★ **commit ก่อน relayout เสมอ** — relayout อ่าน `getScreenCTM` เพื่อแปลง
+         กล่องของแผงลอยเป็นพิกัดแผนที่ ถ้ายังมี transform ค้าง มันจะคำนวณผิดทั้งชุด */
+      commitVB();
       relayout();
       updateWhere();
       layers.labels.style.opacity = 1;
       layers.focus.style.opacity  = 1;
+      cameraSettled();
     }, delay);
   }
 
@@ -1155,6 +1452,8 @@ TK.map = (function(){
     let w, h;
     if (h0 / w0 > ar) { h = h0; w = h0 / ar; }   // กรอบสูงกว่าจอ → ขยายด้านกว้าง
     else              { w = w0; h = w0 * ar; }   // กรอบเตี้ยกว่าจอ → ขยายด้านสูง
+    /* โหมดปก หรือ "ขอเต็มแผ่น" ในผิวที่ยอมให้มีขอบว่าง — คืนกรอบที่ไม่ถูกหนีบ */
+    if (galleryMode() || (skin().coverFit && w0 >= W && h0 >= H)) return {w, h, x:cx-w/2, y:cy-h/2};
     if (w > W){ w = W; h = w * ar; }
     if (h > H){ h = H; w = h / ar; }
     return { w, h,
@@ -1167,9 +1466,19 @@ TK.map = (function(){
     if (!cam) return;
     const dur = ms === undefined ? 1100 : ms;
     const to = fitBox(cam[0], cam[1], cam[2], cam[3]);
-    settleLabels(dur + 60);            // จัดป้ายใหม่ทีเดียวตอนกล้องหยุด
+    clearTimeout(settleTimer);
+    layers.labels.style.opacity = 0;
+    layers.focus.style.opacity = 0;
     camCancel = TK.engine.tween({...vb}, to, dur,
-      cur => { vb = cur; applyVB(); });
+      /* ★ ระหว่างบินใช้ `previewVB` (transform) — ไม่แตะ viewBox
+         ⚠⚠ **commit ต้องผูกกับ `onDone` ของ tween ไม่ใช่ตัวจับเวลา**
+           รอบแรกผมผูกไว้กับ `settleLabels(dur+60)` ซึ่งเป็นการ *เดา* ว่า tween จบแล้ว
+           ตัวทดสอบจับได้ทันที: ตัวจับเวลายิงก่อน tween เดินเสร็จ → commit ค่าเก่า
+           แล้ว tween เดินต่อจนจบ ทิ้ง transform ค้างไว้และ viewBox ไม่เคยตามไปเลย
+           ผลคือ relayout ทั้งชุดคำนวณบนกล้องที่ผิด (ป้ายไปคนละที่กับแผนที่)
+         ★ `settleLabels` ยัง commit ซ้ำอีกที — ตอนนั้นเป็น no-op ปลอดภัย เก็บไว้เป็นตาข่าย */
+      cur => { vb = cur; previewVB(); },
+      () => { camCancel = null; commitVB(); settleLabels(0); });
   }
 
   const resetView = ms => flyTo([0,0,W,H], ms);
@@ -1422,9 +1731,10 @@ TK.map = (function(){
      ★ ต้องเรียก **หลัง** scalePins ของฉากนี้ ไม่งั้น symBox ยังเป็นของฉากก่อน */
   function fitPinsToSymbols(){
     clearHot();
-    layers.markers.querySelectorAll('.mk-pin[data-place]').forEach(g => {
+    layers.markers.querySelectorAll('.mk-pin[data-place], .mk-clash[data-place]').forEach(g => {
       const id = g.dataset.place, s = symBox[id];
       if (!s) return;                                  /* ไม่มีรูป — ใช้หมุดกลมแบบเดิม */
+      g.classList.add('has-place-icon');
       const halo = g.querySelector('.mk-halo'), dot = g.querySelector('.mk-dot');
       const cx = s.x + s.w/2, cy = s.y + s.h/2;
       const r0 = Math.max(s.w, s.h) * 0.62, r1 = r0 * 1.42;
@@ -1456,6 +1766,7 @@ TK.map = (function(){
 
   function clearMarkers(){
     mkTimers.forEach(clearTimeout);  mkTimers = [];
+    cameraWaiters = [];
     mkTweens.forEach(cancel => cancel()); mkTweens = [];
     layers.markers.replaceChildren();
     /* ผีของโหมดสองเอกภพตายพร้อมฉาก — สีแผ่นดินไม่ต้องคืนที่นี่
@@ -1634,7 +1945,8 @@ TK.map = (function(){
            **มันคือกองทัพ** เส้นจึงหนาเท่าทัพบกและมีเลขกำลังพลเหมือนกัน
            สิ่งที่ต่างคือรูปหน่วย (ตัวเรือ) กับร่องรอยที่เส้นทิ้งไว้ (WAKE_DASH) */
         const fleet  = !!m.fleet;
-        const wRoute = supply ? ROUTE_PX * 0.62 : ROUTE_PX;
+        const baseRoute=skin().routePx;
+        const wRoute = supply ? baseRoute * 0.62 : baseRoute;
         let under = null;
         if (!echo){
           under = mk('path',{d:rt.d, class:'mk-route mk-route-under' +
@@ -1675,7 +1987,7 @@ TK.map = (function(){
           headG = mk('g',{class:'mk-head' + (m.retreat ? ' retreat' : ''),
             transform:`translate(${tip.x.toFixed(1)},${tip.y.toFixed(1)}) rotate(${ang.toFixed(1)})`});
           const hs = mk('g',{class:'mk-unit-s', transform:`scale(${mu0.toFixed(3)})`});
-          const hp = mk('path',{d:'M 3,0 L -17,8.5 L -12,0 L -17,-8.5 Z'});
+          const hp = mk('path',{d:skin().arrowHead});
           hp.setAttribute('fill', col);
           hp.setAttribute('stroke', '#0b0d12');
           hp.setAttribute('stroke-width', 1);
@@ -1717,7 +2029,7 @@ TK.map = (function(){
            ถ้าใช้รูปเดียวกัน คนอ่านจะนับมันเป็นทัพอีกทัพหนึ่งบนแผนที่ */
         const sh = supply ? mk('circle',{r:5})
                  : fleet  ? unitShape('boat', 9)
-                          : unitShape(m.unit || 'square', 9);
+                          : skin().marchGlyph ? mk('path',{d:skin().marchGlyph,class:'march-standard'}) : unitShape(m.unit || 'square', 9);
         if (m.retreat){ sh.setAttribute('fill','none');
                         sh.setAttribute('stroke',col);
                         sh.setAttribute('stroke-width',3); }
@@ -1813,7 +2125,12 @@ TK.map = (function(){
             g.setAttribute('transform', `translate(${pt.x},${pt.y})`);
           }, settle));
         if (animate === false) settle();
-        else { walking++; mkTimers.push(setTimeout(run, startAt)); }
+        else {
+          walking++;
+          const schedule = () => mkTimers.push(setTimeout(run, startAt));
+          if (cameraMoving) cameraWaiters.push(schedule);
+          else schedule();
+        }
       }
 
       if (m.type === 'clash'){
@@ -1833,6 +2150,8 @@ TK.map = (function(){
            relayout() ถอด " scale(...)" ออกก่อนใส่ใหม่อยู่แล้ว รูปแบบนี้จึงเข้ากันได้ */
         const g = mk('g',{class:'mk-clash',
           transform:`translate(${p.x},${p.y}) scale(${screenMU().toFixed(3)})`});
+        g.dataset.place=m.place;g.dataset.ev='battle';g.dataset.evc='#935847';
+        g.append(mk('path',{d:'M -7,-8 L 5,4 L 8,4 L 8,1 L -4,-11 Z M 7,-8 L -5,4 L -8,4 L -8,1 L 4,-11 Z M -8,5 L -4,9 M 8,5 L 4,9',class:'battle-blades'}));
         g.append(mk('circle',{r:16, class:'mk-clash-ring'}));
         g.append(mk('circle',{r:24, class:'mk-clash-ring r2'}));
         g.append(mk('path',{d:'M -7,-7 L 7,7 M 7,-7 L -7,7', class:'mk-clash-x'}));
@@ -1853,8 +2172,10 @@ TK.map = (function(){
   }
 
   function relayout(){
+    host.dataset.mapLevel=mapLevel();
+    applyZhouLines();          /* ★ เส้นแบ่งมณฑล — สร้างครั้งเดียว แล้วเปิด/ปิดตาม LOD */
     const screenW = host.clientWidth || 1000;
-    const FONT_PX = 13.5;
+    const FONT_PX = skin().fontPx;
     /* สเกลจริงของ meet = ด้านที่คับกว่า — คำนวณตรง ๆ อย่าเดาจากความกว้างอย่างเดียว */
     const scale = Math.min(screenW / vb.w, (host.clientHeight || 1) / vb.h);
     const mu = 1 / scale;                      // map-unit ต่อ 1 screen px
@@ -1864,7 +2185,8 @@ TK.map = (function(){
     layers.markers.querySelectorAll('.mk-unit-s, .mk-chip-s').forEach(g =>
       g.setAttribute('transform', `scale(${mu.toFixed(3)})`));
     layers.markers.querySelectorAll('.mk-route').forEach(p => {
-      const w = (p.classList.contains('supply') ? ROUTE_PX * 0.62 : ROUTE_PX);
+      const base=skin().routePx;
+      const w = (p.classList.contains('supply') ? base * 0.62 : base);
       p.style.strokeWidth = ((p.classList.contains('mk-route-under') ? w + 4.5 : w) * mu) + 'px';
       /* ระยะประของสายเสบียงต้องคงที่บนจอเหมือนทุกอย่างอื่น — แต่แตะเฉพาะเส้นที่วิ่งจบแล้ว
          (ถ้าเส้นยังวิ่งอยู่ dasharray คือกลไกวาด ห้ามยุ่ง — ดูที่ dashoffset ว่าเป็น 0 หรือยัง) */
@@ -1904,8 +2226,10 @@ TK.map = (function(){
        จะไปคำนวณเองด้วยมือไม่ได้) */
     const avoid = [];
     {
+      /* ★ ใช้ CTM ของ `cam` เพื่อให้ผลถูกเสมอ ไม่ว่าจะมี transform ค้างหรือไม่
+         (ตอนนี้ relayout ถูกเรียกหลัง commit เสมอ แต่ผูกกับ cam แล้วไม่ต้องพึ่งลำดับ) */
       const svgEl = layers.markers.ownerSVGElement;
-      const ctm = svgEl && svgEl.getScreenCTM();
+      const ctm = cam && cam.getScreenCTM();
       if (ctm){
         const inv = ctm.inverse(), pt = svgEl.createSVGPoint();
         const toMap = (x,y) => { pt.x = x; pt.y = y; return pt.matrixTransform(inv); };
@@ -1914,22 +2238,43 @@ TK.map = (function(){
           const a = toMap(r.left, r.top), b = toMap(r.right, r.bottom);
           avoid.push({ x:a.x, y:a.y, w:b.x - a.x, h:b.y - a.y });
         }
+        /* ★★ แผงลอย HTML ที่ทับแผนที่อยู่ ก็ต้องเป็นสิ่งกีดขวางด้วย (เพิ่ม 2026-09-08)
+           เดิมนับแค่ป้ายของฉาก (`.mk-chip/.mk-cap`) เพราะแผงพวกนี้อยู่มุมล่างซ้าย
+           ซึ่งมีแต่ชื่อเมืองเล็ก ๆ · พอย้าย `#hud` ขึ้นมาแนวนอนมุมบนซ้าย มันไปนั่งทับ
+           ที่ที่ **ชื่อมณฑล** อยู่พอดี แล้วชื่อก็มุดหายไปใต้แผงโดยไม่มีอะไรฟ้อง
+           ⚠ ต้องเช็ค `hidden`/`display` ด้วย — `#placecard` ซ่อนอยู่เกือบตลอดเวลา
+             ถ้าไม่เช็คจะได้กล่องขนาดศูนย์มาจองที่มุมซ้ายบนตลอดกาล */
+        for (const sel of ['#where', '#hud', '#placecard', '#legend']){
+          const el = document.querySelector(sel);
+          if (!el || el.hidden) continue;
+          /* ⚠ **ห้ามข้ามเพราะ `opacity:0`** — `#where` เฟดเข้า/ออกตามการเคลื่อนกล้อง
+             ตอน relayout ทำงานมันมักจะยังโปร่งอยู่ ถ้าข้ามตอนนั้น ป้ายจะไปนอนใต้มัน
+             แล้วโผล่มาทับกันพอดีตอนมันเฟดเข้า (เจอจริง: "ยงโจว" หายใต้ #where)
+             → จองที่ตามกล่องจริงเสมอ · ใช้ `display/hidden` ตัดสินอย่างเดียวพอ */
+          const cs = getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+          const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
+          const a = toMap(r.left, r.top), b = toMap(r.right, r.bottom);
+          avoid.push({ x:a.x, y:a.y, w:b.x - a.x, h:b.y - a.y });
+        }
       }
     }
     /* ★ ชื่อมณฑลจองที่ก่อน แล้วให้ชื่อเมืองหลบ — เมืองเจาะจงกว่า จึงเป็นฝ่ายได้ที่
        แต่ชื่อมณฑลวางตายตัวที่ `labelAt` ขยับไม่ได้ จึงต้องเป็นฝ่ายจอง */
-    const rBoxes = regionNameBoxes(vb, screenW, avoid);
-    for (const b of rBoxes) avoid.push({x:b.x, y:b.y, w:b.w, h:b.h});
+    const artStudio = skin().snapLabels;   /* ★ ปัดป้ายลงพิกเซลจอ — ใช้ชื่อเดิมไว้ให้ diff อ่านง่าย */
+    let zBoxes = zhouNameBoxes(vb, screenW, skin().zhouAvoidPins ? avoid.concat(Object.values(symBox)) : avoid);
+    for (const b of zBoxes) avoid.push({x:b.x, y:b.y, w:b.w, h:b.h});
     const res = TK.labeler.layout(TK.places, vb, screenW, {
-      force: forceLabels, quiet: quietLabels, fontPx: FONT_PX, pinR: 4, avoid,
+      force: forceLabels, quiet: quietLabels, fontPx: FONT_PX, pinR: 4, avoid, mu,
+      eligible: (id,p) => alive(p.year,p.gone)&&(!skin().zoomTiers||placeAtZoom(id,p)),
       /* ★★ แผ่นวาดใหม่ไม่มีชื่อพิมพ์มาให้เลยสักตัว — ต้องบอก labeler ตรง ๆ
          ไม่งั้นมันกรองด้วย `!p.map` ตามเดิมแล้วเงียบไป 94 จาก 107 จุด
          (เหตุผลเต็มอยู่หัวไฟล์ labeler.js และที่ opts.plateNames) */
       plateNames: !artOn,
       /* ปล่อยอันดับรองเพิ่มบนแผ่นที่ไม่มีชื่อพิมพ์ — ค่านี้เจ้าของเป็นคนเคาะจากภาพ */
-      rankBonus: artOn ? 1 : 0,
+      rankBonus: artOn ? skin().rankBonus : 0,
       /* เพดานป้าย: แผ่นเก่าพิมพ์ชื่อไว้ให้แล้วจึงพอที่ 26 · แผ่นใหม่โล้น ต้องมากกว่า */
-      maxLabels: artOn ? 44 : 26,
+      maxLabels: artOn ? skin().maxLabels(screenW, host.clientHeight) : 26,
       pinBox: (id) => symBox[id],      /* ★ กล่องจริงของรูป ไม่ใช่วงกลม 4px */
       fontFamily: '"Leelawadee UI","Segoe UI",Tahoma,sans-serif'
     });
@@ -1945,13 +2290,14 @@ TK.map = (function(){
     applyPinVisibility();
 
     layers.labels.replaceChildren();
-    paintRegionNames(rBoxes);   /* ก่อนชื่อเมือง = อยู่ชั้นล่างกว่า */
+    paintZhouNames(zBoxes);   /* ก่อนชื่อเมือง = อยู่ชั้นล่างกว่า */
     for (const L of res.labels){
-      const t = mk('text',{x:L.x, y:L.y, 'text-anchor':L.anchor,
+      const lx=artStudio?vb.x+Math.round((L.x-vb.x)/mu)*mu:L.x,ly=artStudio?vb.y+Math.round((L.y-vb.y)/mu)*mu:L.y;
+      const t = mk('text',{x:lx, y:ly, 'text-anchor':L.anchor,
         class:'plabel' + (forceLabels.has(L.id) ? ' hot' : '')});
       t.style.fontSize = L.fontMU + 'px';
       /* ฮาโลบางกว่านี้ไม่ชัด หนากว่านี้สระไทยจะเชื่อมกันเป็นก้อนดำอ่านไม่ออก */
-      t.style.strokeWidth = (L.fontMU * 0.17) + 'px';
+      t.style.strokeWidth = (L.fontMU * (artStudio?.12:.17)) + 'px';
       t.textContent = TK.places[L.id].label;
       layers.labels.append(t);
       labelEl[L.id] = t;
@@ -1962,7 +2308,9 @@ TK.map = (function(){
   function toMap(evt){
     const pt = svg.createSVGPoint();
     pt.x = evt.clientX; pt.y = evt.clientY;
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
+    /* ⚠ **CTM ของ `cam` ไม่ใช่ของ `svg`** — ระหว่างลาก/ซูม cam มี transform ค้างอยู่
+       ใช้ของ svg จะได้พิกัดก่อนขยับ แล้วจุดยึดตอนหมุนล้อเพี้ยนทันที */
+    return pt.matrixTransform(cam.getScreenCTM().inverse());
   }
 
   function bindPanZoom(){
@@ -1980,51 +2328,128 @@ TK.map = (function(){
        ⚠ ห้ามแก้ด้วยการเพิ่ม z-index — ปัญหาไม่ใช่ลำดับการวาด แต่เป็นการจับ pointer */
     const onChrome = e => e.target.closest('#maptools, #hud, #spine, #where, #seasonnote');
 
+    /* ══ ★★★ ทำไมการลากเคยพัง — และมันไม่ใช่ความผิดของโค้ดลากเลย (2026-09-08) ══
+       เจ้าของทัก: *"พอเราลากแล้วมันไปติดคลุมดำ เท่านั้นยังไม่พอมันเลื่อนไม่ได้อีกเลย
+        มันจะติด ๆ ขัด ๆ วิธีแก้คือเราต้องไปกดคลิกที่ว่างที่ไม่ใช่แผนที่ถึงจะเลื่อนได้ใหม่"*
+
+       **วัดของจริงในเบราว์เซอร์แล้ว** (ติดตัวดักเหตุการณ์ที่ document แล้วลากจริง)
+       ลำดับที่ได้คือ `pointerdown@path` → **`selectstart@path`** → `pointerup`
+       และ `getSelection()` คืนค่าเป็น *ข้อความบนแผนที่*:
+         "ทัพหลวงออกจากที่นี่ ในเอกภพของเรา / อี๋หลิง — และไม่มีใครกลับมา"
+
+       ⇒ ทุกครั้งที่ลาก เบราว์เซอร์ **เลือกข้อความ** บนแผ่นไปด้วย
+         1. **"คลุมดำ"** = แถบไฮไลต์ของ selection ทับป้ายบนแผนที่ (ธีมมืด = แถบดำ)
+         2. **"เลื่อนไม่ได้อีกเลย"** = พอมี selection ค้างอยู่ใต้เมาส์ การกดลากครั้งถัดไป
+            กลายเป็น **drag-and-drop ของข้อความที่เลือกไว้** ซึ่งเป็นกลไกของเบราว์เซอร์
+            มันยิง `pointercancel` แล้วกลืน pointermove ที่เหลือทั้งชุด → แผนที่ค้าง
+         3. **"คลิกที่ว่างแล้วหาย"** = คลิกที่ไม่มีข้อความ → selection ถูกล้าง → ลากได้ใหม่
+            (นี่คือหลักฐานชิ้นที่ชี้ตรงที่สุด — ตรงกับที่เจ้าของสังเกตมาเป๊ะ)
+
+       ★ ต้นแบบของ Codex ไม่มีอาการนี้เพราะ CSS ของเขาปิด selection ไว้ที่ตัวป้าย
+         (`.place-node text{user-select:none}`) — ไม่ใช่เพราะโค้ดลากเขียนดีกว่า
+       ⚠ ห้ามแก้ด้วย `e.preventDefault()` ที่ `pointerdown` — มันฆ่า `click` ของหมุดด้วย
+         ที่ถูกคือปิดที่ CSS (`#tkmap{user-select:none}`) แล้วกัน drag ของรูปที่นี่ */
+    host.addEventListener('dragstart', e => e.preventDefault());
+
+    /* ══ ★★★ ที่กั้นแบบ "ยางยืด" ไม่ใช่กำแพง (แก้รอบสอง 2026-09-08 ดึก) ══════════
+       รอบแรกผมใส่ **กำแพงตาย** (clamp ตรง ๆ) เพื่อกันแผ่นหลุดจอ · เจ้าของทักทันที:
+       *"ทำไมมันลากไปฝั่งซ้ายไม่ได้แล้ว มันติด ๆ"* — และเขาถูก
+
+       ★ วัดของจริงแล้ว: มุมมอง "ทั้งแผ่นดิน" มี `vb.w = 1650` = ความกว้างแผ่นพอดี
+         → `x` ถูกล็อกที่ 0 ทั้งสองทาง **ลากแนวนอนไม่ขยับเลยสักพิกเซล**
+         มือยังลากอยู่แต่ภาพนิ่ง = อ่านว่า "เสีย" ไม่ใช่ "สุดทางแล้ว"
+
+       ★ ที่ถูกคือให้มัน **ขยับได้เสมอ แล้วดีดกลับเอง** — ระหว่างลากปล่อยให้เกินขอบได้
+         SLACK ของขนาดจอ · ปล่อยมือแล้วดีดกลับเข้ากรอบด้วย tween สั้น ๆ
+         ได้ทั้งสองอย่างที่เจ้าของขอ: ไม่ติด และไม่หลงอยู่กับพื้นดำ
+       ⚠ ต้นแบบของ Codex ก็ clamp เหมือนกัน (`updateView`) — ที่มันไม่สะดุดเพราะกล้อง
+         ของเขาไม่เคยกว้างเท่าแผ่นพอดีแบบของเรา · ลอกพฤติกรรมมาเฉย ๆ จึงไม่พอ */
+    const SLACK = 0.22;                       /* เกินขอบได้กี่ส่วนของหน้าจอ ระหว่างลาก */
+    const lim = (v, hi) => skin().twoSided ? Math.min(Math.max(0,hi),Math.max(Math.min(0,hi),v)) : Math.min(Math.max(0, hi), Math.max(0, v));
+    const clampVB = (slack) => {
+      const sx = slack ? vb.w * SLACK : 0, sy = slack ? vb.h * SLACK : 0;
+      if(skin().twoSided){vb.x=Math.min(Math.max(0,W-vb.w)+sx,Math.max(Math.min(0,W-vb.w)-sx,vb.x));vb.y=Math.min(Math.max(0,H-vb.h)+sy,Math.max(Math.min(0,H-vb.h)-sy,vb.y));return;}
+      vb.x = Math.min(Math.max(0, W - vb.w) + sx, Math.max(-sx, vb.x));
+      vb.y = Math.min(Math.max(0, H - vb.h) + sy, Math.max(-sy, vb.y));
+    };
+    /* ตำแหน่งที่ *ควร* อยู่จริง ๆ (ไม่มี slack) — ใช้ตอนดีดกลับ */
+    const inBounds = () => ({ x: lim(vb.x, W - vb.w), y: lim(vb.y, H - vb.h), w: vb.w, h: vb.h });
+
     host.addEventListener('wheel', e => {
       if (onChrome(e)) return;       // หมุนล้อบนพาเนลไม่ควรซูมแผนที่
       e.preventDefault();
       if (camCancel) camCancel();
       const p = toMap(e);
       const k = e.deltaY > 0 ? 1.16 : 1/1.16;
-      const nw = Math.min(W, Math.max(140, vb.w * k)), nh = nw * fitAR();
+      const maxWidth=skin().coverFit?Math.max(W,H/fitAR()):W;
+      const nw = Math.min(maxWidth, Math.max(140, vb.w * k)), nh = nw * fitAR();
       vb.x = p.x - (p.x - vb.x) * (nw/vb.w);
       vb.y = p.y - (p.y - vb.y) * (nh/vb.h);
       vb.w = nw; vb.h = nh;
-      applyVB();
-      scalePins();                // ★ ไอคอนต้องโตตามทันที ไม่งั้นกระตุกตอนหยุดหมุน
-      settleLabels(160);          // จัดป้ายใหม่ตอนหยุดหมุนล้อ
+      clampVB(false);             /* ⚠ ซูมใช้ที่กั้น *แข็ง* — ยางยืดมีไว้สำหรับมือที่กำลังลากเท่านั้น */
+      previewVB();
+      /* ⛔ เคยเรียก `scalePins()` ตรงนี้ให้ไอคอนโตตามทันที — **ถอดออกแล้ว**
+         ตอนนี้ transform ขยายไอคอนให้เองอยู่แล้ว เรียกซ้ำ = ขยายสองชั้น
+         และมันคือการวาดใหม่ 107 หมุดกลางการหมุนล้อ ซึ่งเป็นสิ่งที่เรากำลังเลี่ยง */
+      settleLabels(160);          // commit + จัดป้ายใหม่ตอนหยุดหมุนล้อ
     }, {passive:false});
 
     host.addEventListener('pointerdown', e => {
       if (onChrome(e)) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;   // คลิกขวา/กลางไม่ใช่การลาก
       if (camCancel) camCancel();
-      from = {mx:e.clientX, my:e.clientY, vx:vb.x, vy:vb.y};
-      host.setPointerCapture(e.pointerId);
-      host.classList.add('grabbing');
+      clearTimeout(settleTimer);
+      from = {id:e.pointerId, mx:e.clientX, my:e.clientY, vx:vb.x, vy:vb.y, moved:false};
     });
     host.addEventListener('pointermove', e => {
-      if (!from) return;
-      /* ลากแผนที่ด้วยมือ — ซ่อนแค่ป้ายกับวงเน้น เหมือนตอนกล้องบิน (2026-09-06)
-         หมุดเลื่อนไปกับ viewBox เองอยู่แล้ว ไม่มีเหตุให้หาย */
-      if (!from.moved){ from.moved = true; layers.labels.style.opacity = 0;
-                        layers.focus.style.opacity = 0; }
-      const sc = vb.w / (host.clientWidth || 1);
-      vb.x = from.vx - (e.clientX - from.mx) * sc;
-      vb.y = from.vy - (e.clientY - from.my) * sc;
-      applyVB();
+      if (!from || e.pointerId !== from.id) return;
+      const dx = e.clientX - from.mx, dy = e.clientY - from.my;
+      /* ★★ **จับ pointer ตอนขยับจริง ไม่ใช่ตอนกดลง** (แบบเดียวกับต้นแบบของ Codex)
+         `setPointerCapture` ย้ายเป้าหมายของทั้งชุดมาที่ `#stage` — ถ้าจับตั้งแต่กดลง
+         การ *คลิก* หมุดก็จะไปลงที่ `#stage` แทนที่จะลงที่หมุด (นี่คือโรคเดียวกับที่
+         เคยทำให้ปุ่มบนแผนที่ตายสนิท ดูคอมเมนต์ `onChrome` ข้างบน)
+         ★ 4 px คือเส้นแบ่ง "คลิก" กับ "ลาก" — ต่ำกว่านี้คือมือสั่นตอนคลิก ไม่ใช่การลาก */
+      if (!from.moved){
+        if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        from.moved = true;
+        host.setPointerCapture(e.pointerId);
+        host.classList.add('grabbing');
+      }
+      /* ⛔ เคยซ่อนป้าย+วงเน้นทันทีที่เริ่มลาก — **ถอดออกแล้ว** มันคือส่วน "ขัด ๆ"
+         ที่เจ้าของทัก · การลากคือเลื่อนล้วน สเกล = 1 ป้ายไม่บวมไม่หด ไม่มีอะไรให้ซ่อน */
+      const sc = screenMU();
+      vb.x = from.vx - dx * sc;
+      vb.y = from.vy - dy * sc;
+      clampVB(true);              /* ระหว่างลาก = ยางยืด ขยับได้เสมอ */
+      previewVB();
     });
-    const end = () => {
-      if (from) settleLabels(60);   // ปล่อยเมาส์แล้วค่อยจัดป้าย
-      from = null; host.classList.remove('grabbing');
+    const end = e => {
+      if (!from || (e && e.pointerId !== from.id)) return;
+      const moved = from.moved;
+      from = null;
+      host.classList.remove('grabbing');
+      if (e && host.hasPointerCapture(e.pointerId)) host.releasePointerCapture(e.pointerId);
+      if (!moved){ if (cameraMoving) settleLabels(0, true); return; }
+      /* ★ ดีดกลับเข้ากรอบถ้าลากเลยขอบไป — ป้ายไม่ต้องซ่อนเพราะสเกลยังเป็น 1 เหมือนเดิม */
+      const back = inBounds();
+      if (Math.abs(back.x - vb.x) > 0.5 || Math.abs(back.y - vb.y) > 0.5){
+        clearTimeout(settleTimer);
+        camCancel = TK.engine.tween({...vb}, back, 240,
+          cur => { vb = cur; previewVB(); },
+          () => { camCancel = null; commitVB(); relayout(); updateWhere(); cameraSettled(); });
+      } else settleLabels(60, true);   // commit + จัดป้ายใหม่ โดยไม่กะพริบ
     };
     host.addEventListener('pointerup', end);
     host.addEventListener('pointercancel', end);
 
     /* ย่อ-ขยายหน้าต่างแล้วต้องแก้สัดส่วน viewBox ตาม ไม่งั้นสเกลเพี้ยนทันที */
     window.addEventListener('resize', () => {
+      if (camCancel) camCancel();
       const c = { x: vb.x + vb.w/2, y: vb.y + vb.h/2 };
       const f = fitBox(c.x - vb.w/2, c.y - vb.h/2, vb.w, vb.w * fitAR());
-      vb = f; applyVB();
+      /* ★ ย่อ/ขยายหน้าต่างต้อง **commit ทันที** — สัดส่วนเปลี่ยน สูตร preview
+         ตั้งอยู่บนสมมติฐานว่า base กับ vb สัดส่วนเท่ากัน ซึ่งพังตรงนี้พอดี */
+      vb = f; commitVB();
       scaleCache = null;            // สัดส่วนเปลี่ยน ต้องคำนวณขนาดหมุดใหม่
       settleLabels(180);
     });
@@ -2127,6 +2552,7 @@ TK.map = (function(){
                 setPlate, get plateNew(){ return plateNew; }, get hasPlate(){ return !!TK.plateWater; },
                 setArt, setArtTheme, get artOn(){ return artOn; },
                 setPlaceClick,
+                isPlaceActive: id => !!TK.places[id] && alive(TK.places[id].year,TK.places[id].gone),
                 get glyphs(){ return GLYPH; }, unitShape,
                 showMirror, hideMirror, get mirrorOn(){ return !!mirrorSnap; },
                 get viewBox(){ return {...vb}; } };

@@ -28,6 +28,7 @@
 <meta name="theme-color"        content="#12151a">
 
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ui-studio.css">
 
 <!-- ⚠⚠ ต้องตัดสินใจ "โชว์หน้าเปิดไหม" **ก่อนเบราว์เซอร์วาด** ไม่ใช่ตอน ui.js ทำงาน
      (เจ้าของทัก 2026-09-02: *"กดเข้าลิงก์มามันเด้งหน้า Intro เสร็จแล้วเปลี่ยนไปหน้าแรกทันที"*)
@@ -101,8 +102,9 @@ try{
   </div>
 </div>
 
-<div id="stage">
-  <div id="where"></div>
+<!-- ★ `map-rich` ติดมากับ stage ตรง ๆ ตั้งแต่ 2026-09-08 — ปุ่มสลับความเข้มถูกถอดถาวร
+     (เจ้าของ: "ตั้งเป็นเข้มตลอดเวลา") · เหตุผลเต็มอยู่ที่ ui.js ตรงที่ปุ่มเคยอยู่ -->
+<div id="stage" class="map-rich">
   <div id="seasonnote"></div>
   <div id="maptools">
     <button id="btnSpine"  title="สงครามทั้งก้อนในหน้าจอเดียว — 53 ปี สามฝ่าย และราคาที่จ่ายไปทั้งหมด">แกนสงคราม</button>
@@ -117,7 +119,6 @@ try{
          อันนี้คือชั้นภาพจากฝั่ง Codex ที่ลอกน้ำจากหมึกของ map.jpg เองและตัดภูเขา
          ด้วยหน้ากากจากหมึกเขียวของแผ่น — ไม่มีภูมิศาสตร์ใหม่ถูกประดิษฐ์ขึ้น -->
     <button id="btnBase"   title="สลับแผ่นพื้น — แผ่นพิมพ์ต้นฉบับ หรือชั้นภาพที่วาดใหม่บนพิกัดเดียวกัน">แผ่น: ต้นฉบับ</button>
-    <button id="mapmode"   title="สลับความเข้มของแผนที่พื้น">แผนที่: ปกติ</button>
     <!-- ★ 2026-09-02 — เดิมซ่อนไว้เป็นคำขีดเส้นใต้เล็ก ๆ ท้ายคอลัมน์ ซึ่งไม่มีใครหาเจอ
          (เจ้าของหาไม่เจอเองสองรอบ) · ทางกลับไปคำนำกับทางลัดสามฉากต้องอยู่ที่เดียว
          กับปุ่มอื่นทั้งหมด -->
@@ -128,7 +129,16 @@ try{
        เจ้าของถามหา "เมือง interactive" ที่เห็นในหน้าต้นแบบของ Codex · หมุดเป็นของเราเอง
        มาตลอด สิ่งที่ขาดคือการ์ดนี้ · ช่องที่แสดงคือสิ่งที่ต้องใช้ตอนสอบเทียบตำแหน่งจริง -->
   <div id="placecard" hidden></div>
-  <div id="hud"></div>
+  <!-- ★★ แถบบนซ้าย — `#where` กับ `#hud` เรียงแถวเดียวกัน (เจ้าของสั่ง 2026-09-08:
+       *"อยากให้ UI ทุกอันเรียงอยู่ด้านบนเสมอกัน"*)
+       ⚠ ต้องเป็น flex ไม่ใช่การตั้ง `left` เป็นตัวเลข — ความกว้างของ `#where` เปลี่ยนตาม
+         ชื่อที่กล้องเล็งอยู่ ("ทั้งแผ่นดิน" สั้นกว่า "เฉิงตู · อู่เว่ย · ฉางอาน" มาก)
+         ตั้งเลขตายตัวเมื่อไหร่ ได้ช่องว่างเหวอะหรือทับกันแล้วแต่ฉาก
+       ★ `flex-wrap` ไว้ให้ HUD ตกลงมาบรรทัดล่างเองบนจอแคบ แทนที่จะไปทับปุ่ม -->
+  <div id="topleft">
+    <div id="where"></div>
+    <div id="hud"></div>
+  </div>
   <!-- คลุมเฉพาะพื้นที่แผนที่ ไม่คลุมคอลัมน์นิยาย — จะได้อ่านไปดูไปได้ -->
   <div id="spine"></div>
 </div>
@@ -182,6 +192,13 @@ try{
 <!-- รูปเขตแบบไม่มีรอยต่อ สร้างจาก geo.js + ชายฝั่ง (tools/build_geo.js)
      ลบบรรทัดนี้เพื่อกลับไปใช้รูปที่วาดมือใน geo.js -->
 <script src="data/geo_fill.js"></script>
+<script src="data/provinces.js"></script>  <!-- มณฑล 州: เขตไหนสังกัดไหน + จุดวางชื่อ -->
+<!-- ★ เส้นแบ่งมณฑล — ต้องโหลด *หลัง* provinces.js (มันต่อ TK.zhou ที่ไฟล์นั้นสร้าง)
+     ที่มาของทุกพิกัดอยู่หัวไฟล์ · ตัวตรวจคือ tools/check_zhou.js -->
+<script src="data/zhou_lines.js"></script>
+<!-- ★ ชั้น Environment (ป่า/ดิน) — classic script ไม่มี fetch จึงใช้ได้ทั้ง http และ file://
+     ไม่ต้องใส่ใน tools/build_map_inline.js (ดูเหตุผลที่ loadEnv ใน strategic.js) -->
+<script src="assets/map-art/environment/environment-layer.js"></script>
 <!-- ★ roads.js แทน routes.js ของสองโปรเจกต์ก่อน (DECISIONS §4)
      มันสร้าง TK.routes ให้ในรูปแบบเดิมทุกประการ engine จึงไม่ต้องแก้ -->
 <!-- ⛔ ชั้นน้ำที่ *เราสกัดเอง* — ยังปิดอยู่ (DECISIONS §14 เฟส 5)
@@ -200,6 +217,7 @@ try{
 
 <script src="js/labeler.js"></script>
 <script src="js/engine.js"></script>
+<script src="js/map-surface.js"></script>
 <script src="js/strategic.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/spine.js"></script>
@@ -208,5 +226,6 @@ try{
   TK.ui.init();
   TK.spine.init();
 </script>
+<script src="js/ui-studio.js"></script>
 </body>
 </html>

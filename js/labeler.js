@@ -48,8 +48,18 @@ TK.labeler = (function(){
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   const wCache = new Map();
+  const metricsCache = new Map();
+  function textMetrics(text,fontPx,fontFamily){
+    const key=text+'|'+fontPx+'|'+fontFamily;
+    if(!metricsCache.has(key)){
+      ctx.font=`600 ${fontPx}px ${fontFamily}`;
+      const m=ctx.measureText(text);
+      metricsCache.set(key,{ascent:Math.max(fontPx*.95,m.actualBoundingBoxAscent||0),descent:Math.max(fontPx*.25,m.actualBoundingBoxDescent||0)});
+    }
+    return metricsCache.get(key);
+  }
   function textWidth(text, fontPx, fontFamily){
-    const key = text + '|' + fontPx;
+    const key = text + '|' + fontPx + '|' + fontFamily;
     if (wCache.has(key)) return wCache.get(key);
     ctx.font = `600 ${fontPx}px ${fontFamily}`;
     const w = ctx.measureText(text).width;
@@ -104,7 +114,7 @@ TK.labeler = (function(){
          (เจ้าของทัก 2026-09-08: *"แผนที่เก่ามันมีเมืองทุกเมืองเขียนชื่อบอกหมด ของเราปัจจุบันมันยังโล้น"*) */
     const plateNames = opts.plateNames !== false;
 
-    const mu     = vb.w / screenW;          // map-unit ต่อ 1 screen px
+    const mu     = opts.mu || vb.w / screenW; // ใช้ meet scale จริงเมื่อมีขอบว่างบนจอ
     const fontMU = fontPx * mu;             // ป้ายมีขนาดคงที่บนจอทุกระดับซูม
     const lineMU = fontMU * 1.15;
     /* ★ `rankBonus` — ปล่อยอันดับรองเพิ่มกี่ขั้น (เพิ่ม 2026-09-08)
@@ -121,7 +131,7 @@ TK.labeler = (function(){
       p.x >= vb.x - m && p.x <= vb.x + vb.w + m &&
       p.y >= vb.y - m && p.y <= vb.y + vb.h + m;
 
-    const visible = Object.entries(places).filter(inView);
+    const visible = Object.entries(places).filter(inView).filter(([id,p])=>!opts.eligible || opts.eligible(id,p));
 
     /* หมุดที่แสดง — เดิมคือ "ทุกอันที่ผ่าน LOD" ซึ่งแปลว่าเราเอาจุดขาวไปแปะทับ
        จุดที่ map.jpg พิมพ์มาให้แล้วนับร้อยจุด เหลื่อมกันไปสองสามพิกเซล = เห็นเป็นจุดคู่
@@ -169,6 +179,7 @@ TK.labeler = (function(){
       if (labels.length >= cap && !force.has(id)){ hidden++; continue; }
       const wPx = textWidth(p.label, fontPx, fontFamily);
       const wMU = wPx * mu;
+      const metrics=textMetrics(p.label,fontPx,fontFamily);
       /* ★ ระยะเยื้องต้องคิดจาก **กล่องจริง** ไม่ใช่รัศมีเดียวใช้ทุกทิศ
          รูปยึดที่ฐาน → ด้านบนต้องเยื้องเท่าความสูงของรูป ส่วนด้านล่างไม่ต้องเยื้องเลย
          (ใต้จุดยึดไม่มีอะไรวาดอยู่) — ใช้รัศมีเดียวทุกทิศคือที่มาของป้ายทับรูป */
@@ -185,8 +196,9 @@ TK.labeler = (function(){
         const boxX = c.anchor === 'start' ? x
                    : c.anchor === 'end'   ? x - wMU
                    :                        x - wMU/2;
-        const box = { x:boxX - pad, y:y - lineMU*0.82,
-                      w:wMU + pad*2, h:lineMU*1.02 };
+        // รวมสระบน/ล่างและ halo ของไทย ไม่ประมาณจาก line-height อย่างเดียว
+        const box = { x:boxX - pad, y:y - metrics.ascent*mu - pad,
+                      w:wMU + pad*2, h:(metrics.ascent+metrics.descent)*mu + pad*2 };
         if (!taken.some(t => overlaps(box, t))){
           taken.push(box);
           placed = { id, x, y, anchor:c.anchor, fontMU };

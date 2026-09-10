@@ -1,0 +1,83 @@
+{
+  "run": "verified",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [
+    {
+      "action": "drag",
+      "round": 0,
+      "frames": 75,
+      "median": 16.699999999999818,
+      "p95": 16.900000000000546,
+      "over50": 0
+    },
+    {
+      "action": "scene",
+      "round": 0,
+      "scriptMS": 37.799999952316284,
+      "frames": 74,
+      "median": 16.699999999999818,
+      "p95": 33.900000000000546,
+      "over50": 3
+    },
+    {
+      "action": "drag",
+      "round": 1,
+      "frames": 74,
+      "median": 16.69999999999891,
+      "p95": 17,
+      "over50": 0
+    },
+    {
+      "action": "scene",
+      "round": 1,
+      "scriptMS": 32.200000047683716,
+      "frames": 70,
+      "median": 16.700000000000728,
+      "p95": 66.60000000000036,
+      "over50": 5
+    }
+  ],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 1,
+    "list": [
+      {
+        "sev": "warning",
+        "where": "scene c10-05",
+        "what": "scene label \"กองประจำชะง่อน — ยันได้ทั้งฤดูร้อน แล้วถอยตามเส้นเหมือนที่ฮั่นเคยทำ   12k\" overlaps the map name \"หลานเถียน\" (by 54×2 px)",
+        "how": "move the pin onto its real dot, shorten the label, or reframe the camera"
+      }
+    ]
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "cached surface mounted",
+      "pass": true
+    },
+    {
+      "check": "surface ownership matches all scenes",
+      "pass": true,
+      "checked": 132,
+      "failed": []
+    },
+    {
+      "check": "hold ownership until movement released",
+      "pass": true,
+      "held": true,
+      "released": true,
+      "surface": true
+    },
+    {
+      "check": "original map fallback",
+      "pass": true,
+      "display": "none",
+      "opacity": 0.45,
+      "art": false
+    }
+  ]
+}

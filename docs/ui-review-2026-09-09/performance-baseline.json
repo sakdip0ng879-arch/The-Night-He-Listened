@@ -1,0 +1,55 @@
+{
+  "run": "baseline",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [
+    {
+      "action": "drag",
+      "round": 0,
+      "frames": 49,
+      "median": 116.60000000000036,
+      "p95": 199.89999999999964,
+      "over50": 29
+    },
+    {
+      "action": "scene",
+      "round": 0,
+      "frames": 8,
+      "median": 250.20000000000073,
+      "p95": 333.1999999999989,
+      "over50": 4
+    },
+    {
+      "action": "drag",
+      "round": 1,
+      "frames": 32,
+      "median": 150.1999999999989,
+      "p95": 282.6999999999989,
+      "over50": 31
+    },
+    {
+      "action": "scene",
+      "round": 1,
+      "frames": 11,
+      "median": 150,
+      "p95": 450,
+      "over50": 8
+    }
+  ],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 1,
+    "list": [
+      {
+        "sev": "warning",
+        "where": "scene c10-05",
+        "what": "scene label \"กองประจำชะง่อน — ยันได้ทั้งฤดูร้อน แล้วถอยตามเส้นเหมือนที่ฮั่นเคยทำ   12k\" overlaps the map name \"หลานเถียน\" (by 54×2 px)",
+        "how": "move the pin onto its real dot, shorten the label, or reframe the camera"
+      }
+    ]
+  },
+  "scenes": 0
+}

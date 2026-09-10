@@ -1,0 +1,114 @@
+{
+  "run": "main-final-studio",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "scene destination",
+      "pass": true
+    },
+    {
+      "check": "search",
+      "pass": true
+    },
+    {
+      "check": "place card",
+      "pass": true
+    },
+    {
+      "check": "no army control panel",
+      "pass": true
+    },
+    {
+      "check": "legacy animated circles hidden",
+      "pass": true
+    },
+    {
+      "check": "opening map gallery",
+      "pass": true
+    },
+    {
+      "check": "gallery labels toggle",
+      "pass": true
+    },
+    {
+      "check": "gallery restores scene",
+      "pass": true
+    },
+    {
+      "check": "expand map",
+      "pass": true
+    },
+    {
+      "check": "interrupt camera with click",
+      "pass": true
+    },
+    {
+      "check": "wheel keeps map point under cursor",
+      "pass": true,
+      "errorMapUnits": 0.04358444394829419
+    },
+    {
+      "check": "mobile fits",
+      "pass": true
+    },
+    {
+      "check": "overview capitals and provinces without passes",
+      "pass": true,
+      "visible": [
+        "chengdu",
+        "changan",
+        "luoyang",
+        "yecheng",
+        "xuchang",
+        "jianye",
+        "wuchang",
+        "hanzhong",
+        "tianshui",
+        "chencang",
+        "xiangyang",
+        "jiangling",
+        "shouchun",
+        "hefei"
+      ],
+      "types": [
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city"
+      ],
+      "provinces": 9,
+      "level": "overview",
+      "view": {
+        "w": 3540,
+        "h": 1950,
+        "x": -945,
+        "y": 0
+      }
+    },
+    {
+      "check": "near view hides province names and settles vector text",
+      "pass": true
+    }
+  ]
+}

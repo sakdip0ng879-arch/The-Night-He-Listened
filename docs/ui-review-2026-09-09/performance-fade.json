@@ -1,0 +1,76 @@
+{
+  "run": "fade",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [
+    {
+      "action": "drag",
+      "round": 0,
+      "frames": 84,
+      "median": 16.699999999999818,
+      "p95": 17.299999999999272,
+      "over50": 0
+    },
+    {
+      "action": "scene",
+      "round": 0,
+      "scriptMS": 39.700000047683716,
+      "frames": 66,
+      "median": 16.699999999999818,
+      "p95": 50.29999999999927,
+      "over50": 4
+    },
+    {
+      "action": "drag",
+      "round": 1,
+      "frames": 78,
+      "median": 16.69999999999891,
+      "p95": 17,
+      "over50": 0
+    },
+    {
+      "action": "scene",
+      "round": 1,
+      "scriptMS": 32.60000002384186,
+      "frames": 78,
+      "median": 16.700000000000728,
+      "p95": 50.100000000000364,
+      "over50": 4
+    }
+  ],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "cached surface mounted",
+      "pass": true
+    },
+    {
+      "check": "surface ownership matches all scenes",
+      "pass": true,
+      "checked": 132,
+      "failed": []
+    },
+    {
+      "check": "hold ownership until movement released",
+      "pass": true,
+      "held": true,
+      "released": true,
+      "surface": true
+    },
+    {
+      "check": "original map fallback",
+      "pass": true,
+      "display": "none",
+      "opacity": 0.45,
+      "art": false
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "run": "labels-studio",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "scene destination",
+      "pass": true
+    },
+    {
+      "check": "search",
+      "pass": true
+    },
+    {
+      "check": "place card",
+      "pass": true
+    },
+    {
+      "check": "short captions",
+      "pass": true
+    },
+    {
+      "check": "expand map",
+      "pass": true
+    },
+    {
+      "check": "interrupt camera with click",
+      "pass": true
+    },
+    {
+      "check": "wheel keeps map point under cursor",
+      "pass": true,
+      "errorMapUnits": 0.04358444394829419
+    },
+    {
+      "check": "mobile fits",
+      "pass": true
+    },
+    {
+      "check": "cached surface mounted",
+      "pass": true
+    },
+    {
+      "check": "surface ownership matches all scenes",
+      "pass": true,
+      "checked": 132,
+      "failed": []
+    },
+    {
+      "check": "hold ownership until movement released",
+      "pass": true,
+      "held": true,
+      "released": true,
+      "surface": true
+    },
+    {
+      "check": "original map fallback",
+      "pass": true,
+      "display": "none",
+      "opacity": 0.45,
+      "art": false
+    }
+  ]
+}

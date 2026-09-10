@@ -2,9 +2,9 @@
   "source": "data/names.js",
   "sourceSha256": "4461e9b4f6b4416bf463957803e61507a1a7415a3e83982a3b1038b95ae98abc",
   "count": 80,
-  "completedCount": 29,
+  "completedCount": 47,
   "approvedStyle": true,
-  "nextId": "caopi",
+  "nextId": "mengda",
   "assetPatterns": {
     "fullBody": "approved/{id}-alpha.png",
     "portrait96": "portraits/96/{id}.png",
@@ -278,8 +278,8 @@
       "label": "เฉาพี",
       "py": "Cao Pi",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caopi-alpha.png"
     },
     {
       "order": 31,
@@ -287,8 +287,8 @@
       "label": "เฉารุ่ย",
       "py": "Cao Rui",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caorui-alpha.png"
     },
     {
       "order": 32,
@@ -296,8 +296,8 @@
       "label": "เฉาฟาง",
       "py": "Cao Fang",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caofang-alpha.png"
     },
     {
       "order": 33,
@@ -305,8 +305,8 @@
       "label": "เฉาเหมา",
       "py": "Cao Mao",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caomao-alpha.png"
     },
     {
       "order": 34,
@@ -314,8 +314,8 @@
       "label": "เฉาเจิน",
       "py": "Cao Zhen",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caozhen-alpha.png"
     },
     {
       "order": 35,
@@ -323,8 +323,8 @@
       "label": "เฉาส่วง",
       "py": "Cao Shuang",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caoshuang-alpha.png"
     },
     {
       "order": 36,
@@ -332,8 +332,8 @@
       "label": "เฉาเหริน",
       "py": "Cao Ren",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caoren-alpha.png"
     },
     {
       "order": 37,
@@ -341,8 +341,8 @@
       "label": "ซือหม่าอี้",
       "py": "Sima Yi",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/simayi-alpha.png"
     },
     {
       "order": 38,
@@ -350,8 +350,8 @@
       "label": "ซือหม่าซือ",
       "py": "Sima Shi",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/simashi-alpha.png"
     },
     {
       "order": 39,
@@ -359,8 +359,8 @@
       "label": "ซือหม่าเจา",
       "py": "Sima Zhao",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/simazhao-alpha.png"
     },
     {
       "order": 40,
@@ -368,8 +368,8 @@
       "label": "จางเหอ",
       "py": "Zhang He",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/zhanghe-alpha.png"
     },
     {
       "order": 41,
@@ -377,8 +377,8 @@
       "label": "เฉาหง",
       "py": "Cao Hong",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/caohong-alpha.png"
     },
     {
       "order": 42,
@@ -386,8 +386,8 @@
       "label": "กัวหวย",
       "py": "Guo Huai",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/guohuai-alpha.png"
     },
     {
       "order": 43,
@@ -395,8 +395,8 @@
       "label": "ห่าวเจา",
       "py": "Hao Zhao",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/haozhao-alpha.png"
     },
     {
       "order": 44,
@@ -404,8 +404,8 @@
       "label": "เฟ่ยเย่า",
       "py": "Fei Yao",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/feiyao-alpha.png"
     },
     {
       "order": 45,
@@ -413,8 +413,8 @@
       "label": "ฉินหลาง",
       "py": "Qin Lang",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/qinlang-alpha.png"
     },
     {
       "order": 46,
@@ -422,8 +422,8 @@
       "label": "เติ้งอ้าย",
       "py": "Deng Ai",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/dengai-alpha.png"
     },
     {
       "order": 47,
@@ -431,8 +431,8 @@
       "label": "เฉินฉวิน",
       "py": "Chen Qun",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "approved/chenqun-alpha.png"
     },
     {
       "order": 48,
@@ -732,14 +732,14 @@
       "file": null
     }
   ],
-  "lastReviewed": "2026-09-07",
-  "nextAction": "Continue Wei faction with caopi, caorui and caofang. Produce full-body alpha plus 96px and 192px portraits for each.",
+  "lastReviewed": "2026-09-09",
+  "nextAction": "Continue Wei faction with mengda, jiachong and chengji. Produce full-body alpha plus 96px and 192px portraits for each.",
   "generationMode": "built_in_imagegen",
   "sampleRevision": 3,
   "promptFile": "prompts.md",
   "qualityNotes": [
-    "Characters 1-29 have 1254x1254 RGBA full-body masters normalized to 84% canvas height.",
-    "Characters 1-29 also have transparent portrait icons at 96x96 and 192x192 under portraits/{size}/{id}.png.",
+    "Characters 1-47 have 1254x1254 RGBA full-body masters normalized to 84% canvas height.",
+    "Characters 1-47 also have transparent portrait icons at 96x96 and 192x192 under portraits/{size}/{id}.png.",
     "Background extraction is performed locally from the generated white master to avoid baked checkerboard output."
   ],
   "style": "painted_semi_realistic_adult",

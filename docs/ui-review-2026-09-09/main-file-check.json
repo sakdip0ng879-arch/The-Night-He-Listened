@@ -1,0 +1,141 @@
+{
+  "run": "main-file",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "cached surface mounted",
+      "pass": true
+    },
+    {
+      "check": "surface ownership matches all scenes",
+      "pass": true,
+      "checked": 132,
+      "failed": []
+    },
+    {
+      "check": "hold ownership until movement released",
+      "pass": true,
+      "held": true,
+      "released": true,
+      "surface": true
+    },
+    {
+      "check": "original map fallback",
+      "pass": true,
+      "display": "none",
+      "opacity": 0.45,
+      "art": false
+    },
+    {
+      "check": "no premature or expired place dots and names in all 132 scenes",
+      "pass": true,
+      "checked": 449,
+      "bad": []
+    },
+    {
+      "check": "forward camp boundaries and reverse scrubbing",
+      "pass": true,
+      "years": [
+        {
+          "year": 221,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 227,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 228,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 233,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 234,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 274,
+          "visible": false,
+          "active": false
+        },
+        {
+          "year": 228,
+          "visible": true,
+          "active": true
+        },
+        {
+          "year": 221,
+          "visible": false,
+          "active": false
+        }
+      ]
+    },
+    {
+      "check": "overview capitals and provinces without passes",
+      "pass": true,
+      "visible": [
+        "chengdu",
+        "changan",
+        "luoyang",
+        "yecheng",
+        "xuchang",
+        "jianye",
+        "wuchang",
+        "hanzhong",
+        "tianshui",
+        "chencang",
+        "xiangyang",
+        "jiangling",
+        "shouchun",
+        "hefei"
+      ],
+      "types": [
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city"
+      ],
+      "provinces": 9,
+      "level": "overview",
+      "view": {
+        "w": 3540,
+        "h": 1950,
+        "x": -945,
+        "y": 0
+      }
+    },
+    {
+      "check": "near view hides province names and settles vector text",
+      "pass": true
+    }
+  ]
+}

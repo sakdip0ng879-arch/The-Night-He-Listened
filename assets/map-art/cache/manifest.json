@@ -1,0 +1,30 @@
+{
+  "description": "Regenerate with node tools/build_map_cache.js (local server 8778 required)",
+  "coordinateSystem": [
+    1650,
+    1950
+  ],
+  "inputs": {
+    "environment/environment-layer.svg": "90d1dd7a80fd96022ce8104675c093bb5b8a6d78bcf813d64012681ba0b6e5bd",
+    "environment/environment-art.png": "3ec7c547df6a7606e0e9da53e341699188afb877442478bfc1403d853182bca7",
+    "terrain-layer.svg": "d5fb342a81cba5f05f5f3745365a01042265fc89cbe9c5fcaac3a834696bb46c",
+    "terrain-art.png": "a98791d99e8adfe567eee96d4584dc33e1464bbb0ebaf8a943f3e5a84642061f"
+  },
+  "rasterSize": [
+    1650,
+    1950
+  ],
+  "render": {
+    "environmentOpacity": 0.82,
+    "regionGroupOpacity": 0.45,
+    "regionStrokeWidth": 1.5,
+    "reliefOpacity": 0.72,
+    "reliefFilter": "grayscale(1) brightness(1.06) contrast(1.22)",
+    "reliefComposite": "multiply",
+    "paper": "#f0e9d6"
+  },
+  "outputs": {
+    "environment.png": "054bea791e79ed386bf7312ae455667ee04d7a114f2a0264dea5a5ffae9a9ff6",
+    "relief.png": "55879d90f04aa0ff9a24f8503c1d2a08e1b21634eb896130197cdb0d9eab9f36"
+  }
+}

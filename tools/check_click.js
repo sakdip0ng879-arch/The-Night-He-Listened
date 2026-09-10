@@ -32,7 +32,9 @@ const CONTROLS = [
   ['btnSeason', `document.getElementById('btnSeason').className`],
   ['btnPlay',   `document.getElementById('btnPlay').textContent`],
   ['btnLegend', `document.getElementById('legend').hidden`],
-  ['mapmode',   `document.getElementById('mapmode').textContent`],
+  /* ⛔ 'mapmode' ถูกถอดออกจากรายการ 2026-09-08 — **ปุ่มไม่มีอยู่แล้ว**
+     เจ้าของสั่ง "ตั้งเป็นเข้มตลอดเวลา" แล้ว index.html ติดคลาส `map-rich` ให้ #stage ตรง ๆ
+     ตัวตรวจที่รอปุ่มที่ถูกถอดไปแล้วจะฟ้อง MISSING ตลอดกาล ซึ่งกลบข้อผิดพลาดจริงที่ตามมา */
   /* ⛔ btnPlate ถอดออก 2026-09-06 พร้อมโครงการแผ่นวาดเอง (DECISIONS §14 เฟส 5)
      ถ้าปลุกแผ่นกลับมาเมื่อไหร่ ให้เอาบรรทัดข้างล่างกลับมาด้วย
   // ['btnPlate',  `document.getElementById('stage').className`], */
@@ -188,7 +190,16 @@ async function main(){
      ui.js ถอนโฟกัสเมื่อ e.detail > 0 แล้ว แถวนี้เฝ้าไว้ว่ามันยังถอนอยู่ */
   await evalJs(`TK.spine.toggle(false); TK.engine.goTo(13,'jump')`);
   await wait(400);
-  for (const ctl of ['btnPlay','btnSpine','btnSeason','mapmode']){
+  for (const ctl of ['btnPlay','btnSpine','btnSeason']){
+    /* ★★ **ตรึงฉากใหม่ทุกรอบ ไม่ใช่รอบเดียวก่อนเข้าลูป** (แก้ 2026-09-08)
+       ของเดิม `goTo(13)` อยู่นอกลูป · พอรอบ btnPlay เปิดโหมดเล่นแล้วปิด ฉากที่กำลัง
+       เปลี่ยนค้างอยู่ยังเดินต่ออีกพักหนึ่ง รอบถัดไปจึงอ่านค่า *ระหว่างทาง* (6/7/12) ได้
+       แล้วตัวตรวจก็ฟ้อง DEAD ทั้งที่ Enter ไม่ได้ทำอะไรผิดเลย
+       ⚠ **ยืนยันแล้วว่าอาการนี้มีมาก่อนหน้านี้** — รัน HEAD สามครั้งก็แดงหนึ่งครั้ง
+         (12 → 13) · เป็น *ตัวตรวจที่วูบวาบ* ไม่ใช่บั๊กของแอป · ตัวตรวจที่แดงเป็นครั้งคราว
+         อันตรายกว่าตัวตรวจที่ไม่มี เพราะคนจะเรียนรู้ที่จะไม่เชื่อมัน */
+    await evalJs(`TK.spine.toggle(false); TK.engine.goTo(13,'jump')`);
+    await wait(450);
     const box = await evalJs(
       `(()=>{const e=document.getElementById('${ctl}');const r=e.getBoundingClientRect();
              return {x:Math.round(r.left+r.width/2), y:Math.round(r.top+r.height/2)};})()`);
@@ -228,15 +239,20 @@ async function main(){
   const mid = await evalJs(
     `(()=>{const r=document.getElementById('stage').getBoundingClientRect();
            return {x:Math.round(r.left+r.width*0.4), y:Math.round(r.top+r.height*0.55)};})()`);
+  /* ★★ **ต้องลากไปทาง *ซ้าย*** (แผ่นเลื่อนไปทางซ้าย = viewBox.x เพิ่ม) — ห้ามลากขวา
+     ตั้งแต่ 2026-09-08 การลากถูก **clamp ไว้ในกรอบแผ่น** (เจ้าของทัก: ลากแล้วแผ่นหลุดจอ
+     เหลือแต่พื้นดำ) · มุมมองหลังรีเซ็ตอยู่ที่ x = 0 พอดี ลากขวาจึงชนที่กั้นทันที
+     แล้วตัวตรวจจะรายงาน DEAD ทั้งที่การลาก *ทำงานถูกต้องตามที่ตั้งใจ*
+     ⚠ ก่อนแก้ ค่าเดิมของ baseline คือ 0 → **-44** ซึ่งคือ *อาการของบั๊ก* ไม่ใช่ผลที่ต้องการ */
   await send('Input.dispatchMouseEvent', {type:'mousePressed', button:'left', buttons:1, clickCount:1, ...mid});
   await wait(40);
   for (let k = 1; k <= 4; k++){
     await send('Input.dispatchMouseEvent', {type:'mouseMoved', button:'left', buttons:1,
-                                            x:mid.x + k * 22, y:mid.y});
+                                            x:mid.x - k * 22, y:mid.y});
     await wait(30);
   }
   await send('Input.dispatchMouseEvent', {type:'mouseReleased', button:'left', buttons:0,
-                                          clickCount:1, x:mid.x + 88, y:mid.y});
+                                          clickCount:1, x:mid.x - 88, y:mid.y});
   await wait(300);
   const afterPan = await evalJs(`Math.round(TK.map.viewBox.x)`);
   rows.push(['map drag', beforePan !== afterPan ? 'ok' : 'DEAD',

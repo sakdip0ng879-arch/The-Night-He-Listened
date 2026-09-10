@@ -1,0 +1,166 @@
+{
+  "run": "studio-geography3",
+  "viewport": [
+    1904,
+    980
+  ],
+  "bench": [],
+  "errors": [],
+  "selfcheck": {
+    "errors": 0,
+    "warnings": 0,
+    "list": []
+  },
+  "scenes": 0,
+  "interactions": [
+    {
+      "check": "scene destination",
+      "pass": true
+    },
+    {
+      "check": "search",
+      "pass": true
+    },
+    {
+      "check": "place card",
+      "pass": true
+    },
+    {
+      "check": "no army control panel",
+      "pass": true
+    },
+    {
+      "check": "legacy animated circles hidden",
+      "pass": true
+    },
+    {
+      "check": "opening map gallery",
+      "pass": true
+    },
+    {
+      "check": "cover zoom then release preserves centered negative origin",
+      "pass": true,
+      "before": {
+        "w": 3266.009852216749,
+        "h": 1681.0344827586207,
+        "x": -755.8581554995387,
+        "y": 147.93113550646547
+      },
+      "after": {
+        "w": 3266.009852216749,
+        "h": 1681.0344827586207,
+        "x": -755.8581554995387,
+        "y": 147.93113550646547
+      }
+    },
+    {
+      "check": "gallery labels toggle",
+      "pass": true
+    },
+    {
+      "check": "gallery restores scene",
+      "pass": true
+    },
+    {
+      "check": "expand map",
+      "pass": true
+    },
+    {
+      "check": "interrupt camera with click",
+      "pass": true
+    },
+    {
+      "check": "wheel keeps map point under cursor",
+      "pass": true,
+      "errorMapUnits": 0.04358444394829419
+    },
+    {
+      "check": "mobile fits",
+      "pass": true
+    },
+    {
+      "check": "cached surface mounted",
+      "pass": true
+    },
+    {
+      "check": "surface ownership matches all scenes",
+      "pass": true,
+      "checked": 132,
+      "failed": []
+    },
+    {
+      "check": "hold ownership until movement released",
+      "pass": true,
+      "held": true,
+      "released": true,
+      "surface": true
+    },
+    {
+      "check": "original map fallback",
+      "pass": true,
+      "display": "none",
+      "opacity": 0.45,
+      "art": false
+    },
+    {
+      "check": "overview capitals and provinces without passes",
+      "pass": true,
+      "visible": [
+        "chengdu",
+        "changan",
+        "luoyang",
+        "yecheng",
+        "xuchang",
+        "jianye",
+        "wuchang",
+        "hanzhong",
+        "baidi",
+        "tianshui",
+        "wuwei",
+        "chencang",
+        "jinyang",
+        "fanyang",
+        "wancheng",
+        "xiangyang",
+        "jiangling",
+        "shouchun",
+        "hefei",
+        "guangling"
+      ],
+      "types": [
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "capital",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city",
+        "city"
+      ],
+      "provinces": 14,
+      "level": "overview",
+      "view": {
+        "w": 3540,
+        "h": 1950,
+        "x": -945,
+        "y": 0
+      }
+    },
+    {
+      "check": "near view hides province names and settles vector text",
+      "pass": true
+    }
+  ]
+}

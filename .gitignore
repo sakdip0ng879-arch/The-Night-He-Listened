@@ -10,6 +10,10 @@ Thumbs.db
 
 # scratch
 scratch/
+# ภาพและผลวัด UI สร้างซ้ำได้จาก tools/audit_ui.js ไม่ส่งภาพตรวจทั้งเล่มขึ้น Pages
+tools/_ui-audit/
+assets/map-art/cache/*.svg
+tools/_ui-server*.log
 # สคริปต์สืบสวนชั่วคราวที่รากโปรเจกต์ — ใช้แล้วทิ้ง ไม่ใช่เครื่องมือ
 /_*.js
 

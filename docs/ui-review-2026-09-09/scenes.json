@@ -1,0 +1,1492 @@
+[
+  {
+    "id": "p0-01",
+    "title": "เอกภพที่เรารู้จัก",
+    "chapter": 0,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ใช้ปุ่มเทียบเอกภพและเส้นทางประวัติศาสตร์จริงเมื่อสอบเส้นทางแล้ว; อย่ารวมเป็นการเดินทัพของเรื่องหลัก"
+  },
+  {
+    "id": "p0-02",
+    "title": "จักรพรรดิที่ฟัง",
+    "chapter": 0,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงกล้องเฉิงตูให้สงบ เป็นจุดแยกของเรื่อง"
+  },
+  {
+    "id": "c1-01",
+    "title": "คำที่ต้องเดินสวนขึ้นไป",
+    "chapter": 1,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เก็บคำทัดทานเต็มในคอลัมน์อ่าน บนแผนที่เหลือชื่อเฉิงตู"
+  },
+  {
+    "id": "c1-02",
+    "title": "ทุนของชายที่เริ่มจากรองเท้าฟาง",
+    "chapter": 1,
+    "markers": 0,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ฉากไม่มีหมุดโดยตั้งใจ ให้พื้นที่อ่านเป็นพระเอก"
+  },
+  {
+    "id": "c1-03",
+    "title": "แผนที่ที่ไม่ใช่จิงโจว",
+    "chapter": 1,
+    "markers": 5,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นสี่เมืองหลงโย่วทีละแห่ง ฉางอานเป็นเป้าหมายรอง"
+  },
+  {
+    "id": "c1-04",
+    "title": "ประตูหลังของกวานจง",
+    "chapter": 1,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ไล่แสงจินเฉิง–อู่เวย–จางเย่ อธิบายระเบียงโดยไม่อ้างว่าเดินทัพแล้ว"
+  },
+  {
+    "id": "c1-05",
+    "title": "หนี้ที่ยังไม่ทวง",
+    "chapter": 1,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงกล้องเดียวกับบทสนทนา ไม่เพิ่มลูกศร"
+  },
+  {
+    "id": "c1-06",
+    "title": "ราชโองการสามฉบับ",
+    "chapter": 1,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "กล้องเข้าที่ก่อนทัพออกจากเฉิงตู ป้ายปลายทางสั้น"
+  },
+  {
+    "id": "c1-07",
+    "title": "อาวุธที่ไม่ได้ลงนาม",
+    "chapter": 1,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แยกไฮไลต์ราชสำนักกับแนวตะวันตก ไม่ใช้เส้นทัพแทนสนธิสัญญา"
+  },
+  {
+    "id": "c1-08",
+    "title": "น้องชายที่ควบม้ามาด่า",
+    "chapter": 1,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เหมาะเพิ่มการเดินทางหลางจง→เฉิงตู 3 วัน ต้องตรวจทางบนกราฟก่อน"
+  },
+  {
+    "id": "c1-09",
+    "title": "คำเตือนที่พูดมาสิบปี",
+    "chapter": 1,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "กลับสู่ห้องสนทนา; หยุดภาพเคลื่อนไหวหลังการเดินทาง"
+  },
+  {
+    "id": "c2-01",
+    "title": "กองหนุนที่หมดหน้าตัก",
+    "chapter": 2,
+    "markers": 4,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เปิดภาพรวมสี่เมืองกบฏแล้วเรียกชื่อทีละเมือง"
+  },
+  {
+    "id": "c2-02",
+    "title": "เซี่ยเปี้ยน — กลเก่าจากตางฉวี",
+    "chapter": 2,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [
+      "xiabian"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "รวมป้ายเซี่ยเปี้ยนที่ซ้ำกัน; แสดงเดินเข้า–ปะทะเป็นสองจังหวะ"
+  },
+  {
+    "id": "c2-03",
+    "title": "บันไดขั้นแรก",
+    "chapter": 2,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แสดงเมืองเปลี่ยนธงตามสองเดือน ไม่ตีความเป็นทั้งมณฑลเปลี่ยนทันที"
+  },
+  {
+    "id": "c2-04",
+    "title": "เทพเจ้าเสื้อขาวขึ้นที่ราบสูง",
+    "chapter": 2,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ให้หม่าเชาเดินตามเส้นเดิม คำอธิบายเผ่าอยู่คอลัมน์อ่าน"
+  },
+  {
+    "id": "c2-05",
+    "title": "โจมตีใจสำคัญกว่าโจมตีเมือง",
+    "chapter": 2,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เดินถึงจี้เฉิงแล้วหยุดก่อนบทสนทนา"
+  },
+  {
+    "id": "c2-06",
+    "title": "ประตูตะวันตก",
+    "chapter": 2,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ใช้ประตูตะวันตกเป็นจุดเน้นเดียว"
+  },
+  {
+    "id": "c2-07",
+    "title": "ทูตมาก่อนทัพถึง",
+    "chapter": 2,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แสดงการตอบรับของสามเมืองตามลำดับ ไม่สร้างลูกศรบุก"
+  },
+  {
+    "id": "c2-08",
+    "title": "ธงลง",
+    "chapter": 2,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เหมาะเพิ่มการส่งฎีกาจี้เฉิง–ฮั่นจง ถ้าตรวจเส้นทางแล้ว; แยกจากทัพ"
+  },
+  {
+    "id": "c3-01",
+    "title": "วุ่ยมองผิดทิศ",
+    "chapter": 3,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นสองแนวรบพร้อมกรอบภาพรวม คำอธิบายศึกอยู่ข้างแผนที่"
+  },
+  {
+    "id": "c3-02",
+    "title": "ตารางเกวียนของเสนาบดี",
+    "chapter": 3,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ใช้ขบวนเสบียงเดิม; ย้ายประโยคยาวไปการ์ดและคงระยะ 880 ลี้"
+  },
+  {
+    "id": "c3-03",
+    "title": "ประตูที่ไม่มีใครเคาะ",
+    "chapter": 3,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ใช้แนวตรึงที่อานติ้งกับด่านเซียว ไม่ขยับทัพที่ถูกสั่งห้ามขยับ"
+  },
+  {
+    "id": "c3-04",
+    "title": "สงครามที่เดินตามบ่อน้ำ",
+    "chapter": 3,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นท่าข้ามจินเฉิงก่อนขบวนผ่าน ไม่เพิ่มจุดข้ามใหม่"
+  },
+  {
+    "id": "c3-05",
+    "title": "คืนที่ประตูถูกเคาะจากข้างใน",
+    "chapter": 3,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ฉากกระโจม คงกล้องอานติ้ง"
+  },
+  {
+    "id": "c3-06",
+    "title": "กรงไม้กับสาส์นประจาน",
+    "chapter": 3,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เสนอจดหมาย/กรงไม้สองปลายทาง; ไม่ใช้สัญลักษณ์กองทัพ"
+  },
+  {
+    "id": "c3-07",
+    "title": "เมืองที่ถูกซื้อ ไม่ใช่ถูกตี",
+    "chapter": 3,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [
+      "wuwei"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "แยกการเข้าถึงอู่เวยกับการรบ; รวมคำบรรยายที่พิกัดเดียว"
+  },
+  {
+    "id": "c3-08",
+    "title": "สุดทางที่จางเย่",
+    "chapter": 3,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ต่อเส้นทางจากฉากก่อน จางเย่ขึ้นป้ายเมื่อขบวนถึง"
+  },
+  {
+    "id": "c3-09",
+    "title": "สวนสนามหมื่นแปด",
+    "chapter": 3,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "สวนสนามจี้เฉิงเป็นฉากพัก ไม่ทำขบวนออกศึกใหม่"
+  },
+  {
+    "id": "c4-01",
+    "title": "ผู้เฝ้ามองยอมรับผิด",
+    "chapter": 4,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ฉากลั่วหยางคงที่ ให้ผู้เฝ้ามองนำ"
+  },
+  {
+    "id": "c4-02",
+    "title": "บัญชีบนโต๊ะ",
+    "chapter": 4,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "บัญชี 23 เมืองควรเป็นข้อมูลข้างเรื่อง ไม่สุ่มเติม 23 หมุด"
+  },
+  {
+    "id": "c4-03",
+    "title": "สามประโยคของเฉาเจิน",
+    "chapter": 4,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นเฉินชางและเจียถิงสลับกัน อธิบายประตูสองบาน"
+  },
+  {
+    "id": "c4-04",
+    "title": "หกหมื่นออกจากเฉินชาง",
+    "chapter": 4,
+    "markers": 3,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "สองแนวรุกอยู่คนละแถวในรายการขบวน; เปิดพร้อมกันได้เพราะเป็นภาพรวม"
+  },
+  {
+    "id": "c4-05",
+    "title": "แม่ทัพที่ปล่อยให้เมืองแตก",
+    "chapter": 4,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แสดงจี้เฉิงกับสันเหนือ–ใต้เป็นตำแหน่งป้องกัน"
+  },
+  {
+    "id": "c4-06",
+    "title": "เทียนสุ่ยแตก หนานอานแตก",
+    "chapter": 4,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เดือนเก้า→เดือนสิบ แสดงเมืองแตกแยกจากการถือเขต"
+  },
+  {
+    "id": "c4-07",
+    "title": "สิบเก้าวันบนที่ราบสูง",
+    "chapter": 4,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เพิ่มจังหวะวันที่ 12/23 ในการ์ด; เส้นทางใหม่ต้องยืนยันก่อน"
+  },
+  {
+    "id": "c4-08",
+    "title": "ทัพกลับจากเหอซี",
+    "chapter": 4,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เดินย้อนระเบียงด้วยเส้นที่มีอยู่ แล้วคงปลายทางหลงซี"
+  },
+  {
+    "id": "c4-09",
+    "title": "สามก้อนที่ฉีซาน",
+    "chapter": 4,
+    "markers": 4,
+    "routes": 3,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "เลขกำกับสามกองและรายชื่อข้างแผนที่; ไม่ลากป้ายยาวข้ามทุ่ง"
+  },
+  {
+    "id": "c4-10",
+    "title": "ห้าสิบเอ็ดวัน",
+    "chapter": 4,
+    "markers": 8,
+    "routes": 4,
+    "duplicates": [
+      "tianshui"
+    ],
+    "longLabels": 0,
+    "priority": "สูง",
+    "proposal": "แบ่งเข้าตี–ตรึง–ถอน; เก็บสองทางถอนเป็นจังหวะท้าย ลด 8 หมุดที่เล่าพร้อมกัน"
+  },
+  {
+    "id": "c4-11",
+    "title": "ราคาของเสียงนั้น",
+    "chapter": 4,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงจี้เฉิงเทียบสวนสนามครั้งก่อน ให้ความเงียบทำงาน"
+  },
+  {
+    "id": "c5-01",
+    "title": "เมืองที่ไม่ยอมถอย",
+    "chapter": 5,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ใช้เฉิงตูเป็นตำแหน่งอ้างอิงจาง ๆ ไม่แสดงเส้นกลับที่ไม่ได้เดิน"
+  },
+  {
+    "id": "c5-02",
+    "title": "ไอ้หนุ่มนั่นไปก่อนข้าอีก",
+    "chapter": 5,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เสนอข่าวสารลั่วหยาง→จี้เฉิง เมื่อยืนยันเส้นได้"
+  },
+  {
+    "id": "c5-03",
+    "title": "สิ่งเดียวที่เอกภพนี้มี",
+    "chapter": 5,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ให้จูเก๋อเลี่ยงมาถึงก่อนบทสนทนา"
+  },
+  {
+    "id": "c5-04",
+    "title": "ทุนก้อนสุดท้าย",
+    "chapter": 5,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงมุมจี้เฉิง ไม่มีภาพเคลื่อนไหวเพิ่ม"
+  },
+  {
+    "id": "c5-05",
+    "title": "จงเป็นสิ่งที่ข้าเป็นไม่ได้",
+    "chapter": 5,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงมุมจี้เฉิงเพื่อไม่ตัดอารมณ์"
+  },
+  {
+    "id": "c5-06",
+    "title": "ของขวัญชิ้นสุดท้าย",
+    "chapter": 5,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นสองกลุ่มผู้คนด้วยการ์ด ไม่ใช้ทัพเดิน"
+  },
+  {
+    "id": "c5-07",
+    "title": "รายชื่อบนเตียง",
+    "chapter": 5,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เส้นเสบียงเป็นภาพอ้างอิงนิ่ง ไม่เล่นเหมือนเพิ่งส่งขบวนใหม่"
+  },
+  {
+    "id": "c5-08",
+    "title": "เรื่องหม่าซู่",
+    "chapter": 5,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "บทสนทนาหนึ่งตำแหน่ง ลดป้ายแผนที่เหลือชื่อเมือง"
+  },
+  {
+    "id": "c5-09",
+    "title": "หนี้ของกวนอวี่",
+    "chapter": 5,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "คงมุมเดียวกับเตียงและคำสั่งก่อนหน้า"
+  },
+  {
+    "id": "c5-10",
+    "title": "หน้าต่างด้านเหนือ",
+    "chapter": 5,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ปิดภาคด้วยกล้องนิ่ง ลดวงกระเพื่อม"
+  },
+  {
+    "id": "c6-01",
+    "title": "รัฐจริง ๆ",
+    "chapter": 6,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "อธิบายระบบรัฐผ่านข้อมูลข้างเรื่อง ไม่เพิ่มทัพตามรายชื่อบุคคล"
+  },
+  {
+    "id": "c6-02",
+    "title": "แปดวัน หนึ่งพันสองร้อยลี้",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [
+      "fangling"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "แบ่ง 8 วันเดินทาง→16 วันล้อม; รวมป้ายซินเฉิง"
+  },
+  {
+    "id": "c6-03",
+    "title": "กระดานปี 227",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ภาพรวมที่ตั้งทัพ; เน้นความต่างฉางอานกับเฉินชาง"
+  },
+  {
+    "id": "c6-04",
+    "title": "ประตูหน้าบานแรก",
+    "chapter": 6,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เส้นจากเทียนสุ่ยชัดพอ ไม่เพิ่มลูกศรจากฮั่นจง"
+  },
+  {
+    "id": "c6-05",
+    "title": "ยี่สิบสองวันของห่าวเจา",
+    "chapter": 6,
+    "markers": 4,
+    "routes": 2,
+    "duplicates": [
+      "chencang"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "ล้อม→กองหนุนถึง; รายละเอียดเครื่องล้อมอยู่คอลัมน์อ่าน"
+  },
+  {
+    "id": "c6-06",
+    "title": "ถอนล้อม ไม่ถอนทัพ",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ค่ายคงที่กับเสบียงเคลื่อน แยกสองบทบาทให้ชัด"
+  },
+  {
+    "id": "c6-07",
+    "title": "แนวรั้วของกัวหวย",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แนวรั้วขึ้นก่อนขบวนกัวหวย เพื่ออ่านว่าอ้อม/คุมทางใด"
+  },
+  {
+    "id": "c6-08",
+    "title": "ศิลาหน้าค่ายหลวง",
+    "chapter": 6,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ศิลาฮั่นจงเป็นฉากพัก"
+  },
+  {
+    "id": "c6-09",
+    "title": "สิบแปดวันเหนือแนวรั้ว",
+    "chapter": 6,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [
+      "yangxi"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "เน้นการอ้อมรั้วก่อนปะทะหยางซี; รวมป้ายซ้ำ"
+  },
+  {
+    "id": "c6-10",
+    "title": "คนที่ลั่วหยางส่งมา",
+    "chapter": 6,
+    "markers": 2,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เดินทางไปรับตำแหน่ง ไม่เน้นวงรบ"
+  },
+  {
+    "id": "c6-11",
+    "title": "ถนนสองเส้น",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นเจียถิงบนสายเสบียงหนึ่งสาย ลดประโยคซ้อน"
+  },
+  {
+    "id": "c6-12",
+    "title": "หกวันที่ไม่มีข้าว",
+    "chapter": 6,
+    "markers": 4,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ตัดสายเสบียงเป็นจุดเปลี่ยน; เล่นสองทางรุกตาม wave เดิม"
+  },
+  {
+    "id": "c6-13",
+    "title": "คนแรกที่ยืนขึ้นคือหม่าซู่",
+    "chapter": 6,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ชี้มู่เหมินกับประสบการณ์เสบียง ไม่สร้างการเดินทางย้อนหลังเอง"
+  },
+  {
+    "id": "c6-14",
+    "title": "ชายคนสุดท้ายของตระกูลหม่า",
+    "chapter": 6,
+    "markers": 7,
+    "routes": 2,
+    "duplicates": [
+      "mumen"
+    ],
+    "longLabels": 1,
+    "priority": "สูง",
+    "proposal": "แบ่งถอนทัพหลวง–กองหลังมู่เหมิน–ถอนเว่ยเหยียน ลดคำบรรยาย 7 ชุดพร้อมกัน"
+  },
+  {
+    "id": "c6-15",
+    "title": "จดหมายถึงคนตาย",
+    "chapter": 6,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "แยกจดหมายสามเดือนจากเส้นถอนที่เป็นเหตุการณ์อ้างอิง"
+  },
+  {
+    "id": "c7-01",
+    "title": "ระบบแทนการชิงคืน",
+    "chapter": 7,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ให้โซ่ป้อมและเสบียงเป็นพระเอก; ไม่เพิ่มเส้นรุก"
+  },
+  {
+    "id": "c7-02",
+    "title": "ครั้งที่สามเขาจะไม่ได้ชนะให้ข้า",
+    "chapter": 7,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เน้นช่องว่างคำสั่งที่ฉางอานหลังซือหม่าอี้ย้าย"
+  },
+  {
+    "id": "c7-03",
+    "title": "ศึกชิงคืนครั้งที่สอง",
+    "chapter": 7,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ตั้งภาพรวมแดนยื่นแล้วเน้นเทียนสุ่ยก่อน"
+  },
+  {
+    "id": "c7-04",
+    "title": "ยี่สิบห้าวัน",
+    "chapter": 7,
+    "markers": 5,
+    "routes": 2,
+    "duplicates": [
+      "tianshui"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "โจมตี→วุ่ยถอย→แนวยุบ; รวมข้อความเทียนสุ่ย"
+  },
+  {
+    "id": "c7-05",
+    "title": "เกวียนข้าวคันแรก",
+    "chapter": 7,
+    "markers": 6,
+    "routes": 2,
+    "duplicates": [
+      "chencang"
+    ],
+    "longLabels": 1,
+    "priority": "สูง",
+    "proposal": "ข้าวถึงเทียนสุ่ยเป็นจุดเปลี่ยนก่อนเล่าเฉินชาง; ลดหกป้ายให้เห็นทีละช่วง"
+  },
+  {
+    "id": "c7-06",
+    "title": "กุญแจที่ไขด้วยเวลา",
+    "chapter": 7,
+    "markers": 5,
+    "routes": 3,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "ล้อมสองทางก่อนกองหนุนหันกลับ; วันที่ 9/11 อยู่ในการ์ดเวลา"
+  },
+  {
+    "id": "c7-07",
+    "title": "เมืองต่อเมืองตามลำเว่ย",
+    "chapter": 7,
+    "markers": 6,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "สูง",
+    "proposal": "เปิดชื่อเมืองตามเส้นลำเว่ย; ไม่วางหกคำอธิบายพร้อมกัน"
+  },
+  {
+    "id": "c7-08",
+    "title": "ข้ามน้ำคืนเดือนมืด",
+    "chapter": 7,
+    "markers": 4,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เป็นการเตรียมข้ามน้ำ ใช้สองคืนบนการ์ด ไม่แสดงข้ามก่อนฉากถัดไป"
+  },
+  {
+    "id": "c7-09",
+    "title": "รุ่งเช้าวันที่สาม",
+    "chapter": 7,
+    "markers": 4,
+    "routes": 2,
+    "duplicates": [
+      "beiyuan"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "ข้าม–ปะทะ–กัวหวยกลับฉางอาน; รวมป้ายเป่ยหยวน"
+  },
+  {
+    "id": "c7-10",
+    "title": "สามประตูกับขบวนที่ออกจากลั่วหยาง",
+    "chapter": 7,
+    "markers": 7,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "สูง",
+    "proposal": "แยกการอพยพพลเรือนจากแนวทหารให้ชัดทั้งรูปและป้าย"
+  },
+  {
+    "id": "c7-11",
+    "title": "ศึกสันด่านถง",
+    "chapter": 7,
+    "markers": 8,
+    "routes": 3,
+    "duplicates": [
+      "tongguan"
+    ],
+    "longLabels": 0,
+    "priority": "สูง",
+    "proposal": "แบ่งยึดสัน–กองแยกใต้–กำลังหนุน; ย้ำได้สันยังไม่ได้ด่าน"
+  },
+  {
+    "id": "c7-12",
+    "title": "นครหลวงที่ว่างเปล่า",
+    "chapter": 7,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ขบวนออกแล้วกล้องคงนครว่าง ไม่ทำเมืองแตกเป็นเอฟเฟกต์ระเบิด"
+  },
+  {
+    "id": "c7-13",
+    "title": "ทุ่งเดียวกัน เดือนเดียวกัน ปีเดียวกัน",
+    "chapter": 7,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "รักษาปุ่มสองเอกภพ เป็นฉากแนะนำความสามารถหลัก"
+  },
+  {
+    "id": "c7-14",
+    "title": "แพ้ได้โดยไม่ตาย",
+    "chapter": 7,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เงียบที่ค่ายกับด่านถง; ไม่มีลูกศรฝ่าด่าน"
+  },
+  {
+    "id": "c7-15",
+    "title": "ฉากที่ไม่มีอะไรเกิดขึ้น",
+    "chapter": 7,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ถอนตามตารางอย่างสงบ ไม่ใช้สีสัญญาณพ่ายแพ้รุนแรง"
+  },
+  {
+    "id": "c8-01",
+    "title": "ราคาของนักฆ่าคนเดียว",
+    "chapter": 8,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "แสดงการขาดม้ากับตำแหน่งพันธมิตร ไม่วาดเส้นทัพที่ไม่มีในฉาก"
+  },
+  {
+    "id": "c8-02",
+    "title": "มันไม่ใช่ป้อม มันคือรั้ว",
+    "chapter": 8,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "เน้นโซ่ป้อมเป็นระบบเตือน ก่อนการทัพ"
+  },
+  {
+    "id": "c8-03",
+    "title": "ป้อมละสิบวัน",
+    "chapter": 8,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [
+      "tongguan"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "ป้อมละสิบวันเป็นแถบขั้น; ไม่ใส่ป้ายสิบวันทุกป้อม"
+  },
+  {
+    "id": "c8-04",
+    "title": "ป้อมที่หนึ่งมีคนกลับเข้าไปแล้ว",
+    "chapter": 8,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "เส้นถอยจบแล้วป้อมเปิดธงกลับ; ฉากนี้เรื่องการผลัดกำลัง"
+  },
+  {
+    "id": "c8-05",
+    "title": "แนวเหนือที่หายไปทั้งเส้น",
+    "chapter": 8,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "ปกติ",
+    "proposal": "เน้นกองที่ออกกับกองที่อยู่เฝ้า; จำกัดป้ายที่หานกู่"
+  },
+  {
+    "id": "c8-06",
+    "title": "ขี่ผ่านรั้ว",
+    "chapter": 8,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "วิ่งผ่านป้อมโดยไม่แสดงวงล้อมที่เฉินชาง"
+  },
+  {
+    "id": "c8-07",
+    "title": "ห้ากอง สี่กองไม่กลับ",
+    "chapter": 8,
+    "markers": 12,
+    "routes": 5,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "สูง",
+    "proposal": "สำคัญที่สุด: 12 markers/5 routes ใช้ภาพรวมแล้วเลือกกอง 1–5; รักษาการเกิดพร้อมกัน ไม่แต่งเป็นลำดับเวลาใหม่"
+  },
+  {
+    "id": "c8-08",
+    "title": "จักรพรรดิเด็กแปดขวบ",
+    "chapter": 8,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "สองศูนย์อำนาจคนละที่ ใช้การ์ดเทียบ ไม่ลากทางรบ"
+  },
+  {
+    "id": "c8-09",
+    "title": "ครั้งเดียวที่เขาเกือบสำเร็จ",
+    "chapter": 8,
+    "markers": 8,
+    "routes": 3,
+    "duplicates": [],
+    "longLabels": 4,
+    "priority": "สูง",
+    "proposal": "แยกกำลังเสริม–กองปิดล้อม–ทัพหลัก; อู่จ้างหยวนเป็นกองที่ไม่มาช่วย"
+  },
+  {
+    "id": "c8-10",
+    "title": "วิธีของคนที่ตายไปแล้วสิบเอ็ดปี",
+    "chapter": 8,
+    "markers": 5,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ทัพวุ่ยออกก่อนชิงคืน; คงเมืองพลิกเมื่อขบวนถึง"
+  },
+  {
+    "id": "c8-11",
+    "title": "ไม่เคยต้องเดา",
+    "chapter": 8,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "ปกติ",
+    "proposal": "ทำเส้นผลัดกำลังเป็นภาพของระบบ ไม่เพิ่มราชโองการใหม่"
+  },
+  {
+    "id": "c8-12",
+    "title": "แปดหมื่น",
+    "chapter": 8,
+    "markers": 5,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "แสดงเพดานเสบียงกับจำนวนคนข้างเรื่อง; โซ่ป้อมถูกผ่าน ไม่ใช่ถูกตี"
+  },
+  {
+    "id": "c8-13",
+    "title": "สี่สิบวัน แล้วก็ไม่มีความหมาย",
+    "chapter": 8,
+    "markers": 7,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "สูง",
+    "proposal": "เน้นยุ้งว่างเทียนสุ่ยเทียบยุ้งจริงหลงซี; ลด 7 ป้ายพร้อมกัน"
+  },
+  {
+    "id": "c8-14",
+    "title": "เอกสารที่อันตรายที่สุดในสงครามทั้งสงคราม",
+    "chapter": 8,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "ปกติ",
+    "proposal": "การถอยจบแล้วค่อยเปิดฎีกาในคอลัมน์อ่าน"
+  },
+  {
+    "id": "c9-01",
+    "title": "ครั้งสุดท้ายที่แผ่นดินเปลี่ยนสี",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ขบวนรับมอบ ใช้สัญญาณสันติ ไม่วงปะทะ"
+  },
+  {
+    "id": "c9-02",
+    "title": "ปีที่แอ่งเลิกเป็นทางผ่าน",
+    "chapter": 9,
+    "markers": 7,
+    "routes": 5,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "สูง",
+    "proposal": "แบ่งประจำด่านสามแห่งกับข้าวออกจากค่ายนา; ภาพรวมมีเลขอ้างอิง"
+  },
+  {
+    "id": "c9-03",
+    "title": "หนึ่งพันสี่ร้อยลี้",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "เหมาะแสดงข่าวไป–กลับ 40 วันผ่านฮั่นจง; ต้องใช้ทางที่ยืนยันแล้ว"
+  },
+  {
+    "id": "c9-04",
+    "title": "ข้อตกลงที่ยังไม่ได้จ่ายคืน",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "เน้นต้นทางข้าว–แรงงาน–คน ไม่สร้างกองทัพเพิ่ม"
+  },
+  {
+    "id": "c9-05",
+    "title": "คนที่หลิวช่านคุยด้วยทุกวัน",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "การ์ดเปรียบข่าวช้ากับห้องตัดสินใจ; เส้นทูตต้องยืนยัน"
+  },
+  {
+    "id": "c9-06",
+    "title": "คนที่ไม่ควรมา",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "ภาพรวมรวมพลก่อนเข้าชะง่อน"
+  },
+  {
+    "id": "c9-07",
+    "title": "ชะง่อน",
+    "chapter": 9,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "เน้นความแคบตามแผ่นเดิม ไม่บิดแม่น้ำเพื่อขยายฉาก"
+  },
+  {
+    "id": "c9-08",
+    "title": "สามส่วนของหวังผิง",
+    "chapter": 9,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "สามส่วน: สองส่วนอยู่กับที่ มีเพียงม้า 4,000 ที่เคลื่อน"
+  },
+  {
+    "id": "c9-09",
+    "title": "ฤดูร้อนทำที่เหลือ",
+    "chapter": 9,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ใช้แผนภาพข้าว 10→3 ในคอลัมน์อ่าน; เส้นเสบียงเส้นเดียว"
+  },
+  {
+    "id": "c9-10",
+    "title": "สิบเอ็ดวันของการกลับหลังหัน",
+    "chapter": 9,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [
+      "taolin"
+    ],
+    "longLabels": 1,
+    "priority": "กลาง",
+    "proposal": "ถอนครึ่งแรก→ซุ่มโจมตี→ทะเบียน; รวมป้ายเถาหลิน"
+  },
+  {
+    "id": "c9-11",
+    "title": "คนที่ไม่ไปด้วย",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "เทียบสถานที่สองเอกภพ ห้ามตีเส้นเชื่อมเป็นการเดินทาง"
+  },
+  {
+    "id": "c9-12",
+    "title": "รุ่นที่หมดไป",
+    "chapter": 9,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "ปกติ",
+    "proposal": "ใช้แถบปี 246/248 และชื่อผู้จากไป ไม่เพิ่มขบวนรบ"
+  },
+  {
+    "id": "c10-01",
+    "title": "วันที่จูเก๋อเลี่ยงรอมาสิบห้าปี",
+    "chapter": 10,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ยึดประตูลั่วหยางเป็นจุดเดียว สวี่ชางเป็นสถานะที่ไม่ขยับ"
+  },
+  {
+    "id": "c10-02",
+    "title": "ข้าพเจ้าเกิดที่นั่น",
+    "chapter": 10,
+    "markers": 3,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "เส้นแปรพักตร์กับผู้มารับ แยกจากการโจมตี"
+  },
+  {
+    "id": "c10-03",
+    "title": "แผ่นดินเหนือฉีกตัวเองตามตาราง",
+    "chapter": 10,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 3,
+    "priority": "ปกติ",
+    "proposal": "แถบปี 251→253 ลดชื่อเมืองยาวสามชุด"
+  },
+  {
+    "id": "c10-04",
+    "title": "ปีที่ทุกอย่างเปิดออกพร้อมกัน",
+    "chapter": 10,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "ภาพรวมวิกฤตหวยหนานก่อนเคลื่อนซือหม่าซือ"
+  },
+  {
+    "id": "c10-05",
+    "title": "ยี่สิบเจ็ดปี แล้วเขาไม่บุกลึก",
+    "chapter": 10,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [
+      "hangu"
+    ],
+    "longLabels": 3,
+    "priority": "กลาง",
+    "proposal": "รวมป้ายหานกู่และลดความยาวกองประจำชะง่อน; มี overlap เดิมกับหลานเถียน"
+  },
+  {
+    "id": "c10-06",
+    "title": "เติ้งอ้ายกับตำราของคนตาย",
+    "chapter": 10,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "แสดงปลายแนวปี 256→257 ทีละจุดโดยคงเส้นป้อมเดิม"
+  },
+  {
+    "id": "c10-07",
+    "title": "ง่อขยับครั้งเดียวในสี่สิบปี",
+    "chapter": 10,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ขบวนหนุนเข้าล้อม; เจี้ยนเย่เป็นจุดตัดสินใจ"
+  },
+  {
+    "id": "c10-08",
+    "title": "ปีครึ่งในเมืองที่ถูกล้อม",
+    "chapter": 10,
+    "markers": 6,
+    "routes": 2,
+    "duplicates": [
+      "shouchun"
+    ],
+    "longLabels": 2,
+    "priority": "สูง",
+    "proposal": "โช่วชุนมีหลายป้ายที่จุดเดียว: ใช้การ์ดแยกผู้ล้อม/ในเมือง/ผู้กลับ"
+  },
+  {
+    "id": "c10-09",
+    "title": "ลั่วหยางแตกเพราะเลขไม่พอ",
+    "chapter": 10,
+    "markers": 4,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "เปรียบกำลังที่ถูกดึงไปกับนครที่เหลือ; ใช้ยอด engine เดิม"
+  },
+  {
+    "id": "c10-10",
+    "title": "ห้ามแตะสุสาน",
+    "chapter": 10,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "คงลั่วหยาง เฉินชางเป็นความทรงจำรอง ไม่เดินทัพย้อน"
+  },
+  {
+    "id": "c10-11",
+    "title": "เฉาเหมาชักดาบ · เย่ยอมจำนน",
+    "chapter": 10,
+    "markers": 5,
+    "routes": 2,
+    "duplicates": [],
+    "longLabels": 2,
+    "priority": "ปกติ",
+    "proposal": "แยกยอมจำนนจากตระกูลซือหม่าถอย; ไม่มีวงรบที่เย่"
+  },
+  {
+    "id": "c10-12",
+    "title": "คดีที่ลั่วหยาง",
+    "chapter": 10,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "คดีสี่เดือนอยู่การ์ดเรื่อง; การกลับฉางอานเสนอได้เมื่อยืนยันเส้น"
+  },
+  {
+    "id": "c10-13",
+    "title": "สี่สิบเอ็ดปีหลังคืนนั้น",
+    "chapter": 10,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "ให้การเดินทางหลิวช่านจบก่อนเปิดพิธีรับมอบ"
+  },
+  {
+    "id": "c11-01",
+    "title": "เราไม่มีเสมียนพอ",
+    "chapter": 11,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ข้อมูลเสมียนและรัฐอยู่ข้างเรื่อง ไม่เปลี่ยนเป็นภาพทหาร"
+  },
+  {
+    "id": "c11-02",
+    "title": "ห้าหมื่นที่ยังยืนอยู่ตรงนั้น",
+    "chapter": 11,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เปรียบเจียงหลิงที่ยังยืนกับเมืองหลวงที่ย้าย; ไม่สร้างแนวรุก"
+  },
+  {
+    "id": "c11-03",
+    "title": "คลองไม่รู้จักราชวงศ์",
+    "chapter": 11,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "คลองและเกษตรเป็นภาพนิ่ง ไม่เดินทัพแทนงานชลประทาน"
+  },
+  {
+    "id": "c11-04",
+    "title": "ขอให้บันทึกเหตุผลข้อนี้ไว้",
+    "chapter": 11,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ฎีกากับการตัดสินใจ ใช้สองตำแหน่งสงบ"
+  },
+  {
+    "id": "c11-05",
+    "title": "หกทาง สองแสนหนึ่งหมื่น",
+    "chapter": 11,
+    "markers": 7,
+    "routes": 5,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "สูง",
+    "proposal": "ภาพรวมหกกองพร้อมรายการเลือกกอง; กองที่หกอยู่กับที่ ห้ามแต่งให้เดิน"
+  },
+  {
+    "id": "c11-06",
+    "title": "ลู่ค่างเผาเรือที่เซี่ยโข่ว",
+    "chapter": 11,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [
+      "xiakou"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "กองเรือเข้า→ถูกเผา; แยกกองสามที่ฝั่งเหนือจากลู่ค่าง"
+  },
+  {
+    "id": "c11-07",
+    "title": "ปีที่สอง — และแนวที่ขยับได้โดยไม่เสียคน",
+    "chapter": 11,
+    "markers": 4,
+    "routes": 1,
+    "duplicates": [
+      "xiakou"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "คงทิศย้อนน้ำให้ชัด รวมป้ายเซี่ยโข่ว"
+  },
+  {
+    "id": "c11-08",
+    "title": "สวรรคตที่ได้เห็นครึ่งเดียว",
+    "chapter": 11,
+    "markers": 2,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "หยุดการรบให้ฉากสวรรคต ไม่ทำการเดินทางเฉิงตูใหม่"
+  },
+  {
+    "id": "c11-09",
+    "title": "จดหมายสองฉบับที่ถูกส่งคืนโดยไม่แกะผนึก",
+    "chapter": 11,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "เสนอจดหมายสองฉบับส่งคืน; ไม่อ้างว่าปลายทางยอมรับ"
+  },
+  {
+    "id": "c11-10",
+    "title": "แนวที่พังในเจ็ดสัปดาห์",
+    "chapter": 11,
+    "markers": 5,
+    "routes": 1,
+    "duplicates": [
+      "xiakou"
+    ],
+    "longLabels": 0,
+    "priority": "กลาง",
+    "proposal": "เทียบเส้นทางเดียวกับปี 270 แล้วเล่นปี 274; รวมป้ายเจ็ดสัปดาห์ที่ซ้ำ"
+  },
+  {
+    "id": "c11-11",
+    "title": "เจี้ยนเย่ เดือนที่แปด",
+    "chapter": 11,
+    "markers": 5,
+    "routes": 2,
+    "duplicates": [
+      "jianye"
+    ],
+    "longLabels": 1,
+    "priority": "กลาง",
+    "proposal": "กองเรือมาถึงก่อนกองล่อข้าม; แยกสี่ปีครึ่งที่รอกับวันข้าม"
+  },
+  {
+    "id": "c11-12",
+    "title": "คนรับดาบ",
+    "chapter": 11,
+    "markers": 3,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "ให้พิธีรับดาบสงบ; เรื่องศาลเป็นความทรงจำ ไม่ใช่ส่งเครื่องเซ่นจริง"
+  },
+  {
+    "id": "c12-01",
+    "title": "ศิลาที่หน้าค่าย",
+    "chapter": 12,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 1,
+    "priority": "ปกติ",
+    "proposal": "คงศิลากับเมืองฉางอาน ลดวงกระเพื่อม"
+  },
+  {
+    "id": "c12-02",
+    "title": "สี่เอกภพ สี่คืน",
+    "chapter": 12,
+    "markers": 1,
+    "routes": 0,
+    "duplicates": [],
+    "longLabels": 0,
+    "priority": "ปกติ",
+    "proposal": "จุดจบควรให้ปุ่มเทียบเอกภพเด่นเพียงปุ่มเดียว"
+  }
+]

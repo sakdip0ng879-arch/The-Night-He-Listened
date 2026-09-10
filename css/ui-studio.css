@@ -1,0 +1,88 @@
+/* เฉพาะตัวอย่าง ?ui=studio — ไม่แตะโทนสีภูมิประเทศหรือชุดไอคอน */
+.battle-blades{display:none}
+.ui-studio .battle-blades{display:block;fill:#925443;stroke:#f6ebd1;stroke-width:1.1;stroke-linejoin:round;transform:translate(13px,-17px)}
+.ui-studio .mk-clash-ring,.ui-studio .mk-clash-x,.ui-studio .mk-halo{display:none}
+.ui-studio #tkmap .pin.hot{--ev:#80613f!important}
+.ui-studio #tkmap .pin.hot[data-ev="battle"]{--ev:#935847!important}
+.ui-studio #tkmap .pin.hot[data-ev="supply"]{--ev:#58776b!important}
+.ui-studio #tkmap .pin.hot .pin-sym,.ui-studio #tkmap .pin.hot .pin-role{filter:drop-shadow(0 0 1.5px #fff5da)}
+.ui-studio .plabel.hot{fill:#765331;stroke:#fff2d5}
+.ui-studio .mk-cap text{fill:#715039;stroke:#f5ead1;stroke-width:3px;paint-order:stroke}
+.ui-studio .zlabel{fill:#766d57;stroke:#eee4cd;opacity:.8}
+.ui-studio .zline{stroke:#5d5140;stroke-opacity:.9;stroke-width:1.7px;stroke-dasharray:8 5}
+.ui-studio .zline-case{stroke:#fff2d7;stroke-opacity:.8;stroke-width:4px}
+.ui-studio .zline.coarse{stroke-opacity:.57;stroke-dasharray:4 7}
+.ui-studio .zline-case.coarse{stroke-opacity:.45}
+.ui-studio #stage.art-on #L-wall .pl-wall{stroke:#675c48;stroke-width:2.6px;vector-effect:non-scaling-stroke}
+.ui-studio #stage.art-on #L-wall .pl-tooth{stroke:#675c48;stroke-width:1.5px;vector-effect:non-scaling-stroke}
+.ui-studio .mk-route{filter:none;opacity:.88}
+.ui-studio .mk-route-under{stroke:#f0e5ca!important;opacity:.76}
+.ui-studio .mk-unit{filter:none}
+.ui-studio #stage[data-map-level="overview"] #L-pins .pin[data-id="hanzhong"] .pin-role{display:none}
+.ui-studio .march-standard{stroke:#494b40;stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round}
+.ui-studio .mk-head path{stroke:#f7ebcd;stroke-width:1.2}
+body.ui-studio{grid-template-columns:minmax(0,1fr) 370px;grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"dock dock" "map side" "time side"}
+.studio-dock{grid-area:dock;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;background:#171b21;border-bottom:1px solid #343c41;min-width:0}
+.studio-brand{font:600 13px Georgia,serif;letter-spacing:1.3px;color:#d9b169;flex:none}
+.studio-mode{display:block;font:11px "Leelawadee UI",sans-serif;color:#9da99f;letter-spacing:0;margin-top:4px}
+.ui-studio #maptools{position:static;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px}
+.ui-studio #maptools button{backdrop-filter:none;background:#222931;border:1px solid #39414a;padding:8px 11px}
+.ui-studio #topleft{display:none}
+.studio-context{padding:12px 18px;border-bottom:1px solid var(--line);flex:none}
+.ui-studio #where{padding:8px 0;border:none;background:none;backdrop-filter:none;box-shadow:none;transform:none;max-width:none}
+.ui-studio #hud{display:flex;flex-direction:column;transform:none;max-width:none;width:100%;background:#1d242b;border:0;padding:9px 12px;backdrop-filter:none;gap:5px}
+.ui-studio #hud .hrow{width:100%;min-width:0}
+.studio-finder label{display:block;font-size:11px;color:#aeb8ae;margin-bottom:5px}
+.studio-finder input{width:100%;background:#11171c;border:1px solid #3a454b;border-radius:5px;padding:9px 11px;color:#f3f0df;font:13px "Leelawadee UI",sans-serif}
+.studio-finder small{display:block;color:#939e98;font-size:10px;margin-top:5px}
+.studio-results{max-height:170px;overflow:auto;background:#141b21;padding:8px}
+.studio-results button{display:block;width:100%;text-align:left;padding:8px;background:transparent;border:0;border-bottom:1px solid #30383e;color:#eee}
+.studio-return{padding:7px 12px;margin-top:8px;background:#304a40;border:1px solid #628779;border-radius:5px;color:#fff}
+.studio-briefing{flex:none;border-bottom:1px solid #343e42;padding:9px 18px;font-size:12px}
+.studio-briefing summary{cursor:pointer;color:#d9b169}
+.studio-briefing>div{max-height:min(32vh,280px);overflow:auto;padding-top:8px}
+.studio-briefing small{display:block;color:#a4b4aa;margin-bottom:8px}
+.studio-briefing button{padding:5px 8px;margin:4px;background:#293b35;color:#f2eddd;border:1px solid #587061;border-radius:4px}
+.studio-event{border-top:1px solid #35413e;padding:5px 0}
+.studio-army{border:1px solid #35413e;border-left:4px solid var(--army-color);border-radius:5px;margin:9px 0;padding:10px;background:#1c232b;line-height:1.6}
+.studio-army strong{display:block;font-size:13px}
+.studio-army.selected{border-color:var(--gold);background:#2a332f}
+.studio-army [aria-pressed="true"]{background:#d9b169;color:#151b19}
+.studio-route-name{display:block;color:#d4dfd9;font-size:12px}
+.studio-army-note{color:#b5c0bd;font-size:11px;margin-top:5px}
+.studio-view-status{padding:8px;background:#304a40;border-left:3px solid var(--gold);line-height:1.6}
+.studio-context-toggle{display:none}
+.ui-studio aside{overflow-y:auto}
+.ui-studio #placecard,.ui-studio #legend{position:relative;inset:auto;width:auto;max-width:none;max-height:190px;overflow:auto;margin:8px 12px;flex:none;backdrop-filter:none}
+.ui-studio #reader{padding-top:12px;min-height:160px}
+.ui-studio .beat.now .btitle{font-family:"Leelawadee UI",sans-serif;font-size:19px;line-height:1.5}
+.ui-studio.studio-map-only{grid-template-columns:minmax(0,1fr);grid-template-areas:"dock" "map" "time"}
+.ui-studio.studio-map-only aside{display:none}
+@media(max-width:1100px){
+ body.ui-studio{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(250px,1.2fr) minmax(180px,1fr) auto;grid-template-areas:"dock" "map" "side" "time"}
+ .studio-brand{display:none}.studio-dock{padding:7px 10px}.ui-studio #maptools{justify-content:flex-start}
+ .ui-studio #maptools button{font-size:10px;padding:6px 8px}.studio-context{display:none}
+ .ui-studio #maptools .studio-context-toggle{display:block}
+ .ui-studio.studio-context-open .studio-context{display:block;max-height:220px;overflow:auto}
+ .ui-studio.studio-map-only{grid-template-rows:auto minmax(0,1fr) auto}
+}
+@media(prefers-reduced-motion:reduce){.ui-studio *{scroll-behavior:auto!important}}
+.studio-gallery-controls,.studio-cover-title{display:none}
+.studio-gallery-credit{display:none}
+.studio-gallery .studio-gallery-credit{display:block;position:fixed;bottom:18px;left:22px;font-size:10px;color:#5c513f;max-width:370px;z-index:35;background:#f0e9d6d9;padding:5px}
+.studio-gallery-credit a{color:inherit}
+body.ui-studio.studio-gallery{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);grid-template-areas:"map";background:#f0e9d6}
+.studio-gallery #stage{background:#f0e9d6}
+.studio-gallery aside,.studio-gallery #time,.studio-gallery .studio-dock,.studio-gallery #spine,.studio-gallery #seasonnote{display:none}
+.studio-gallery #L-markers,.studio-gallery #L-focus,.studio-gallery #L-roads{display:none}
+.studio-gallery:not(.gallery-names) #L-labels,.studio-gallery:not(.gallery-names) #L-pins{display:none}
+.studio-gallery .studio-gallery-controls{display:flex;position:fixed;z-index:40;right:18px;bottom:18px;gap:6px;flex-wrap:wrap}
+.studio-gallery-controls button,.studio-cover-title button{padding:10px 14px;background:#eee4ce;color:#493e2e;border:1px solid #988468;border-radius:4px;cursor:pointer}
+.studio-gallery .studio-cover-title{display:block;position:fixed;z-index:35;left:3vw;top:10vh;max-width:310px;color:#493d2e;padding:24px;background:linear-gradient(110deg,rgba(240,233,214,.97),rgba(240,233,214,.8));border-top:1px solid #a28c67}
+.studio-cover-title small{letter-spacing:3px;font:12px Georgia,serif}
+.studio-cover-title h1{font-size:32px;line-height:1.5;margin:18px 0;font-family:"Leelawadee UI",serif}
+.studio-cover-title h1 span{display:block;white-space:nowrap}
+.studio-cover-title p{font-size:12px;line-height:1.8;margin-bottom:22px}
+.studio-gallery.gallery-no-title .studio-cover-title{display:none}
+@media(max-width:700px){.studio-gallery .studio-cover-title{top:5vh;left:5vw;max-width:280px;padding:18px}.studio-cover-title h1{font-size:24px}.studio-gallery .studio-gallery-controls{right:10px;bottom:12px;left:10px}.studio-gallery-controls button{font-size:11px;padding:8px}}
+@media(max-width:700px){.studio-gallery .studio-gallery-credit{bottom:60px;left:10px;right:10px;font-size:9px}}

@@ -1,7 +1,9 @@
 ﻿/* style.css — เฟส 2 (shell) · design pass เต็มอยู่ในเฟส 6 */
 
 :root{
-  --han:#2E9E5B; --wei:#2563A8; --wu:#C2413A;
+  /* ⚠ ค่าพวกนี้เป็นแค่ **ค่าสำรองก่อน JS ทำงาน** — แหล่งจริงคือ `data/names.js`
+     `ui.js init()` เขียนทับตอนเริ่ม (ดูคอมเมนต์ที่นั่น) · แก้สีฝ่ายให้แก้ที่ names.js ที่เดียว */
+  --han:#3E7F58; --wei:#3C5F8C; --wu:#A8544A;
   --bg:#0e1015; --panel:#161922; --panel2:#1d212c; --line:#2a2f3d;
   --text:#e8eaf0; --dim:#8b93a7; --gold:#d9b169;
   --pad:18px;
@@ -31,8 +33,40 @@ body{
 #stage{grid-area:map; position:relative; overflow:hidden; background:#0b0d12; cursor:grab;
   min-height:0; min-width:0}
 #stage.grabbing{cursor:grabbing}
+/* ══ ★★★ สองบรรทัดนี้คือตัวแก้จริงของอาการ "ลากแล้วติดคลุมดำ แล้วเลื่อนไม่ได้อีก" ══
+   (เจ้าของทัก 2026-09-08 · หลักฐานการวัดอยู่ที่ `bindPanZoom` ใน strategic.js)
+   `user-select` — ถ้าไม่ปิด ทุกครั้งที่ลาก เบราว์เซอร์จะ **เลือกข้อความบนแผ่น** ไปด้วย
+     แถบไฮไลต์บนธีมมืด = "คลุมดำ" ที่เจ้าของเห็น · และพอมี selection ค้างใต้เมาส์
+     การกดลากครั้งถัดไปกลายเป็น drag-and-drop ของข้อความนั้น ซึ่งกลืน pointermove ทั้งชุด
+   `user-drag` — `<image>` ใน SVG ลากได้เองเหมือน <img> ต้องปิดคู่กัน
+   ★ ต้นแบบของ Codex ปิด `user-select` ไว้ที่ป้ายของเขาตั้งแต่แรก — นี่คือเหตุผลที่มัน "ลื่น"
+   ⚠ ปิดที่ `#tkmap` เท่านั้น **ห้ามปิดที่ `#stage`** — `#placecard` อยู่ในนั้นและมีพิกัด
+     ที่คนสอบเทียบต้องก๊อปไปใช้ */
 #tkmap{width:100%; height:100%; display:block; touch-action:none;
+  user-select:none; -webkit-user-select:none;
   min-height:0; min-width:0}
+#tkmap image{-webkit-user-drag:none}
+#stage.art-on.map-surface-ready #L-plate,
+#stage.art-on.map-surface-ready #L-relief,
+#stage.art-on.map-surface-ready [data-art-layer="environment"]{display:none}
+#stage.art-on.map-surface-ready #L-regions{opacity:0}
+#stage.art-on.map-surface-ready .region{animation:none;transition:none}
+#stage:not(.art-on) #L-map-surface{display:none}
+/* ══ ★★ ลำดับการวาดของสองชั้นนี้ (2026-09-10 — ตอนย้าย canvas ออกจาก SVG) ══════
+   `#L-map-surface` เป็น `position:absolute` ส่วน `#tkmap` เดิมเป็น static
+   → ตามกฎการวาดของ CSS **ของที่ positioned วาดทับของที่ static เสมอ ไม่สนลำดับใน DOM**
+   ผลคือ canvas ขึ้นไปคลุมทั้งหมุดและตัวหนังสือ (เจอจริงทันทีที่ย้าย: แผนที่มีแต่พื้น)
+   → ต้องยก `#tkmap` ขึ้นมาเป็น positioned ด้วย แล้วเรียง z-index ให้ชัด */
+#stage > #L-map-surface{z-index:0}
+/* ★ ยกเป็นชั้น GPU **เฉพาะตอนกล้องเคลื่อน** — ตั้งค้างไว้ = เบราว์เซอร์กัน texture ไว้ตลอด
+   ซึ่งเป็นตัวการเดียวกับที่ทำให้ตัวหนังสือใน SVG เบลอ (ดู cameraSettled ใน strategic.js) */
+#stage.camera-moving > #L-map-surface{will-change:transform}
+#stage > #tkmap{position:relative; z-index:1}
+/* กล้องเลื่อนชั้นภาพที่วาดไว้แล้ว; #stage เป็นผู้ตัดขอบภาพ */
+#tkmap{transform-origin:0 0;will-change:transform;overflow:visible}
+#stage.camera-moving .mk-halo,
+#stage.camera-moving .mk-clash-ring,
+#stage.camera-moving .region.flip{animation-play-state:paused}
 /* ความเข้มของแผนที่พื้น — เดิมฟอกจนซีดเพื่อให้ชื่อไทยชนะชื่ออังกฤษที่พิมพ์ติดมากับภาพ
    ซึ่งเป็นการแก้ผิดจุด (ทำลายแผนที่เพื่อช่วยตัวหนังสือ)
    ที่ถูกคือให้ป้ายมีฮาโลของตัวเองแล้วคืนสีภูมิประเทศให้เห็นแม่น้ำกับภูเขา
@@ -133,15 +167,34 @@ body{
      ที่ทำให้ขอบเข้มขึ้นมาเองแม้ตั้งค่าเท่ากัน — เพราะ alpha ถูกรวมในชั้นก่อน แล้วค่อยจาง
    ★ ตัวเลขสองตัวข้างล่าง **ไม่ได้ตั้งใหม่ด้วยตา** — เป็นค่าที่มีอยู่แล้วทั้งคู่:
      `.38` = `#L-regions` ฐานเดิม · `.45` = `#stage.plate-new #L-regions` เดิม */
-#stage.art-on #L-regions{opacity:.45}                  /* "เข้ม" (ค่าเริ่มต้นของปุ่ม) */
-/* ปุ่ม "แผนที่: ปกติ/เข้ม" มีความหมายกับแผ่นนี้ตรงนี้ — คุมเนื้อสีเขต ไม่ใช่ความสว่างของแผ่น */
-#stage.art-on:not(.map-rich) #L-regions{opacity:.38}   /* "ปกติ" */
+#stage.art-on #L-regions{opacity:.45}
+/* ⛔ เคยมีคู่ `:not(.map-rich)` ที่ .38 สำหรับโหมด "ปกติ" — ถอดพร้อมปุ่ม 2026-09-08
+   ตอนนี้ `map-rich` ติดกับ #stage ตลอด จึงเหลือความเข้มเดียว */
+
+/* ══ ★★★ บรรทัดเดียวที่คืน "เข้ม" ให้ **แผ่นต้นฉบับ** ด้วย (แก้ 2026-09-08 ดึก) ══════
+   เจ้าของทัก: *"ทำไมแผนที่มันเป็นสีปกติ แทนที่จะเป็นเข้ม ไม่ใช่ session ก่อนหน้าทำไปแล้วเหรอ"*
+   — และเขาถูก · **วัดของจริงแล้ว**: กด "แผ่น: ต้นฉบับ" ปุ๊บ `#stage` เหลือคลาสเดียวคือ
+   `map-rich` (ไม่มี `art-on` ไม่มี `plate-new`) → **ไม่มีกฎ .45 ข้อไหนติดเลย**
+   → ตกไปใช้ค่าฐาน `#L-regions{opacity:.38}` ซึ่งคือ *"ปกติ"* พอดี
+
+   ★★ ต้นเหตุคือรอบที่แล้วเขียนกฎ "เข้ม" ผูกไว้กับ `art-on` (= แผ่นวาดใหม่) ทั้งที่คลาสที่
+   **แปลว่า "เข้ม" จริง ๆ คือ `map-rich`** · พอปุ่มสลับความเข้มถูกถอดและ `map-rich`
+   กลายเป็นค่าถาวร ไม่มีใครสังเกตว่าฝั่งแผ่นต้นฉบับหลุดออกจากกฎไปเงียบ ๆ
+   ★ บทเรียนเดิมของ §5.14 ซ้ำอีกที: **เปลี่ยนสถาปัตยกรรมของชั้นเมื่อไหร่ ต้องไล่ดูทุกโหมด
+     ที่ยังเปิดอยู่ ไม่ใช่เฉพาะโหมดที่กำลังทำ** (คราวนั้นคือ multiply · คราวนี้คือปุ่มที่ถูกถอด) */
+#stage.map-rich #L-regions{opacity:.45}
 
 /* ★ เงาเขา — คูณทับสีพื้น · ต้องถอดสีก่อน ไม่งั้นภาพสีน้ำตาลจะย้อมสีฝ่ายให้เพี้ยน
    ยกความเข้มขึ้นได้แล้วเพราะเนื้อสีเขตบางลงมาก (เดิม .55 ตอนเขตทึบ .62) */
 #L-relief{mix-blend-mode:multiply}
 #L-relief image{opacity:.72; filter:grayscale(1) brightness(1.06) contrast(1.22)}
 #stage:not(.art-on) #L-relief{display:none}
+
+/* ★ ชั้น Environment (ป่า/ดิน จากฝั่ง Codex) — โผล่เฉพาะโหมดแผ่นวาดใหม่
+   แผ่นต้นฉบับมีสีพื้นของมันเองอยู่แล้ว เอาป่าไปทับจะได้สองระบบซ้อนกัน
+   ⚠ ความเข้มคุมที่ `opacity` ของ group ผ่าน `TKEnvironment.setOpacity()` ใน JS
+     **ห้ามมาตั้ง opacity ทับที่นี่** ไม่งั้นสองที่จะแย่งกันคุมแล้วงงว่าค่าจริงคือเท่าไร */
+#stage:not(.art-on) [data-art-layer="environment"]{display:none}
 
 /* ★★ น้ำ — ไฟล์ส่งมาเป็น **เทาอมเขียว** (`#9bbdbc` / `#688f87`) ซึ่งสวยบนกระดาษเปล่า
    แต่พอมีแผ่นดินของฮั่นสีเขียวอยู่ข้างใต้ มันกลืนกันทันที (เจ้าของจับได้)
@@ -235,7 +288,7 @@ path.mk-echo{marker-end:none !important; marker-start:none !important; filter:no
   font-family:"Leelawadee UI","Segoe UI",sans-serif}
 .sp-key{font-size:10.5px; font-weight:700;
   font-family:"Leelawadee UI","Segoe UI",sans-serif}
-text.sp-key.sp-han{fill:var(--han)} text.sp-key.sp-wei{fill:#5585BB} text.sp-key.sp-wu{fill:#CD635D}
+text.sp-key.sp-han{fill:var(--han)} text.sp-key.sp-wei{fill:var(--wei)} text.sp-key.sp-wu{fill:var(--wu)}
 rect.sp-sw2.sp-han{fill:var(--han)} rect.sp-sw2.sp-wei{fill:var(--wei)} rect.sp-sw2.sp-wu{fill:var(--wu)}
 
 .sp-line{fill:none; stroke-width:2.2; stroke-linejoin:round; stroke-linecap:round}
@@ -289,7 +342,9 @@ rect.sp-none{fill:#6b7285}
 @keyframes flip{0%{filter:brightness(2.4)} 100%{filter:none}}
 
 /* ป้ายบอกว่าตอนนี้กล้องกำลังเล็งอะไรอยู่ */
-#where{position:absolute; left:var(--pad); top:var(--pad); z-index:5;
+/* ★ ย้ายมาอยู่ใน `#topleft` (flex row) 2026-09-08 — จึงเลิกเป็น absolute
+   ความกว้างของมันเปลี่ยนตามชื่อที่กล้องเล็ง flex จึงเป็นวิธีเดียวที่ HUD ตามได้ถูก */
+#where{position:relative; z-index:5; flex:none;
   background:rgba(14,16,21,.84); backdrop-filter:blur(9px);
   border:1px solid var(--line); border-left:3px solid var(--gold);
   border-radius:8px; padding:8px 13px; pointer-events:none;
@@ -413,17 +468,56 @@ rect.sp-none{fill:#6b7285}
 }
 .plabel.hot{fill:var(--gold)}
 
-/* ★★ ชื่อมณฑล — ชั้น "ภาพรวม" ของแผ่นวาดใหม่ (เจ้าของสั่ง 2026-09-08)
-   ต้องอ่านออกว่าเป็นคนละชนิดกับชื่อเมืองตั้งแต่แวบแรก จึงใช้ภาษาคนละแบบ:
-   **จางกว่า · ตัวห่าง · ไม่ขาวจัด** ตามคอนเวนชันแผนที่จริง (ชื่อภูมิภาคถอยให้ชื่อจุด)
-   ⚠ ห้ามทำให้เด่นเท่าชื่อเมือง — มันเป็นฉากหลัง ไม่ใช่สิ่งที่ฉากกำลังชี้
-   ⚠ ฮาโลต้องหนากว่า `.plabel` นิดหน่อย เพราะตัวห่างทำให้เส้นขอบขาดเป็นช่วง ๆ
-      บนพื้นภูเขาที่มีลายเยอะ (ค่า stroke-width ตั้งใน strategic.js ตามขนาดตัวอักษร) */
-.rlabel{
-  fill:rgba(255,255,255,.62); font-weight:700; paint-order:stroke;
-  stroke:rgba(11,13,18,.78); stroke-linejoin:round; pointer-events:none;
+/* ★★ ชื่อมณฑล (州) — ชั้น "ภาพรวม" ของแผ่นวาดใหม่ (เจ้าของสั่ง 2026-09-08)
+   ต้องอ่านออกว่าเป็นคนละชนิดกับชื่อเมืองตั้งแต่แวบแรก จึงใช้ภาษาคนละแบบ
+
+   ⚠⚠ **รอบแรกใช้ "จาง" เป็นตัวแยกชนิด แล้วเจ้าของทักว่า "มันกลืนกับฉาก"** (2026-09-08)
+   — และเขาถูก · ตัวเลขเดิมคือ fill `rgba(255,255,255,.62)` บนฮาโล `rgba(11,13,18,.78)`
+   คือ **จางทั้งตัวอักษรและฮาโล** พร้อมกัน ตัวหนังสือจึงไม่มีอะไรกันตัวเองจากภูมิประเทศเลย
+   ★ ที่ถูกคือแยกชนิดด้วย **รูปแบบ** ไม่ใช่ด้วยความจาง:
+     ตัวห่าง (letter-spacing) · ตัวใหญ่กว่า · สีเย็นอมฟ้าแทนขาวจัด · ฮาโลหนากว่าและทึบ
+     → ยังอ่านออกทันทีว่าเป็นชั้นภูมิภาค แต่ไม่ต้องเพ่ง
+   ⚠ ห้ามใช้สีฝ่ายกับชื่อนี้ — มณฑลไม่ใช่ของฝ่ายไหน */
+.zlabel{
+  fill:#D6E0F0; font-weight:700; paint-order:stroke;
+  stroke:#0b0d12; stroke-linejoin:round; pointer-events:none;
   dominant-baseline:alphabetic;
 }
+
+/* ══ ★★★ เส้นแบ่งมณฑล (州界) — กลับมาแล้ว 2026-09-08 รอบสอง ═══════════════
+   ข้อมูล `data/zhou_lines.js` · ตัวตรวจ `tools/check_zhou.js` · ที่มาเต็มอยู่หัวไฟล์นั้น
+
+   ⚠ **ต้องอ่านว่าเป็นคนละภาษากับทุกเส้นที่มีอยู่แล้วบนแผ่น** — บนจอเดียวกันมี
+     · เส้นประ **แดง** ที่แผ่นพิมพ์มาเอง = พรมแดนสามรัฐปี 221
+     · เส้นประ **ทอง** 9/7 = วงเน้นพื้นที่ของฉาก (§17)
+     · เส้น **ถนน** ทึบ/ประถี่
+   → ของเราจึงเป็น **เทาอมฟ้าเย็น จังหวะยาว-ห่าง (10/8) และบางที่สุดในสามอัน**
+     ไม่มีสีฝ่ายเด็ดขาด เพราะมณฑลไม่เปลี่ยนมือ ต่างจากสีเขต
+
+   ★ `non-scaling-stroke` = ความหนากับจังหวะประคงที่บนจอเองทุกระดับซูม
+     จึงไม่ต้องให้ `relayout` มาคูณ mu ให้เหมือน .road/.mk-route (เส้นเดียวในโปรเจกต์
+     ที่ทำแบบนี้ได้ เพราะมันไม่มีหัวลูกศรหรือป้ายที่ต้องคำนวณตามไปด้วย) */
+#L-zhou{pointer-events:none}
+/* ปลอกสว่าง — ทำให้แกนหมึกเข้มอ่านออกทั้งบนพื้นสว่าง (ที่ราบ) และพื้นเข้ม (ป่า/ภูเขา)
+   ⚠ ต้องไม่ประ ไม่งั้นจะเห็นเป็นเส้นประสองชั้นเหลื่อมกัน */
+/* ⚠ ตัวเลขชุดนี้ **ลดลงหนึ่งขั้นเมื่อ 2026-09-10** (เจ้าของ: *"ดูแล้วรกแผนที่"*)
+   จาก ปลอก .42/3.2px + แกน .62/1.25px → .28/2.8px + .46/1.15px
+   ★ แต่ตัวแก้หลักของความรก **ไม่ได้อยู่ที่นี่** — อยู่ที่ `zhouMinVB()` ใน strategic.js
+     (เดิมเส้นวาดต่อไปแม้ชื่อมณฑลหายหมดแล้ว = เส้นประไม่มีป้ายพาดจอทุกฉาก)
+     ตรงนี้แค่ผ่อนให้ *ภาพรวม* ไม่หนาแน่นเกิน · ถ้าจะจูนต่อ ขยับสองค่านี้พอ */
+.zline-case{
+  stroke:#F4F1E6; stroke-opacity:.28; stroke-width:2.8px; stroke-linecap:round;
+  vector-effect:non-scaling-stroke;
+}
+.zline{
+  stroke:#2E3A4B; stroke-opacity:.46; stroke-width:1.15px;
+  stroke-dasharray:9 7; stroke-linecap:butt;
+  vector-effect:non-scaling-stroke;
+}
+/* ★ ท่อนที่ข้อมูลเองบอกว่า *หยาบ* (แผ่นไม่มีจุดอ้างอิงแถบนั้น) ต้องดูไม่มั่นใจกว่าท่อนอื่น
+   — จางลงและประสั้นกว่า · ความไม่แน่นอนของข้อมูลควรมองเห็นได้ ไม่ใช่ซ่อนไว้ในคอมเมนต์ */
+.zline.coarse{stroke-opacity:.4; stroke-dasharray:4 7}
+.zline-case.coarse{stroke-opacity:.28}
 
 /* หมุด/ลูกศร/ปะทะ ของฉากปัจจุบัน */
 .mk-halo{fill:var(--gold); opacity:.22; animation:pulse 2.2s ease-in-out infinite}
@@ -562,25 +656,46 @@ rect.sp-none{fill:#6b7285}
 #counter{color:var(--dim); font-size:12px; font-variant-numeric:tabular-nums; min-width:56px;
   text-align:right}
 
-/* ══ HUD ══ */
-#hud{position:absolute; left:var(--pad); bottom:var(--pad); width:250px;
+/* ★★ แถบบนซ้าย — `#where` + `#hud` เรียงแถวเดียวกับปุ่มขวาบน (เจ้าของสั่ง 2026-09-08)
+   ⚠ `right` ต้องเว้นที่ให้ `#maptools` ไม่งั้น HUD จะไหลไปทับปุ่ม
+     ค่านี้กว้างกว่าปุ่มจริง (495px) นิดหน่อยเผื่อฟอนต์ต่างเครื่อง */
+#topleft{position:absolute; left:var(--pad); top:var(--pad); right:calc(var(--pad) + 520px);
+  z-index:5; display:flex; align-items:center; gap:10px; flex-wrap:wrap; pointer-events:none}
+#topleft > *{pointer-events:auto}
+
+/* ══ HUD ══
+   ★★ ย้ายจาก **มุมล่างซ้ายแนวตั้ง** มาเป็น **แถบแนวนอนใต้ `#where`** (เจ้าของสั่ง 2026-09-08)
+   > *"หลอดกำลังพลมันบังแผนที่ กำลังคิดว่าจะย้ายไปเป็นแนวนอนมุมบนซ้ายจะดีไหม
+   >  เพราะบางฉากมันก็บังแผนที่จริง ๆ"*
+
+   ★ ทำไมแนวนอนถึงบังน้อยกว่า: ของเดิมเป็นกล่อง 250 × ~150 px นั่งทับมุมล่างซ้าย
+     ซึ่งบนแผ่นนี้คือ **อี้โจว/เสฉวน** — เวทีของจ๊กทั้งเรื่อง · แนวนอนสูงแค่ ~34 px
+     และไปอยู่ในแถบบนซึ่งเป็นพื้นที่ของเครื่องมืออยู่แล้ว
+
+   ⚠ `top` คิดจากความสูงของ `#where` (หัวหนา 1 บรรทัด + บรรทัดรอง = ~46px + เว้น)
+     `#where` มีสองบรรทัดคงที่เสมอ ค่านี้จึงนิ่ง — ถ้าวันหนึ่งมันยาวขึ้นเป็นสามบรรทัด
+     ต้องขยับเลขนี้ตาม (ไม่มีทางคำนวณอัตโนมัติเพราะทั้งคู่เป็น absolute คนละตัว)
+   ⚠ **ห้ามใช้ `bottom`** อีก — แถบเวลาด้านล่างกับกล่องนี้เคยเบียดกันบนจอเตี้ย */
+#hud{position:relative; z-index:4; flex:0 1 auto; min-width:0;
   background:rgba(14,16,21,.82); backdrop-filter:blur(9px);
-  border:1px solid var(--line); border-radius:10px; padding:11px 13px;
-  display:flex; flex-direction:column; gap:7px}
-/* หัวข้อบอกว่าหลอดวัดอะไร — ถ้าไม่บอก คนอ่านเดาไม่ออกว่าเทียบกับอะไร */
+  border:1px solid var(--line); border-radius:10px; padding:7px 12px;
+  display:flex; flex-direction:row; align-items:center; flex-wrap:wrap; gap:6px 14px}
+/* หัวข้อบอกว่าหลอดวัดอะไร — ถ้าไม่บอก คนอ่านเดาไม่ออกว่าเทียบกับอะไร
+   แนวนอนแล้วเส้นคั่นย้ายจากใต้หัวข้อ ไปอยู่ *ขวา* ของมันแทน */
 .hhead{font-size:10px; color:var(--dim); letter-spacing:.4px;
-  padding-bottom:2px; border-bottom:1px solid var(--line); margin-bottom:1px}
-.hrow{display:flex; flex-direction:column; gap:4px; font-size:11.5px}
-.htop{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
-.hname{font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px}
+  padding-right:12px; border-right:1px solid var(--line); flex:none}
+.hrow{display:flex; flex-direction:row; align-items:center; gap:7px; font-size:11.5px; flex:none}
+.htop{display:flex; align-items:baseline; gap:6px}
+.hname{font-weight:700; color:var(--text); display:flex; align-items:center; gap:5px}
 .hdot{width:9px; height:9px; border-radius:2px; flex:none; display:inline-block}
-.hbar{height:6px; background:#232836; border-radius:3px; overflow:hidden}
+.hbar{height:6px; width:54px; flex:none; background:#232836; border-radius:3px; overflow:hidden}
 .hbar i{display:block; height:100%; width:0; border-radius:3px; transition:width .9s ease}
 .hnum{color:var(--dim); font-size:10.5px; font-variant-numeric:tabular-nums; white-space:nowrap}
 /* ★ บรรทัดแนวตะวันตก — ชั้นกลางระหว่าง "ทั้งรัฐ" กับ "กองที่อยู่ในฉาก" (2026-08-27)
-   เส้นคั่นด้านบนบอกว่ามันไม่ใช่หลอดที่สี่ แต่เป็นการซูมเข้าไปในสามหลอดข้างบน */
-.hfront{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
-  padding-top:6px; margin-top:1px; border-top:1px solid var(--line); font-size:10.5px}
+   เส้นคั่นบอกว่ามันไม่ใช่หลอดที่สี่ แต่เป็นการซูมเข้าไปในสามหลอดข้างบน
+   แนวนอนแล้วเส้นคั่นย้ายจากด้านบน มาอยู่ *ซ้าย* แทน */
+.hfront{display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding-left:12px; border-left:1px solid var(--line); font-size:10.5px; flex:none}
 .hfl{color:var(--dim); letter-spacing:.3px}
 .hfv{color:var(--text); display:inline-flex; align-items:center; gap:4px;
   font-variant-numeric:tabular-nums; white-space:nowrap}
@@ -676,7 +791,7 @@ button:disabled{opacity:.32; cursor:default}
   body{grid-template-columns:minmax(0,1fr); grid-template-rows:46vh minmax(0,1fr) auto;
        grid-template-areas:"map" "side" "time"}
   aside{border-left:0; border-top:1px solid var(--line)}
-  #hud{width:210px; transform:scale(.92); transform-origin:left bottom}
+  #hud{transform:scale(.92); transform-origin:left top}   /* แนวนอนแล้ว origin ต้องเป็น top */
 }
 
 /* ══ มือถือ ══
@@ -713,7 +828,8 @@ button:disabled{opacity:.32; cursor:default}
   /* .hnum เป็น nowrap บนเดสก์ท็อปเพื่อไม่ให้ "130k troops" ตกบรรทัด
      พอย่อลงมาขนาดนี้ nowrap กลายเป็นตัวตัดข้อความทิ้ง — วัดที่ 680px แล้วเหลือแค่
      "4 regions · 1.1M peop" ปล่อยให้ตกบรรทัดได้ และคืนความกว้างให้หน่อย */
-  #hud{width:178px; transform:scale(.76)}
+  /* จอแคบ: ปล่อยให้แถบตกบรรทัดเองแทนการย่อ — ย่อแล้วตัวเลขอ่านไม่ออก */
+  #hud{transform:scale(.82); transform-origin:left top; gap:4px 10px}
   .hnum{white-space:normal; line-height:1.35}
 }
 

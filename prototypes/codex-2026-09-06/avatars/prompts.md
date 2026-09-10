@@ -108,3 +108,39 @@ Generation mode remains built-in `image_gen.imagegen`, using the shared producti
 - `caocao`: commanding Wei warlord, midnight-blue and charcoal command armor, tablet and sheathed sword.
 
 Characters 1–29 pass alpha, dimensions, file-presence and manifest-status checks. Next id: `caopi`.
+
+---
+
+# Production continuation — characters 30–38
+
+Generation mode: built-in `image_gen.imagegen`, one call per character, using the approved Liu Bei master as the visual-style reference. Each prompt requested one centered full-body figure on a uniform white canvas for the authorized local alpha and portrait-icon finishing workflow.
+
+- `caopi`: poised first Wei emperor in his thirties, cool reserved expression, dark indigo-black imperial robes over restrained command armor, formal crown and sheathed sword.
+- `caorui`: refined young Wei emperor, confident thoughtful face, deep blue and muted violet court robes with measured gold ornament and imperial headpiece.
+- `caofang`: natural-proportioned eight-year-old Wei emperor, serious child expression, formal dark-blue court robe and small ceremonial crown; no chibi treatment.
+- `caomao`: defiant youthful Wei emperor, alert determined expression, dark blue and red court-command clothing with a sheathed sword.
+- `caozhen`: broad older Wei field commander, stern weathered face, dark lamellar armor, restrained gold fittings, blue command cape and spear.
+- `caoshuang`: affluent heavyset Wei commander, proud composed expression, ornate blue-violet robes over ceremonial armor and a sheathed sword.
+- `caoren`: powerful veteran Wei general, square face and dark beard, blackened lamellar armor with blue cape and a compact sheathed sword.
+- `simayi`: older calculating Wei strategist, narrow controlled expression, formal black-and-violet court robes, official crown and feather fan.
+- `simashi`: stern middle-aged Sima clan commander, disciplined expression, dark charcoal and blue command robes, official crown and feather fan.
+
+Characters 1–38 pass the production asset checks. Next id: `simazhao`.
+
+---
+
+# Production continuation — characters 39–47
+
+Generation mode remains built-in `image_gen.imagegen`, one call per character, using the approved Liu Bei master as the style reference. Local finishing uses the established white-background extraction, 84% full-body normalization and 96/192-pixel portrait workflow.
+
+- `simazhao`: mature Sima clan commander and statesman, dark blue-black command robes over light armor, formal crown, sealed scroll and sheathed sword.
+- `zhanghe`: lean veteran field general, refined silver-black armor, blue mantle and long spear, with an alert disciplined expression.
+- `caohong`: broad older Wei general, dark lamellar armor with bronze fittings, deep blue cape, restrained red accents and a sheathed saber.
+- `guohuai`: weathered northwestern frontier commander, blue-gray armor, dusty practical layers and a sheathed sword.
+- `haozhao`: steadfast fortress defender in worn iron armor and slate-blue garments, compact rectangular shield and sheathed sword.
+- `feiyao`: capable mid-career field officer, dark iron armor, muted blue cape and a straight spear.
+- `qinlang`: young Wei field commander, clean-shaven determined face, dark blue armor, scroll case and sheathed sword.
+- `dengai`: rugged senior engineer-general, travel-worn armor in earth and slate tones, rolled terrain map and measuring tablet.
+- `chenqun`: orderly senior civil minister, charcoal and muted teal court robes, formal cap, administrative tablets and closed ledger.
+
+Characters 1–47 pass the production asset checks. Next id: `mengda`.

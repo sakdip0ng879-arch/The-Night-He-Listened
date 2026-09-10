@@ -85,7 +85,8 @@ const nearWater = (px, py) => {
 /* ── เมืองที่ระบุสังกัดไว้ ─────────────────────────────────────────────────
    ★ แหล่งเดียว: ช่อง `province` ใน places.js (ย้ายมาจากตารางใน check_zhou.js 2026-09-10) */
 const byZ = {};
-for (const id in P) if (P[id].province) (byZ[P[id].province] ||= []).push(id);
+/* ⚠ ข้ามจุดที่ยัง `chk:true` — พิกัดยังไม่สอบเทียบ เอามาค้ำเส้นไม่ได้ (ดู check_zhou.js) */
+for (const id in P) if (P[id].province && !P[id].chk) (byZ[P[id].province] ||= []).push(id);
 
 /* ── วัดทีละเส้น ─────────────────────────────────────────────────────────── */
 const rows = [];

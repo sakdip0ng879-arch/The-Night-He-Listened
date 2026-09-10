@@ -188,6 +188,13 @@ TK.labeler = (function(){
       const upH   = (p.y - bx.y);            /* รูปสูงเหนือจุดยึดเท่าไร */
 
       let placed = null;
+      /* ★★★ ที่ที่ฉากชี้ต้องได้ชื่อ **เสมอ** — เก็บตัวเลือกที่ทับน้อยที่สุดไว้เป็นทางลง
+         (เจ้าของสั่ง 2026-09-10: *"เวลา highlight สถานที่ไหน ชื่อเมืองมันหาย ไม่เอาแบบนี้"*)
+         ⚠ ของเดิมลองครบแปดทิศแล้วถ้าไม่ว่างเลยก็ **ทิ้งชื่อ** — ซึ่งยอมรับได้สำหรับเมือง
+           ทั่วไป (หมุดยังอยู่ ฮอเวอร์ได้) แต่ **ยอมไม่ได้สำหรับที่ที่ฉากกำลังชี้**
+           วัดแล้วเกิดจริง 23 ฉาก กระจุกที่ด่านถง/ด่านหานกู่/เถาหลิน ซึ่งอยู่ชิดกันสามจุด
+         ★ ทับนิดหน่อยยังอ่านออก · ไม่มีชื่อเลยอ่านไม่ออกแน่นอน — เลือกอย่างแรก */
+      let fallback = null, fallbackCost = Infinity;
       for (const c of CANDIDATES){
         const x = p.x + c.dx * (halfW + pad*1.6);
         const y = c.dy < 0 ? bx.y - pad*1.2 + c.dy * lineMU * 0.1
@@ -204,6 +211,20 @@ TK.labeler = (function(){
           placed = { id, x, y, anchor:c.anchor, fontMU };
           break;
         }
+        if (force.has(id)){
+          /* พื้นที่ทับรวม — ตัวเลือกที่ทับน้อยที่สุดชนะ */
+          let cost = 0;
+          for (const t of taken){
+            const ow = Math.min(box.x+box.w, t.x+t.w) - Math.max(box.x, t.x);
+            const oh = Math.min(box.y+box.h, t.y+t.h) - Math.max(box.y, t.y);
+            if (ow > 0 && oh > 0) cost += ow * oh;
+          }
+          if (cost < fallbackCost){ fallbackCost = cost; fallback = { id, x, y, anchor:c.anchor, fontMU, box }; }
+        }
+      }
+      if (!placed && fallback){            /* ★ ทางลงของที่ที่ฉากชี้ — ทับน้อยที่สุดดีกว่าไม่มีชื่อ */
+        taken.push(fallback.box);
+        placed = { id, x:fallback.x, y:fallback.y, anchor:fallback.anchor, fontMU:fallback.fontMU };
       }
       if (placed) labels.push(placed);
       else hidden++;                       // ไม่มีที่ว่าง → เหลือแต่หมุด (hover ค่อยโผล่)

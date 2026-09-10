@@ -221,7 +221,6 @@ window.TK.places = {
                note:"กบฏ Zhang Jin ปี 220–221 · จุดจริงอยู่นอกแผ่น หมุดวางที่ขอบบนแนวระเบียง" },
   xiping:    { label:"ซีผิง",       py:"Xiping",    map:null,        x:230, y:430, type:"town", province:"liang", chk:true,
                note:"กบฏ Qu Yan ปี 220–221" },
-  qilian:    { label:"เทือกเขาฉีเหลียน", py:"Qilian", map:null,       x:120, y:288, type:"mountain", province:"liang", chk:true },
 
   /* ══════════ ประตูกวานจง ══════════ */
   /* ★ `role:"depot"` — อีกปลายของข้าวค่ายนา "ขึ้นเฉินชางหลังโซ่ป้อม" (_part8.js ข้อ ②) */

@@ -360,6 +360,11 @@ window.TK.timeline = [
         "label": "ควบมาสามวัน"
       },
       {
+        "type": "arrow",
+        "route": "zhangfei_langzhong_chengdu_221",
+        "side": "han"
+      },
+      {
         "type": "pin",
         "place": "chengdu",
         "label": "ราชโองการฉบับที่สี่"

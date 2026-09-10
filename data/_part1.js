@@ -284,6 +284,9 @@ window.TK._part1 = [
   camera:  [180,800,560,333],
   markers: [
     { type:"pin", place:"langzhong", side:"han", label:"ควบมาสามวัน" },
+    /* ★ ลูกศรม้าเร็ว (`rider`) — เจ้าของสั่ง 2026-09-10 · **ไม่มีเลขกำลังพลโดยตั้งใจ**
+       มันบอกว่า "มีคนควบมา" ไม่ใช่ "มีกำลังมาถึง" (เหตุผลเต็มที่ roads.js) */
+    { type:"arrow", route:"zhangfei_langzhong_chengdu_221", side:"han" },
     { type:"pin", place:"chengdu",   label:"ราชโองการฉบับที่สี่" }
   ],
   fact:     "mixed",

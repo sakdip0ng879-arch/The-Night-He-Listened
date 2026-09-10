@@ -520,7 +520,10 @@ rect.sp-none{fill:#6b7285}
 .zline-case.coarse{stroke-opacity:.28}
 
 /* หมุด/ลูกศร/ปะทะ ของฉากปัจจุบัน */
-.mk-halo{fill:var(--gold); opacity:.22; animation:pulse 2.2s ease-in-out infinite}
+/* ★★ ออร่าต้อง **หาเจอโดยไม่ต้องหา** (เจ้าของ 2026-09-10: *"อ่านแล้วยังต้องหาเลยว่า
+   อยู่ตรงไหน"*) — ดันความทึบขึ้นจาก .22 เป็น .34 และให้วงพองกว้างขึ้น (ดู r1 ใน strategic.js)
+   ⚠ **ไม่**ดันด้วยการทำสีให้จัดขึ้น — นั่นคือสิ่งที่ทำให้รอบก่อนดู "ฉูดฉาดไม่เข้าโทนแผนที่" */
+.mk-halo{fill:var(--ev,var(--gold)); opacity:.34; animation:pulse 2.2s ease-in-out infinite}
 .mk-dot{fill:var(--gold); stroke:#0b0d12; stroke-width:1.5}
 /* อยู่ในชั้นที่ถูก scale(mu) แล้ว ขนาดจึงเป็นพิกเซลจอตรง ๆ ไม่ต้องให้ JS คำนวณ */
 .mk-label{fill:var(--gold); font-weight:700; font-size:16px;
@@ -529,8 +532,8 @@ rect.sp-none{fill:#6b7285}
 /* ★★ วงกระเพื่อมต้องพองรอบ **รูปสัญลักษณ์** ไม่ใช่รอบจุดขนาดตายตัว (เจ้าของสั่ง 2026-09-06)
    รัศมีจึงมาจากตัวแปรที่ JS ตั้งตามขนาดรูปจริง · ค่าเริ่มต้นคือของเดิม (13→19)
    สำหรับสถานที่ที่ไม่มีรูปให้เกาะ */
-@keyframes pulse{0%,100%{r:var(--r0,13px); opacity:var(--o0,.22)}
-                 50%    {r:var(--r1,19px); opacity:var(--o1,.06)}}
+@keyframes pulse{0%,100%{r:var(--r0,13px); opacity:var(--o0,.34)}
+                 50%    {r:var(--r1,24px); opacity:var(--o1,.10)}}
 
 /* ══ ★★★ จังหวะการเต้นบอกชนิดของเหตุการณ์ ไม่ใช่แค่สี (เจ้าของสั่ง 2026-09-06) ══
    สีอย่างเดียวไม่พอบนกระดาษที่มีทั้งเขียว น้ำเงิน และหมึกดำอยู่แล้ว — **จังหวะ**
@@ -544,8 +547,10 @@ rect.sp-none{fill:#6b7285}
 .mk-pin.ev-supply .mk-halo{animation-duration:3.8s}
 /* วงของการรบต้องทึบกว่าเพื่อน — มันแข่งกับวงปะทะสีเหลืองที่ซ้อนอยู่จุดเดียวกัน
    ⚠ ตั้ง `opacity` ตรง ๆ ไม่ได้ — keyframes ทับเสมอ · ต้องผ่านตัวแปรที่ keyframes อ่าน */
-.mk-pin.ev-battle .mk-halo{--o0:.26; --o1:.07}
-.mk-pin.ev-flip   .mk-halo{--o0:.26; --o1:.07}
+/* วงของการรบทึบสุด — มันคือเหตุการณ์ที่ฉากอยากให้เห็นก่อนอย่างอื่นเสมอ */
+.mk-pin.ev-battle .mk-halo{--o0:.46; --o1:.14}
+.mk-pin.ev-flip   .mk-halo{--o0:.38; --o1:.11}
+.mk-pin.ev-supply .mk-halo{--o0:.30; --o1:.09}
 
 /* ป้ายธง — ใครเดินเส้นนี้ และมากับกี่คน · ราคาของวงปะทะ
    พื้นหลังต้องทึบพอ เพราะมันลอยอยู่บนแผนที่พื้นที่มีทั้งตัวหนังสือ ภูเขา และแม่น้ำ
@@ -609,11 +614,18 @@ rect.sp-none{fill:#6b7285}
 .mk-ticks{transition:opacity .3s ease}
 .mk-tick{stroke:#0b0d12; stroke-width:1.2}
 /* บั๊กเดียวกับวงไฟในสมรภูมิ — ต้องมี transform-box ไม่งั้นวงแหวนเหวี่ยงหลุดตำแหน่ง */
-.mk-clash-ring{fill:none; stroke:#ffcf5c; stroke-width:2.5; opacity:.9;
+/* ★★★ วงปะทะเป็น **สีของเหตุการณ์** ไม่ใช่สีเหลืองตายตัวอีกต่อไป (2026-09-10)
+   เจ้าของเสนอเอง: *"ตรงที่มีการปะทะเราใช้สีโดนแดงดีไหมและมีกระเพื่อมๆ"*
+   ⚠ เดิม stroke ตรึง #ffcf5c ไว้ตรงนี้ — แปลว่าถึง strategic.js จะส่งสีมา วงก็ยังเหลือง
+     (นั่นคือเหตุผลที่ "สีของเหตุการณ์" มองไม่เห็นผลที่จุดปะทะเลยสักฉาก)
+   ★ ขอบมืดใต้วง = สิ่งที่ทำให้สีเข้มอ่านออกบนกระดาษสว่าง โดยไม่ต้องเพิ่มความจัดของสี */
+.mk-clash-ring{fill:none; stroke:var(--ev,#8F2A1B); stroke-width:3.2; opacity:1;
+  filter:drop-shadow(0 0 1.5px rgba(0,0,0,.55));
   animation:ring 1.6s ease-out infinite;
   transform-box:fill-box; transform-origin:center}
 .mk-clash-ring.r2{animation-delay:.55s}
-.mk-clash-x{fill:none; stroke:#ffcf5c; stroke-width:3.5; stroke-linecap:round}
+.mk-clash-x{fill:none; stroke:var(--ev,#8F2A1B); stroke-width:4; stroke-linecap:round;
+  filter:drop-shadow(0 0 1.5px rgba(0,0,0,.6))}
 @keyframes ring{0%{transform:scale(.5); opacity:1} 100%{transform:scale(1.5); opacity:0}}
 
 /* ══ แถบเวลา ══ */
@@ -979,7 +991,7 @@ html.no-intro #intro{display:none}
        **ป้าย**     = ฝ่าย (สีชิปเหมือนเดิม)
    ⚠ ออร่าขาวของกฎฐาน (#tkmap .pin-sym) ถูกกฎนี้ทับ — จึงต้องเขียนชั้นขาวกลับเข้ามา
      เองในนี้ ไม่งั้นรูปที่ติดไฟจะอ่านไม่ออกบนชื่อเมืองสีดำที่แผ่นพิมพ์ไว้ */
-#tkmap .pin.hot .pin-sym path{stroke:var(--ev,#5A420C); stroke-width:1.7}
+#tkmap .pin.hot .pin-sym path{stroke:var(--ev,#5A420C); stroke-width:2.1}
 /* ★ ไอคอนชุดใหม่ทาสีด้วย inline style (เพื่อรักษาเงาสองระดับ) ซึ่งชนะ selector ทุกตัว
    → สถานะ "ฉากชี้มาที่นี่" ต้องใช้ `!important` เพื่อทวงเส้นขอบคืนมาให้สีเหตุการณ์
    ⚠ นี่คือที่เดียวในไฟล์ที่ใช้ !important และมีเหตุผลเฉพาะข้อนี้ ห้ามลอกไปใช้ที่อื่น */
@@ -989,9 +1001,11 @@ html.no-intro #intro{display:none}
 /* ⚠ ออร่าสีชั้นเดียวเท่านั้น — ลองซ้อนสองชั้น (3.5px + 7px) แล้วสีทับสีจนกลายเป็น
    ก้อนดำขุ่นรอบรูป (ตรวจด้วยภาพจริง c7-04 2026-09-06) · ชั้นขาวต้องมาก่อนเสมอ
    มันคือชั้นที่ดันชื่อเมืองสีดำของแผ่นให้ห่างตัวรูป */
+/* ★ ออร่ารอบรูปแรงขึ้นหนึ่งขั้น (4px → 7px) พร้อมชั้นขาวที่หนาขึ้น
+   ชั้นขาวคือสิ่งที่ดันชื่อเมืองสีดำของแผ่นให้ห่างตัวรูป — ถ้าไม่หนาพอ สีเข้มจะจมหมึก */
 #tkmap .pin.hot .pin-sym, #tkmap .pin.hot .pin-role{
-  filter:drop-shadow(0 0 1.6px rgba(255,255,255,.95))
-         drop-shadow(0 0 4px   var(--ev,#d9b169));
+  filter:drop-shadow(0 0 2.2px rgba(255,255,255,.98))
+         drop-shadow(0 0 7px   var(--ev,#d9b169));
 }
 
 /* ══ หมุดที่พิกัดยังไม่ได้สอบเทียบกับแผ่น (`chk:true`) ═══════════════════════

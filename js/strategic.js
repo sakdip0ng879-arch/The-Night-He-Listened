@@ -37,6 +37,19 @@ TK.map = (function(){
           const r=a*Math.PI/180; return `${(s*Math.cos(r)).toFixed(1)},${(s*Math.sin(r)).toFixed(1)}`;
         }).join(' ')});
       case 'circle':   return mk('circle',{r:s});
+      /* ★★ ม้าเร็ว — **คนเดียว ไม่ใช่กองทัพ** (เจ้าของสั่ง 2026-09-10: ฉาก c1-08
+         *"ลูกศรขี่ม้าไปเฉิงตู"*) · roads.js เคยเขียนไว้ว่า *"ไม่มีลูกศรของ Zhang Fei
+         เข้า Chengdu ... ลูกศรอ้างการไปถึงด้วยกำลัง"* (BUGS_SEEN §B1)
+         ★ ข้อกังวลนั้น **ยังถูก** — ที่เปลี่ยนคือเราแยกภาษาของสองอย่างนี้ออกจากกันแล้ว:
+           ทัพ = สี่เหลี่ยม เส้นหนา มีเลขกำลังพล · ม้าเร็ว = รูปม้า เส้นบาง **ไม่มีเลข**
+         ⇒ ลูกศรเส้นนี้อ่านได้ว่า "มีคนควบมา" ไม่ใช่ "มีกำลังมาถึง"
+         ทรงสมมาตรไม่ได้เหมือน boat เพราะม้าต้องมีหัวมีหาง — แต่สัญลักษณ์ไม่ถูกหมุนตามทิศ
+         จึงวาดให้ **หันขวาเสมอ** และให้หัวลูกศรที่ปลายทางเป็นตัวบอกทิศแทน */
+      case 'horse':    return mk('path',{d:
+        'M -1.15,.30 L -.72,.30 L -.62,-.05 L -.20,-.22 L .28,-.18 L .55,-.42 ' +
+        'L .72,-.75 L 1.02,-.85 L 1.18,-.62 L 1.00,-.38 L .95,-.05 L .72,.30 ' +
+        'L 1.00,.30 L 1.00,.62 L .55,.62 L .38,.32 L -.05,.38 L -.28,.62 L -.72,.62 Z',
+        transform:`scale(${s})`});
       /* ประทุนเกวียน — ขบวนลำเลียงเสบียง · รูปเดียวกับใน battle.js shapeOf()
          ต้องมีทั้งสองที่ ไม่งั้นขบวนเสบียงบนแผนที่ใหญ่จะตกไปเป็นสี่เหลี่ยม
          ซึ่งตารางสัญลักษณ์ล็อกไว้แล้วว่าแปลว่าทหารราบ */
@@ -1835,7 +1848,9 @@ TK.map = (function(){
       g.classList.add('has-place-icon');
       const halo = g.querySelector('.mk-halo'), dot = g.querySelector('.mk-dot');
       const cx = s.x + s.w/2, cy = s.y + s.h/2;
-      const r0 = Math.max(s.w, s.h) * 0.62, r1 = r0 * 1.42;
+      /* ★ ระยะกระเพื่อม 1.42 → 1.80 เท่า (2026-09-10) — ตาคนจับ *การเคลื่อนไหว* ได้ไวกว่า
+         จับเฉดสี · การขยายช่วงพองคือวิธีทำให้เด่นที่ไม่ต้องเพิ่มความจัดของสีเลยสักนิด */
+      const r0 = Math.max(s.w, s.h) * 0.62, r1 = r0 * 1.80;
       if (halo){
         halo.setAttribute('cx', cx.toFixed(2)); halo.setAttribute('cy', cy.toFixed(2));
         halo.style.setProperty('--r0', r0.toFixed(2) + 'px');
@@ -1892,10 +1907,25 @@ TK.map = (function(){
   /* ทองของทั้งโปรเจกต์อยู่ที่ `--gold` ใน style.css — ค่านี้ต้องตรงกับมันเป๊ะ ๆ
      (อ่านจาก CSS ตอนรันไม่ได้ เพราะ halo ต้องได้สีตอนสร้าง ก่อนเข้า DOM) */
   const GOLD = '#d9b169';
+  /* ══ ★★★ สีของเหตุการณ์ — **เด่น แต่ไม่ฉูดฉาด** (เจ้าของสั่ง 2026-09-10) ══════════
+     > *"ตรงฉาก Highlight ตอนนี้สีมันอ่อนไปหน่อย ... เราคนอ่านแล้วยังต้องหาเลยว่าอยู่ตรงไหน
+     >  ... จริงๆ มันคือที่นายเคยเสนอมาหมดเลย แต่สีมันฉูดฉาดไปไม่เข้ากับโทนแผนที่
+     >  GPT เอาออกไปหมด เอามันกลับมาได้นะ แต่ทำสีให้โทนมันเข้ากับแผนที่ด้วย"*
+
+     ★★★ **ข้อค้นพบ: "เด่น" กับ "ฉูดฉาด" ไม่ใช่ปุ่มเดียวกัน**
+     รอบแรกผมดันความเด่นด้วย *ความจัดของสี* (ชาดไฟ #D93A1E · ม่วง #7B4FBF) ซึ่งดังจริง
+     แต่มันดังแบบ **หลุดออกจากกระดาษ** — แผ่นนี้เป็นหมึกบนกระดาษเก่า ไม่มีสีอิ่มตัวสักสี
+     สีที่อิ่มกว่าทุกอย่างบนแผ่นจึงอ่านเหมือนสติกเกอร์ที่แปะทับ · GPT เอาออกก็ไม่แปลก
+     ⇒ รอบนี้ดันความเด่นด้วย **ความทึบ · ระยะกระเพื่อม · ขอบมืด** แทน
+       แล้ว *ลด* ความจัดของสีลงหนึ่งขั้นให้เข้าโทนหมึก (ดูค่าที่ตั้งไว้ใน style.css ด้วย)
+
+     ⚠ ทุกสีต้อง **เข้มกว่าสีฝ่ายที่ใกล้ที่สุด** ไม่งั้นสองภาษาปนกัน:
+       ง่อ = #C2413A (แดงอิฐ) ⇒ สีรบต้องเข้มกว่านั้นชัด ๆ ไม่ใช่สดกว่า        */
   const EV_COLOR = {
-    battle: '#D93A1E',   /* ชาดไฟ — ไม่ใช่แดงอิฐของง่อ (#C2413A) สดกว่าและส้มกว่าชัดเจน */
-    flip:   '#7B4FBF',   /* ม่วง — ทั้งแผ่นไม่มีสีนี้อยู่เลย จึงอ่านว่า "ของใหม่" ทันที */
-    supply: '#B07E1C'    /* ทองเมล็ดข้าว เข้มกว่าป้ายยุ้ง (#EBC77A) หนึ่งขั้นเพื่อให้เห็นบนกระดาษ */
+    battle: '#8F2A1B',   /* ชาดเลือดหมู — เข้มกว่าแดงอิฐของง่อ (#C2413A) หนึ่งขั้นครึ่ง
+                            ★ เจ้าของเสนอเอง: *"ตรงที่มีการปะทะเราใช้สีโดนแดงดีไหม"* */
+    flip:   '#5C4382',   /* ม่วงหม่น — ยังเป็นสีที่ไม่มีบนแผ่น (อ่านว่า "ของใหม่") แต่หม่นลง */
+    supply: '#8A6314'    /* ทองข้าวเข้ม — เข้มกว่าป้ายยุ้ง (#EBC77A) สองขั้น */
   };
   /* ปลายทางของเส้นทางเดินทัพเป็น **ชื่อ node** ไม่ใช่พิกัด — ต้องอ่านจาก marches
      (routeEnd() คืนพิกัด ใช้เทียบกับ m.place ตรง ๆ ไม่ได้) */
@@ -2066,12 +2096,17 @@ TK.map = (function(){
            **มันคือกองทัพ** เส้นจึงหนาเท่าทัพบกและมีเลขกำลังพลเหมือนกัน
            สิ่งที่ต่างคือรูปหน่วย (ตัวเรือ) กับร่องรอยที่เส้นทิ้งไว้ (WAKE_DASH) */
         const fleet  = !!m.fleet;
+        /* ★ `rider` — ม้าเร็ว/ทูต **คนเดียว** ไม่ใช่กองทัพ (2026-09-10)
+           เส้นบางเท่าขบวนเสบียง แต่ยังทึบตลอด (เสบียงกลายเป็นเส้นประเพราะมัน *ไหลอยู่ตลอด*
+           ส่วนม้าเร็วคือ **การเดินทางครั้งเดียว** จบแล้วจบเลย) */
+        const rider  = !!m.rider;
         const baseRoute=skin().routePx;
-        const wRoute = supply ? baseRoute * 0.62 : baseRoute;
+        const wRoute = (supply || rider) ? baseRoute * 0.62 : baseRoute;
         let under = null;
         if (!echo){
           under = mk('path',{d:rt.d, class:'mk-route mk-route-under' +
-            (m.retreat ? ' retreat' : '') + (supply ? ' supply' : '') + (fleet ? ' fleet' : '')});
+            (m.retreat ? ' retreat' : '') + (supply ? ' supply' : '') + (fleet ? ' fleet' : '') +
+            (rider ? ' rider' : '')});
           under.style.stroke = '#0b0d12';
           under.style.strokeWidth = ((wRoute + 4.5) * mu0) + 'px';
           layers.markers.append(under);
@@ -2079,7 +2114,7 @@ TK.map = (function(){
         const path = mk('path',{d:rt.d, stroke:col,
           class:'mk-route' + (m.retreat ? ' retreat' : '') +
                 (supply ? ' supply' : '') + (fleet ? ' fleet' : '') +
-                (echo ? ' mk-echo' : '')});
+                (rider ? ' rider' : '') + (echo ? ' mk-echo' : '')});
         /* ★ "หนาคงที่บนจอ" — เจ้าของชี้ให้ดูโปรเจกต์กวนอูแล้วบอกว่า "เส้นไม่หนา" คือสิ่งที่
            ต้องการ · เส้นดูบาง = ปัญหากล้องแคบ ทางแก้คือถอยกล้อง ไม่ใช่ทำเส้นหนา (ROUTE_PX) */
         path.style.strokeWidth = (wRoute * mu0) + 'px';
@@ -2149,14 +2184,15 @@ TK.map = (function(){
         /* ขบวนเสบียงไม่ใช่กองทัพ — ใช้รูปวงกลมเล็ก (ล้อเกวียน) แทนสี่เหลี่ยมกองทัพ
            ถ้าใช้รูปเดียวกัน คนอ่านจะนับมันเป็นทัพอีกทัพหนึ่งบนแผนที่ */
         const sh = supply ? mk('circle',{r:5})
+                 : rider  ? unitShape('horse', 9)
                  : fleet  ? unitShape('boat', 9)
                           : skin().marchGlyph ? mk('path',{d:skin().marchGlyph,class:'march-standard'}) : unitShape(m.unit || 'square', 9);
         if (m.retreat){ sh.setAttribute('fill','none');
                         sh.setAttribute('stroke',col);
                         sh.setAttribute('stroke-width',3); }
-        else if (supply){ sh.setAttribute('fill', col);
+        else if (supply || rider){ sh.setAttribute('fill', col);
                           sh.setAttribute('stroke', '#0b0d12');
-                          sh.setAttribute('stroke-width', 2); }
+                          sh.setAttribute('stroke-width', rider ? 1.4 : 2); }
         else            sh.setAttribute('fill', col);
         gs.append(sh); g.append(gs);
         layers.markers.append(g);
@@ -2271,7 +2307,10 @@ TK.map = (function(){
            relayout() ถอด " scale(...)" ออกก่อนใส่ใหม่อยู่แล้ว รูปแบบนี้จึงเข้ากันได้ */
         const g = mk('g',{class:'mk-clash',
           transform:`translate(${p.x},${p.y}) scale(${screenMU().toFixed(3)})`});
-        g.dataset.place=m.place;g.dataset.ev='battle';g.dataset.evc='#935847';
+        g.dataset.place=m.place;g.dataset.ev='battle';g.dataset.evc=EV_COLOR.battle;
+        /* ★ ส่งสีเข้า CSS ด้วย — เดิม `.mk-clash-ring` ตรึงสีเหลือง #ffcf5c ไว้ในสไตล์
+           วงปะทะจึงเป็นสีเหลืองเสมอ ไม่ว่า evc จะเป็นสีอะไร (เจ้าของขอให้เป็นแดงเข้ม) */
+        g.style.setProperty('--ev', EV_COLOR.battle);
         g.append(mk('path',{d:'M -7,-8 L 5,4 L 8,4 L 8,1 L -4,-11 Z M 7,-8 L -5,4 L -8,4 L -8,1 L 4,-11 Z M -8,5 L -4,9 M 8,5 L 4,9',class:'battle-blades'}));
         g.append(mk('circle',{r:16, class:'mk-clash-ring'}));
         g.append(mk('circle',{r:24, class:'mk-clash-ring r2'}));

@@ -1,12 +1,38 @@
 /* เฉพาะตัวอย่าง ?ui=studio — ไม่แตะโทนสีภูมิประเทศหรือชุดไอคอน */
 .battle-blades{display:none}
 .ui-studio .battle-blades{display:block;fill:#925443;stroke:#f6ebd1;stroke-width:1.1;stroke-linejoin:round;transform:translate(13px,-17px)}
-.ui-studio .mk-clash-ring,.ui-studio .mk-clash-x,.ui-studio .mk-halo{display:none}
-.ui-studio #tkmap .pin.hot{--ev:#80613f!important}
-.ui-studio #tkmap .pin.hot[data-ev="battle"]{--ev:#935847!important}
-.ui-studio #tkmap .pin.hot[data-ev="supply"]{--ev:#58776b!important}
-.ui-studio #tkmap .pin.hot .pin-sym,.ui-studio #tkmap .pin.hot .pin-role{filter:drop-shadow(0 0 1.5px #fff5da)}
-.ui-studio .plabel.hot{fill:#765331;stroke:#fff2d5}
+/* ══ ★★★★ ไฮไลต์ของฉาก — เอาวงกระเพื่อมกลับมา (เจ้าของสั่ง 2026-09-10) ══════════
+   > *"ตรงฉาก Highlight ตอนนี้สีมันอ่อนไปหน่อย ... เราคนอ่านแล้วยังต้องหาเลยว่าอยู่ตรงไหน
+   >  ... ตรงที่มีการปะทะเราใช้สีโดนแดงดีไหมและมีกระเพื่อมๆ แล้วอื่นๆ ด้วย
+   >  จริงๆ มันคือที่นายเคยเสนอมาหมดเลย ... GPT เอาออกไปหมด เอามันกลับมาได้นะ
+   >  แต่ทำสีให้โทนมันเข้ากับแผนที่ด้วย คือมันไม่ฉูดฉาดมาก แต่ต้องเด่น"*
+
+   ★★★ **ต้นเหตุจริงอยู่บรรทัดเดียว** — ของเดิมคือ
+       `.ui-studio .mk-clash-ring,.ui-studio .mk-clash-x,.ui-studio .mk-halo{display:none}`
+   นั่นแปลว่าในผิว studio (ซึ่งเป็น **ค่าเริ่มต้น**) ฉากไม่มีออร่าและไม่มีวงปะทะเลยสักฉาก
+   เหลือแค่ขอบสีรอบไอคอน ⇒ ผู้อ่านต้อง *ไล่หา* ว่าฉากชี้ไปที่ไหน ซึ่งตรงกับที่เจ้าของทักเป๊ะ
+   ⚠ ไม่ใช่ "สีอ่อนไป" อย่างเดียว — **มันถูกปิดทิ้ง** การไปไล่ปรับเฉดสีอย่างเดียวจะไม่เจอ
+
+   ★ กลับมาแบบใหม่: เด่นด้วย **ความทึบ + ระยะกระเพื่อม + ขอบมืด** ไม่ใช่ด้วยสีที่จัดขึ้น
+     และใช้สีโทนหมึกบนกระดาษ (ดู EV_COLOR ใน strategic.js) แทนสีอิ่มตัว        */
+.ui-studio #tkmap .pin.hot{--ev:#7A5A34!important}
+.ui-studio #tkmap .pin.hot[data-ev="battle"]{--ev:#8F2A1B!important}
+.ui-studio #tkmap .pin.hot[data-ev="flip"]  {--ev:#5C4382!important}
+.ui-studio #tkmap .pin.hot[data-ev="supply"]{--ev:#7B5A18!important}
+/* ออร่าของหมุด — ต้องหนากว่าผิว classic เพราะกระดาษของผิวนี้สว่างกว่า */
+.ui-studio #tkmap .pin.hot .pin-sym,.ui-studio #tkmap .pin.hot .pin-role{
+  filter:drop-shadow(0 0 2.4px #fff5da) drop-shadow(0 0 7px var(--ev,#7A5A34))}
+/* ⚠ วงกระเพื่อมของผิวนี้ **จางกว่าฝั่ง classic หนึ่งขั้น** โดยตั้งใจ — พื้นกระดาษสว่าง
+   สีทึบเท่ากันจะอ่านแรงกว่ามาก · ที่ต้องการคือ "เห็นทันทีว่าอยู่ตรงไหน" ไม่ใช่ "แสบตา" */
+.ui-studio .mk-halo{--o0:.30; --o1:.08}
+.ui-studio .mk-pin.ev-battle .mk-halo{--o0:.40; --o1:.12}
+.ui-studio .mk-pin.ev-flip   .mk-halo{--o0:.33; --o1:.10}
+/* วงปะทะ — สีแดงเข้มพร้อมขอบขาวบาง ๆ ให้แยกจากหมึกของแผ่น */
+.ui-studio .mk-clash-ring{stroke-width:2.8;
+  filter:drop-shadow(0 0 1.6px rgba(255,247,226,.9))}
+.ui-studio .mk-clash-x{stroke-width:3.4;
+  filter:drop-shadow(0 0 1.6px rgba(255,247,226,.9))}
+.ui-studio .plabel.hot{fill:var(--ev,#7A5A34);stroke:#fff2d5;stroke-width:.24em;paint-order:stroke;font-weight:700}
 .ui-studio .mk-cap text{fill:#715039;stroke:#f5ead1;stroke-width:3px;paint-order:stroke}
 .ui-studio .zlabel{fill:#766d57;stroke:#eee4cd;opacity:.8}
 .ui-studio .zline{stroke:#5d5140;stroke-opacity:.9;stroke-width:1.7px;stroke-dasharray:8 5}

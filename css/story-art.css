@@ -1,0 +1,39 @@
+.works-art-spine{fill:none;stroke:#7d7057;stroke-opacity:.6}
+/* แสงเน้นเมือง/เส้นทัพ/รอยปะทะเป็นภาพประกอบ ไม่บังการกดหอป้อมข้างด่าน */
+.mk-halo,.mk-route,.mk-clash{pointer-events:none}
+.works[role=button]{cursor:pointer;outline:none}.works[role=button]:focus-visible .works-masonry,.works.chosen .works-masonry{stroke:#eed292;stroke-width:1.3}
+.works[role=button]:focus-visible .works-wood,.works.chosen .works-wood{stroke:#eed292}
+.scene-cast-more{font-size:12px;align-self:center}.scene-cast-more>summary{cursor:pointer;padding:10px 7px;min-height:44px}.scene-cast-more[open]{flex-basis:100%}.scene-cast-more .scene-cast-person{display:inline-flex}
+.works-masonry{fill:#cbbb96;stroke:#554938;stroke-width:.85;stroke-linejoin:round}
+.works-stone-shade{fill:#9c8a69;stroke:#756248;stroke-width:.45}
+.works-door{fill:#443f32;stroke:none}.works-banner{fill:#546e54;stroke:none}
+.s-wei .works-banner{fill:#637b8d}
+.works-wood{fill:none;stroke:#756044;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.works-smoke{fill:none;stroke:#f0e4c3;stroke-width:2;stroke-linecap:round;opacity:0;pointer-events:none}
+.works-signalling .works-smoke{animation:works-message 1.3s var(--signal-delay,0s) 1 both}
+@keyframes works-message{0%{opacity:0;transform:translateY(2px)}35%{opacity:.9}100%{opacity:0;transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){.works-signalling .works-smoke{animation:none}}
+.route-muted{opacity:.2!important}
+.story-art-controls{margin:14px 0 18px;border-block:1px solid #aa98613d;padding:9px 0;font:13px/1.65 Tahoma,sans-serif}
+.story-art-controls h3{font:600 13px/1.6 Tahoma,sans-serif;margin:8px 0}
+.story-art-controls p{margin:8px 0}.story-art-controls small{color:inherit;opacity:.75}
+.story-art-controls summary{cursor:pointer;padding:7px 0;min-height:36px}
+.art-map-notes p{font-size:12px}.art-route-options{display:flex;flex-wrap:wrap;gap:5px}
+.art-action{border:1px solid #8c7959;background:#27332c;color:#eee2c7;border-radius:6px;padding:8px 10px;margin:4px 3px 4px 0;font:12px/1.5 Tahoma,sans-serif;cursor:pointer}
+.art-action[aria-pressed=true]{background:#d4b16d;color:#25291f}.art-action:focus-visible,summary:focus-visible{outline:2px solid #d4b16d;outline-offset:2px}
+.story-art-controls .art-action:hover:not(:disabled){background:#3b483b;color:#eee2c7}
+.story-art-controls .art-action[aria-pressed=true]:hover:not(:disabled){background:#e1c17e;color:#25291f}
+.art-grain{display:flex;gap:5px;padding:8px 0;flex-wrap:wrap}.grain-sack{width:20px;height:27px;background:#c0a46c;border:1px solid #756040;border-radius:45% 45% 25% 25%;position:relative}.grain-sack:before{content:'';position:absolute;top:3px;left:4px;right:4px;border-top:2px solid #6e5838}.grain-spent{opacity:.25}
+.art-compare{margin-top:10px}.art-compare .art-action{display:block;width:100%;text-align:left}
+.ui-studio .studio-context{display:none}.ui-studio.studio-context-open .studio-context{display:block;max-height:240px;overflow:auto}
+.ui-studio #maptools .studio-context-toggle{display:block}
+.art-tools-menu{position:relative;font:12px Tahoma,sans-serif}.art-tools-menu>summary{list-style:none;cursor:pointer;padding:9px 12px;border:1px solid #39414a;border-radius:6px;background:#222931;color:#e5dfcf;min-height:36px}
+.art-tools-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:40;width:230px;padding:8px;background:#20272d;border:1px solid #56615e;border-radius:8px;box-shadow:0 6px 20px #10171055}
+.ui-studio #maptools .art-tools-panel button{width:100%;display:block;text-align:left;margin:3px 0;min-height:40px}
+@media(max-width:700px){
+ body.ui-studio:not(.studio-map-only):not(.studio-gallery){grid-template-rows:auto minmax(210px,.9fr) minmax(260px,1.3fr) auto}
+ .ui-studio #maptools{gap:4px;align-items:center}.ui-studio #maptools>button{min-height:38px}
+ .art-tools-menu>summary{font-size:11px;padding:8px;min-height:38px}
+ .ui-studio aside>.hint{display:none}.ui-studio aside>.credit{font-size:8px;max-height:27px;overflow:auto}
+ .art-action,.story-art-controls summary{min-height:44px}.ui-studio .foot{padding-block:9px}
+}

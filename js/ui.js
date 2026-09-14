@@ -253,6 +253,8 @@ TK.ui = (function(){
          <span class="fact ${f.cls}">${f.label}</span>
          <div class="fnote">${mdBold(b.factNote)}</div>`;
 
+      const cast = TK.mapPeople?.castRow(b);
+      if (cast) a.querySelector('.btitle').after(cast);
       a.querySelector('.fact').onclick = e => {
         e.stopPropagation();
         a.querySelector('.fnote').classList.toggle('open');
@@ -637,21 +639,19 @@ TK.ui = (function(){
         '<path class="lg-wall-t" d="M3,15 v-4 M9,15 v-4 M15,15 v-4 M21,15 v-4"/>',
         'กำแพงเมืองจีน','เส้นทึบ + ฟันเสมา · ชายแดนเหนือของจักรวรรดิ'));
       box.append(line('<path class="lg-spine" d="M1,14 H25"/>' +
-        '<rect class="lg-fort" x="3" y="11" width="5" height="5"/>' +
-        '<rect class="lg-fort" x="11" y="11" width="5" height="5"/>' +
-        '<rect class="lg-fort" x="19" y="11" width="5" height="5"/>',
-        'โซ่ป้อม','ป้อมเรียงตามถนน — แต่ละป้อมมองเห็นป้อมถัดไป'));
+        '<path class="works-masonry" d="M3 18V9H2V5H5V8H8V5H11V9H10V18Z M17 18V9H16V5H19V8H22V5H25V9H24V18Z"/>',
+        'โซ่ป้อม','หอป้อมตามแนวถนน · จำนวนรูปย่อให้เหมาะกับระดับซูม กดแนวเพื่ออ่านข้อมูล'));
       box.append(line('<path class="lg-spine" d="M1,15 H25"/>' +
-        '<path class="lg-stake" d="M4,12 v6 M9,12 v6 M14,12 v6 M19,12 v6 M24,12 v6"/>',
+        '<path class="works-wood" d="M4 19V9L5 7L6 9V19M12 19V9L13 7L14 9V19M20 19V9L21 7L22 9V19M2 12H24M2 17H24"/>',
         'แนวรั้ว','หลักไม้ถี่ — บอกว่าคนเข้ามาตรงไหน ไม่ได้กันคนเข้า'));
 
-      box.append(head('กองทัพ — รูปทึบ มีสีฝ่าย เคลื่อนที่บนเส้นทาง'));
+      box.append(head('กองทัพและการขนส่ง — เคลื่อนตามเส้นทาง'));
       for (const [kind, name] of UNITS){
         const svg = document.createElementNS(NS,'svg');
         svg.setAttribute('viewBox','-12 -12 24 24');
         svg.setAttribute('width','26'); svg.setAttribute('height','26');
-        const sh = TK.map.unitShape(kind, 8);
-        sh.setAttribute('class','lg-unit'); svg.append(sh);
+        if(kind==='boat'||kind==='wagon'){svg.setAttribute('viewBox','-16 -16 32 32');TK.storyArt.vehicle(svg,{fleet:kind==='boat',supply:kind==='wagon'});}
+        else{const sh = TK.map.unitShape(kind, 8);sh.setAttribute('class','lg-unit');svg.append(sh);}
         box.append(row(svg, name, ''));
       }
       const sw = document.createElement('div'); sw.className = 'lg-sides';
@@ -662,8 +662,7 @@ TK.ui = (function(){
       box.append(sw);
       const foot = document.createElement('div');
       foot.className = 'lg-foot';
-      foot.textContent = 'สัญลักษณ์สถานที่เป็นหมึกดำล้วน ไม่มีสีฝ่าย และไม่เคลื่อนที่ — ' +
-                         'สีฝ่ายเป็นภาษาของกองทัพเท่านั้น';
+      foot.textContent = 'รูปเมืองและด่านอยู่ประจำที่ ส่วนภาพบุคคลอาจอยู่ในเมืองหรือเคลื่อนตามเส้นทาง กดภาพเพื่ออ่านบทบาท สีพื้นที่และสีเส้นบอกฝ่าย';
       box.append(foot);
     }
 

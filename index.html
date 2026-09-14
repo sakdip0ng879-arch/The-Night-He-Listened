@@ -29,6 +29,8 @@
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/ui-studio.css">
+<link rel="stylesheet" href="css/map-people.css">
+<link rel="stylesheet" href="css/story-art.css">
 
 <!-- ⚠⚠ ต้องตัดสินใจ "โชว์หน้าเปิดไหม" **ก่อนเบราว์เซอร์วาด** ไม่ใช่ตอน ui.js ทำงาน
      (เจ้าของทัก 2026-09-02: *"กดเข้าลิงก์มามันเด้งหน้า Intro เสร็จแล้วเปลี่ยนไปหน้าแรกทันที"*)
@@ -214,11 +216,16 @@ try{
 <script src="data/works.js"></script>  <!-- โซ่ป้อม/แนวรั้ว · เกาะ edge ของกราฟถนน -->
 <script src="data/roads.js"></script>
 <script src="data/timeline.js"></script>
+<script src="data/scene_people.js"></script>
+<script src="data/scene_art.js"></script>
 
 <script src="js/labeler.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/map-surface.js"></script>
 <script src="js/strategic.js"></script>
+<script src="js/map-works-art.js"></script>
+<script src="js/map-people.js"></script>
+<script src="js/story-art.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/spine.js"></script>
 <script>
@@ -227,5 +234,6 @@ try{
   TK.spine.init();
 </script>
 <script src="js/ui-studio.js"></script>
+<script>TK.storyArt.init();</script>
 </body>
 </html>

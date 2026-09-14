@@ -1,0 +1,28 @@
+/* กรอบภาพวาดใน SVG เดิม จึงไม่เพิ่ม foreignObject หรือชั้นแผนที่ raster */
+.mk-portrait{pointer-events:all;cursor:pointer;outline:none}
+#L-people{pointer-events:none}.studio-gallery #L-people{display:none}
+.map-portrait-rim{paint-order:stroke fill}
+.mk-portrait:hover .map-portrait-rim,.mk-portrait:focus-visible .map-portrait-rim,.mk-portrait.chosen .map-portrait-rim{stroke:#d6a94f;stroke-width:4}
+.map-portrait-count-bg{fill:#26362d;stroke:#d4c296;stroke-width:.7}
+.map-portrait-count{fill:#f6eedc;font:600 10px Tahoma,sans-serif;stroke:none}
+.map-portrait-fallback{font:600 9px Tahoma,sans-serif;fill:#213228;stroke:none}
+.map-person-card{position:absolute;z-index:7;bottom:14px;left:14px;width:330px;max-width:calc(100% - 28px);max-height:min(42%,330px);overflow:auto;padding:16px 34px 16px 16px;border:1px solid #a08e61;border-radius:12px;background:#202e27;color:#eee4ca;box-shadow:0 5px 20px #10160f33;font:13px/1.65 Tahoma,sans-serif}
+.map-person-card[hidden]{display:none}.map-person-card h3{font-size:18px;margin:0 0 6px;color:#f1e5c7}.map-person-card p{margin:7px 0}.map-person-card small{display:block;clear:both;color:#aeb9a2;font-size:10px}.map-person-meta{color:#d2bb83}.map-person-face{float:left;width:128px;height:128px;object-fit:contain;background:#c5bd9e;border-radius:50%;margin:0 12px 8px 0}.map-person-close{position:absolute;right:5px;top:5px;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:#e9dfc7;cursor:pointer;font-size:24px}.map-person-close:focus-visible{outline:2px solid #d6a94f}.studio-gallery .map-person-card{display:none}
+@media(max-width:600px){.map-person-card{bottom:8px;left:8px;max-width:calc(100% - 16px);max-height:50%;padding:12px 32px 12px 12px}.map-person-face{width:96px;height:96px}}
+@media(prefers-reduced-motion:reduce){.mk-portrait{transition:none}}
+.scene-cast{margin:12px 0 18px;padding:10px 0;border-block:1px solid #ac956b45}
+.scene-cast .scene-cast-title{margin:0 0 9px;font:600 11px/1.5 Tahoma,sans-serif;color:inherit;opacity:.72}
+.scene-cast-list{display:flex;flex-wrap:wrap;gap:8px}
+.scene-cast-person{display:flex;align-items:center;gap:7px;padding:4px 8px 4px 4px;max-width:100%;border:1px solid transparent;border-radius:28px;background:transparent;color:inherit;font:600 12px/1.5 Tahoma,sans-serif;cursor:pointer}
+.scene-cast-person img{width:48px;height:48px;object-fit:contain;border-radius:50%;background:#c5bd9e;flex-shrink:0}
+.scene-cast-person:hover,.scene-cast-person[aria-expanded=true]{border-color:#b69a63;background:#ab956b18}
+.scene-cast-person:focus-visible{outline:2px solid #b69a63;outline-offset:2px}
+.scene-cast .scene-cast-role{margin:10px 0 0;font:13px/1.75 Tahoma,sans-serif;color:inherit}
+.scene-cast-role[hidden]{display:none}
+@media(max-width:600px){
+  .scene-cast{margin:6px 0 10px;padding:5px 0}
+  .scene-cast .scene-cast-title{margin-bottom:3px;font-size:10px}
+  .scene-cast-list{gap:3px}
+  .scene-cast-person{min-height:44px;padding:4px;gap:4px;font-size:11px}
+  .scene-cast-person img{width:32px;height:32px}
+}

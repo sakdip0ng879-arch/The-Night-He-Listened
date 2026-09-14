@@ -102,7 +102,7 @@ TK.map = (function(){
        ทุกครั้งที่เพิ่มความทึบของเขตให้สีฝ่ายชัด แม่น้ำจะจมหายไปพร้อมกัน (DECISIONS §14 เฟส 2) */
     /* ★ 'zhou' (เส้นแบ่งมณฑล) อยู่เหนือน้ำ/กำแพง แต่ใต้ทุกอย่างที่เป็นของ *ฉาก* —
        มันเป็นชั้นภูมิศาสตร์การปกครอง ไม่ใช่เหตุการณ์ ห้ามบังลูกศรเดินทัพหรือวงเน้น */
-    for (const name of ['regions','water','wall','zhou','works','focus','roads','routes','markers','pins','labels'])
+    for (const name of ['regions','water','wall','zhou','works','focus','roads','routes','markers','pins','labels','people'])
       cam.append(layers[name] = mk('g',{id:'L-'+name}));
 
     /* ── ปิดทับตัวอักษร WEI / SHU / WU ที่พิมพ์มากับแผนที่ (DECISIONS §3) ──
@@ -1087,84 +1087,9 @@ TK.map = (function(){
   /* ── ★★ โซ่ป้อม / แนวรั้ว (DECISIONS §3 · เจ้าของอนุญาต 2026-09-05) ──────────
      ★ **ไม่มีพิกัดของตัวเอง** — สุ่มจุดจาก `d` ของ edge ที่มันเกาะอยู่ แล้วตัดเอา
        เฉพาะช่วง from–to · ถ้าถนนถูกลากใหม่วันไหน สิ่งก่อสร้างขยับตามเอง
-     ⚠ ป้อมเป็น **หน่วยแผนที่** เหมือนกำแพง — มันคือสิ่งที่ตั้งอยู่บนแผ่นดิน
-       ไม่ใช่สัญลักษณ์บนจอ                                                        */
-  /* ⚠ แผ่นบีบระยะ — edge 180 ลี้ (tianshui–jieting) ยาวแค่ ~58 หน่วยบนแผ่น
-     ระยะป้อมจึงต้องคิดจาก *หน่วยแผ่น* ไม่ใช่จากลี้ ไม่งั้นได้ป้อมสองหลังทั้งโซ่ */
-  /* ⚠ FORT_STEP 11 → 9 พร้อมกับเปลี่ยนวิธีวาง (2026-09-06) — ดูคอมเมนต์ที่ลูปวาดป้อม */
-  const FORT_STEP = 9, FORT_SIZE = 4.2, FENCE_STEP = 7, FENCE_TOOTH = 3.6;
-  function buildWorks(){
-    const list = TK.works || [];
-    if (!list.length) return;
-    const byPair = {};
-    (TK.edges || []).forEach(e => { byPair[e.a+' '+e.b] = e; byPair[e.b+' '+e.a] = e; });
-
-    for (const w of list){
-      const e = byPair[w.on[0]+' '+w.on[1]];
-      if (!e || !e.d) continue;                    /* ข้อ 14 ของตัวตรวจฟ้องให้แล้ว */
-      const probe = mk('path',{d:e.d});
-      layers.works.append(probe);                  /* ต้องอยู่ใน DOM ถึงจะวัดความยาวได้ */
-      const total = probe.getTotalLength();
-      /* `d` ลากจาก a ไป b เสมอ (กติกา §4) — ถ้า `on` กลับด้าน ต้องกลับเศษส่วนด้วย */
-      const flip = (e.a !== w.on[0]);
-      const t0 = flip ? 1 - w.to : w.from, t1 = flip ? 1 - w.from : w.to;
-      const s0 = total * t0, s1 = total * t1;
-      const g = mk('g',{class:'works w-'+w.kind+' s-'+(w.side||'none')});
-      g.dataset.id = w.id;
-
-      /* เส้นแกน — เก็บจุดตามช่วงที่กิน */
-      let d = '', first = true;
-      for (let s = s0; s <= s1; s += 4){
-        const p = probe.getPointAtLength(s);
-        d += (first ? 'M' : ' L') + p.x.toFixed(1) + ',' + p.y.toFixed(1);
-        first = false;
-      }
-      g.append(mk('path',{class:'works-spine', d}));
-
-      if (w.kind === 'fortchain'){
-        /* ป้อมเป็นสี่เหลี่ยมเล็ก ๆ เรียงตามถนน — "แต่ละป้อมมองเห็นป้อมถัดไป" (c7-01)
-
-           ★★★ **ตะแกรงร่วมของทั้ง edge** (เจ้าของทัก 2026-09-06: *"โซ่ป้อมมันวางตัว
-             ไม่สวย สี่เหลี่ยมมันทับกัน"*)
-           ของเดิมนับจาก `s0` ของ **ชิ้นตัวเอง** → ป้อมของสองชิ้นที่ต่อกันบน edge เดียวกัน
-           (ป้อมเจียงเหวย 256 จบที่ t=0.15 · 257 เริ่มที่ t=0.15) ตกห่างกันแค่ 4.3 หน่วย
-           ทั้งที่ตัวป้อมกว้าง 4.2 = **ซ้อนกันพอดี** และมันเกิดที่รอยต่อเสมอ ไม่ใช่บังเอิญ
-           ★ ใหม่: วางบนตะแกรงที่นับจาก **ต้น edge** (s = 0, 9, 18, …) แล้วเก็บเฉพาะตัวที่
-             ตกในช่วง from–to ของชิ้นนี้ → ทุกชิ้นบนถนนเส้นเดียวกันใช้ตะแกรงเดียวกัน
-             ระยะห่างจึงเท่ากันหมดและไม่มีทางซ้อน ต่อให้แบ่งชิ้นกันตรงไหน
-           ⚠ ช่วงที่สั้นกว่าหนึ่งช่วงตะแกรงจะไม่ได้ป้อมเลย — ใส่ตัวกลางให้หนึ่งหลัง
-             ไม่งั้นโซ่ป้อมที่ประกาศไว้จะกลายเป็นเส้นเปล่า */
-        let n = 0;
-        for (let s = Math.ceil(s0 / FORT_STEP) * FORT_STEP; s <= s1 + 0.01; s += FORT_STEP){
-          const p = probe.getPointAtLength(s);
-          g.append(mk('rect',{class:'works-fort', x:(p.x-FORT_SIZE/2).toFixed(1),
-            y:(p.y-FORT_SIZE/2).toFixed(1), width:FORT_SIZE, height:FORT_SIZE}));
-          n++;
-        }
-        if (!n){
-          const p = probe.getPointAtLength((s0 + s1) / 2);
-          g.append(mk('rect',{class:'works-fort', x:(p.x-FORT_SIZE/2).toFixed(1),
-            y:(p.y-FORT_SIZE/2).toFixed(1), width:FORT_SIZE, height:FORT_SIZE}));
-        }
-      } else {
-        /* รั้ว — หลักไม้ตั้งฉากกับแนว สั้นและถี่กว่าฟันเสมาของกำแพง */
-        let teeth = '';
-        for (let s = s0; s <= s1; s += FENCE_STEP){
-          const p = probe.getPointAtLength(s);
-          const q = probe.getPointAtLength(Math.min(s + 2, total));
-          const dx = q.x - p.x, dy = q.y - p.y, len = Math.hypot(dx,dy) || 1;
-          const nx = -dy/len * FENCE_TOOTH, ny = dx/len * FENCE_TOOTH;
-          teeth += `M${(p.x-nx/2).toFixed(1)},${(p.y-ny/2).toFixed(1)}` +
-                   `l${nx.toFixed(1)},${ny.toFixed(1)}`;
-        }
-        if (teeth) g.append(mk('path',{class:'works-stake', d:teeth}));
-      }
-      const t = mk('title'); t.textContent = w.label + (w.note ? ' — ' + w.note : '');
-      g.append(t);
-      probe.remove();
-      layers.works.append(g);
-    }
-  }
+     ตำแหน่งยังอยู่บนแผ่น ขนาดหอป้อมจำกัดตามระดับซูมและเว้นกรอบไอคอนจริง
+     จำนวนรูปแสดงความต่อเนื่องของแนว ไม่ใช่จำนวนป้อมเชิงประวัติศาสตร์ */
+  function buildWorks(){ TK.worksArt.build(layers.works,mk); }
 
   /* works โผล่เฉพาะปีที่มันมีอยู่จริง — เรียกจาก setYear */
   function applyWorksYear(){
@@ -1644,7 +1569,7 @@ TK.map = (function(){
     });
   }
 
-  const fmtK = n => n >= 1000 ? (n/1000).toFixed(n % 1000 ? 1 : 0) + 'k' : String(n);
+  const fmtTroops = n => n.toLocaleString('en-US');
 
   /* ── ป้ายธง ──
      ลูกศรบนแผนที่เดิมบอกได้แค่ "ฝ่ายไหน" (สี) กับ "เหล่าไหน" (รูปทรง) ไม่เคยบอกว่า *ใคร*
@@ -1714,6 +1639,7 @@ TK.map = (function(){
 
   function layoutAnnotations(){
     if (!pendingAnn.length) return;
+    for(const a of pendingAnn)if(a.reflow)Object.assign(a,a.reflow());
     const mu = screenMU();
     const toPx = (mx, my) => [ (mx - vb.x)/mu, (my - vb.y)/mu ];
     const boxes = annBlocks.map(o => {
@@ -1787,7 +1713,22 @@ TK.map = (function(){
           box = null;
         }
       }
-      /* ที่สุดท้าย: ยอมทับได้แต่ห้ามหลุดจอ — clamp กลับเข้าขอบ */
+      /* จอแคบ: วงรอบจุดยึดอาจไม่มีที่ ทั้งที่อีกฝั่งยังว่าง ค้นพื้นที่ในเฟรม
+         ก่อนยอมซ้อน เลือกกล่องชนของแข็งน้อยสุด แล้วจึงระยะถึงเส้นเดิม */
+      if (!box){
+        let best = null;
+        for (let y = a.h/2+6; y <= FH-a.h/2-6; y += 16){
+          for (let x = a.w/2+6; x <= FW-a.w/2-6; x += 16){
+            const b = {x:x-a.w/2-3,y:y-a.h/2-3,w:a.w+6,h:a.h+6};
+            let area = 0;
+            for (const o of boxes){const dx=Math.min(b.x+b.w,o.x+o.w)-Math.max(b.x,o.x),dy=Math.min(b.y+b.h,o.y+o.h)-Math.max(b.y,o.y);if(dx>0&&dy>0)area+=dx*dy;}
+            const score=area*100000+Math.hypot(x-ax,y-ay)+(hitsLine(b)?20:0);
+            if(!best||score<best.score)best={x,y,b,score};
+          }
+        }
+        if(best){cx=best.x;cy=best.y;box=best.b;}
+      }
+      /* เฟรมเล็กกว่าตัวป้ายเอง: clamp กลับเข้าขอบ */
       if (!box){
         cx = Math.min(Math.max(cx, a.w/2 + 5), FW - a.w/2 - 5);
         cy = Math.min(Math.max(cy, a.h/2 + 5), FH - a.h/2 - 5);
@@ -1886,10 +1827,15 @@ TK.map = (function(){
   }
 
   function clearMarkers(){
+    TK.mapPeople?.clear();
+    TK.storyArt?.clear();
+    TK.worksArt?.signal([]);
+    pendingAnn=[];annBlocks=[];annPaths=[];leaderG=null;
     mkTimers.forEach(clearTimeout);  mkTimers = [];
     cameraWaiters = [];
     mkTweens.forEach(cancel => cancel()); mkTweens = [];
     layers.markers.replaceChildren();
+    layers.people.replaceChildren();
     /* ผีของโหมดสองเอกภพตายพร้อมฉาก — สีแผ่นดินไม่ต้องคืนที่นี่
        เพราะ render() ของฉากใหม่เรียก setOwners ของมันเองเสมอ */
     clearHot();
@@ -2011,6 +1957,7 @@ TK.map = (function(){
     const evKind = evScan(markers, delta);
 
     markers.forEach((m, idx) => {
+      const markerStart=layers.markers.children.length,peopleStart=layers.people.children.length;
       /* ── echo — เพิ่ม 2026-08-22 สำหรับ "โหมดทั้งฤดู" ใน ui.js ────────────────
          marker ที่ติดธง echo คือของ *ฉากอื่นในฤดูเดียวกัน* ไม่ใช่ของฉากที่กำลังอ่าน
          มันมีหน้าที่เดียวคือบอกว่า "ตอนนั้นมีอะไรเกิดขึ้นที่อื่นด้วย" จึงต้องเบาลง
@@ -2061,10 +2008,16 @@ TK.map = (function(){
         g.append(halo); g.append(dot);
         layers.markers.append(g);
         blockAt(p.x, p.y, 15);                 // วงฮาโลที่เต้นถึง r19 บนจอ
-        if (m.label){
+        const labelOnlyPlace = m.label && [p.label,p.py,p.map].filter(Boolean).some(name => {
+          const label=m.label.trim();
+          if(label===name)return true;
+          return ['—','–','-'].some(dash=>['ต้นทาง','ปลายทาง','เมืองหลวง','นครหลวง'].some(role=>label===name+' '+dash+' '+role));
+        });
+        if (m.label && (!labelOnlyPlace || m.strength)){
           /* rank 0 — คำบรรยายคือสิ่งที่ฉากตั้งใจให้อ่าน ได้เลือกที่ก่อนป้ายชื่อกองทัพ
              ⚠ หมุดทอง (ไม่มี side) ไม่รับเลข — ทองแปลว่า "ฉากนี้ชี้ตรงนี้" ไม่ใช่ "ใครถืออะไร" */
-          const txt = col && m.strength ? m.label + '   ' + fmtK(m.strength) : m.label;
+          const shortLabel=TK.storyArt.labelFor(focusBeat,m);
+          const txt = col && m.strength ? shortLabel + '   ' + fmtTroops(m.strength) : shortLabel;
           const lab = col ? addChip(layers.markers, m.side, txt)
                           : addCaption(layers.markers, m.label);
           queueAnn(lab, p.x, p.y, 0, 14);
@@ -2107,7 +2060,7 @@ TK.map = (function(){
         /* ★ `rider` — ม้าเร็ว/ทูต **คนเดียว** ไม่ใช่กองทัพ (2026-09-10)
            เส้นบางเท่าขบวนเสบียง แต่ยังทึบตลอด (เสบียงกลายเป็นเส้นประเพราะมัน *ไหลอยู่ตลอด*
            ส่วนม้าเร็วคือ **การเดินทางครั้งเดียว** จบแล้วจบเลย) */
-        const rider  = !!m.rider;
+        const rider  = !!(m.rider || TK.marches?.[m.route]?.rider);
         const baseRoute=skin().routePx;
         const wRoute = (supply || rider) ? baseRoute * 0.62 : baseRoute;
         let under = null;
@@ -2160,23 +2113,7 @@ TK.map = (function(){
           headG.style.opacity = 0;
         }
 
-        /* จุดแวะ — node ระหว่างทางของ march นี้ (ข้อมูลจริงจากกราฟถนน ไม่ใช่ของแต่ง)
-           ให้อ่านออกว่าทัพ "เดินเมืองต่อเมือง" ตามที่ DECISIONS §4 ประกาศไว้ */
-        let ticksG = null;
-        const meta = TK.routeMeta && TK.routeMeta[m.route];
-        if (!echo && meta && TK.nodes){
-          ticksG = mk('g',{class:'mk-ticks'});
-          for (const nid of meta.path.slice(1, -1)){
-            const nd = TK.nodes[nid]; if (!nd || nd.x == null) continue;
-            const tg = mk('g',{transform:`translate(${nd.x},${nd.y})`});
-            const ts = mk('g',{class:'mk-unit-s', transform:`scale(${mu0.toFixed(3)})`});
-            const c = mk('circle',{r:2.7, class:'mk-tick'});
-            c.style.fill = col;
-            ts.append(c); tg.append(ts); ticksG.append(tg);
-          }
-          layers.markers.append(ticksG);
-          ticksG.style.opacity = 0;
-        }
+        /* เส้นทางใช้แนวเดิมโดยไม่วาดจุดแวะทับ ชื่อเมืองและรูปเมืองบอกตำแหน่งอยู่แล้ว */
 
         /* ชั้นนอกรับ translate ชั้นในรับ scale — relayout() ปรับ scale ให้ขนาดคงที่บนจอ
            ⚠ ต้องใส่ scale ตั้งแต่ตอนสร้าง เหมือนที่ shell() ทำให้ป้ายธง (2026-08-22)
@@ -2202,8 +2139,14 @@ TK.map = (function(){
                           sh.setAttribute('stroke', '#0b0d12');
                           sh.setAttribute('stroke-width', rider ? 1.4 : 2); }
         else            sh.setAttribute('fill', col);
-        gs.append(sh); g.append(gs);
-        layers.markers.append(g);
+        const portraitMoving = !echo && !!TK.people[m.who];
+        if(portraitMoving){TK.mapPeople.moving(gs,m);g.style.visibility='hidden';}
+        else if(supply||fleet)TK.storyArt.vehicle(gs,m);
+        else gs.append(sh);
+        g.append(gs);
+        /* ภาพที่กำลังเดินอยู่เหนือรูปเมือง ป้องกันหลังคาเมืองบังใบหน้าชั่วขณะ
+           ยังใช้กล้องและพิกัดเดียวกัน และเก็บเส้นทัพไว้ชั้นเดิม */
+        (portraitMoving ? layers.people : layers.markers).append(g);
 
         /* ป้ายธงเกาะอยู่บนเส้นทาง เยื้องออกด้านข้างในแนวตั้งฉาก
            ห้ามวางที่หัวลูกศร เพราะหัวลูกศรไปจบบนเมืองปลายทาง ซึ่งมีทั้งชื่อพิมพ์บนภาพพื้น
@@ -2215,8 +2158,10 @@ TK.map = (function(){
         const cname = echo ? null : (who ? who.label : m.name);
         if (cname){
           const mu = screenMU();
-          const c  = addChip(layers.markers, m.side,
-                             cname + (m.strength ? '   ' + fmtK(m.strength) : ''));
+          const actor = TK.scenePeople?.[focusBeat?.id]?.find(a=>a.who===m.who&&a.route===m.route);
+          const c = who ? TK.mapPeople.portrait(layers.markers, shell, {...m,role:actor?.role})
+                        : addChip(layers.markers, m.side,
+                            cname + (m.strength ? '   ' + fmtTroops(m.strength) : ''));
           /* ★ `chip:"head"` (รีวิวรอบสาม 2026-08-26 — เจ้าของ: "ชี้เฮ่าเจาที่เฉินชาง
              ก็ได้ 1k ไม่ต้องวางข้างเส้น ไหน ๆ เราก็ได้วิธีใหม่กันมาละ") — ลูกศรที่
              ความหมายคือ "เข้าประจำที่ปลายทาง" ยึดป้ายที่หัวลูกศรเลย ความแน่นแถวนั้น
@@ -2235,6 +2180,7 @@ TK.map = (function(){
           queueAnn(c, p1.x, p1.y, 1, 16);
           chipEl = c.g;
           chipEl.style.opacity = 0;
+          if(who){chipEl.style.pointerEvents='none';chipEl.setAttribute('tabindex','-1');chipEl.setAttribute('aria-hidden','true');}
         }
 
         /* สัญลักษณ์กองทัพไปหยุดที่หัวลูกศร — จองที่ไว้ ป้ายจะได้ไม่ไปนั่งทับ
@@ -2248,8 +2194,10 @@ TK.map = (function(){
         /* เปิดป้ายพร้อมเส้นโยงของมัน (ถ้า layout แขวนไว้) — เส้นโยงที่โผล่ก่อนป้าย
            คือเส้นชี้ไปหาอากาศ */
         const showChip = () => { if (chipEl){ chipEl.style.opacity = 1;
+          if(who){chipEl.style.pointerEvents='';chipEl.setAttribute('tabindex','0');chipEl.removeAttribute('aria-hidden');}
           (chipEl._leaders || []).forEach(l => l.style.opacity = ''); } };
         const settle = () => {
+          if(portraitMoving)g.style.visibility='hidden';
           path.style.strokeDashoffset = 0;
           if (under) under.style.strokeDashoffset = 0;
           /* เสบียง: พอถึงปลายทางแล้วเปลี่ยนเป็นเส้นประ — สายที่ไหลอยู่ตลอด ไม่ใช่การเดินครั้งเดียว
@@ -2260,7 +2208,6 @@ TK.map = (function(){
           g.setAttribute('transform', `translate(${pt.x},${pt.y})`);
           showChip();
           if (headG) headG.style.opacity = 1;
-          if (ticksG) ticksG.style.opacity = 1;
           /* ★ ทัพถึงที่หมายแล้ว — ถ้านี่คือเส้นสุดท้ายของฉาก ธงถึงจะพลิกได้ */
           if (animate !== false && --walking <= 0) flushOwners();
         };
@@ -2281,14 +2228,14 @@ TK.map = (function(){
         const startAt = waveGate + 260 + idx*140;
         const durMs   = runMs + idx*160;
         waveEnd = Math.max(waveEnd, startAt + durMs);
-        const run = () => mkTweens.push(
+        const run = () => {if(portraitMoving)g.style.visibility='visible';mkTweens.push(
           TK.engine.tween({v:0},{v:1}, durMs, cur => {
             const rest = L * (1 - cur.v);
             path.style.strokeDashoffset = back ? -rest : rest;
             if (under) under.style.strokeDashoffset = back ? -rest : rest;
             const pt = at(cur.v);
             g.setAttribute('transform', `translate(${pt.x},${pt.y})`);
-          }, settle));
+          }, settle));};
         if (animate === false) settle();
         else {
           walking++;
@@ -2326,7 +2273,19 @@ TK.map = (function(){
         layers.markers.append(g);
         blockAt(p.x, p.y, 30);                 // วงนอกพองถึง 1.5 เท่าของ r24 ตอนเต้น
       }
+      if(m.type==='arrow'&&!echo){for(const node of [...Array.from(layers.markers.children).slice(markerStart),...Array.from(layers.people.children).slice(peopleStart)])node.dataset.route=m.route;}
+      if(m.type==='pin'&&!echo&&TK.sceneArt?.[focusBeat?.id]?.focusPins?.includes(m.place)){for(const node of Array.from(layers.markers.children).slice(markerStart))node.dataset.route='station:'+m.place+':'+m.side;}
     });
+
+    /* คนที่อยู่ในเมืองจริง เกาะตำแหน่งเมืองและใช้คิวหลบป้ายเดียวกับรูปผู้เดินทาง
+       ไม่เพิ่มหมุด/คำบรรยายเมือง และไม่วาดผู้ที่อยู่บนเส้นทางซ้ำ */
+    for(const actor of TK.scenePeople?.[focusBeat?.id] || []){
+      if(!actor.place || markers.some(m=>!m.echo&&m.type==='arrow'&&m.who===actor.who))continue;
+      const p=TK.places[actor.place],who=TK.people[actor.who];if(!p||!who)continue;
+      forceLabels.add(actor.place);
+      const c=TK.mapPeople.portrait(layers.markers,shell,{...actor,side:who.side});
+      queueAnn(c,p.x,p.y,1,18);
+    }
 
     /* ไม่มีลูกศรวิ่งสักเส้น (ฉากหมุดล้วน · โหมด echo ล้วน · ตอนถ่ายภาพ) = ไม่มีอะไรให้รอ */
     if (!walking) flushOwners();
@@ -2342,6 +2301,7 @@ TK.map = (function(){
          หนานอาน · โซ่วชุน · ฮั่นโช่ว · เซี่ยโข่ว) */
     scaleCache = null;
     scalePins();
+    TK.worksArt.update(screenMU(),symBox);
     fitPinsToSymbols();
     layoutAnnotations();
   }
@@ -2357,7 +2317,7 @@ TK.map = (function(){
 
     /* ทุกอย่างที่ต้อง "ขนาดคงที่บนจอ" ต้องคูณ mu เพราะ viewBox ย่อ-ขยายตลอด
        (.mk-label ไม่ต้องคิดขนาดเองแล้ว มันอยู่ในชั้น .mk-chip-s ที่ถูก scale ให้อยู่) */
-    layers.markers.querySelectorAll('.mk-unit-s, .mk-chip-s').forEach(g =>
+    [...layers.markers.querySelectorAll('.mk-unit-s, .mk-chip-s'),...layers.people.querySelectorAll('.mk-unit-s')].forEach(g =>
       g.setAttribute('transform', `scale(${mu.toFixed(3)})`));
     layers.markers.querySelectorAll('.mk-route').forEach(p => {
       const base=skin().routePx;
@@ -2388,6 +2348,7 @@ TK.map = (function(){
       g.setAttribute('transform', `${t} scale(${mu.toFixed(3)})`);
     });
     scalePins(mu);
+    TK.worksArt.update(mu,symBox);
 
     /* สเกลเปลี่ยน = ขนาดป้ายเทียบกับระยะบนแผนที่เปลี่ยน ต้องจัดตำแหน่งใหม่
        ไม่งั้นซูมเข้าแล้วป้ายที่เคยหลบกันพอดีจะกางออกจนลอยห่างจากสิ่งที่มันอธิบาย */
@@ -2399,7 +2360,7 @@ TK.map = (function(){
        ต้องอ่าน *หลัง* layoutAnnotations() เท่านั้น ป้ายถึงจะอยู่ที่จริงแล้ว
        แปลง screen rect → หน่วยแผนที่ด้วย CTM ของ svg (ป้ายมี transform ซ้อนหลายชั้น
        จะไปคำนวณเองด้วยมือไม่ได้) */
-    const avoid = [];
+    const avoid = [...TK.worksArt.boxes];
     {
       /* ★ ใช้ CTM ของ `cam` เพื่อให้ผลถูกเสมอ ไม่ว่าจะมี transform ค้างหรือไม่
          (ตอนนี้ relayout ถูกเรียกหลัง commit เสมอ แต่ผูกกับ cam แล้วไม่ต้องพึ่งลำดับ) */
@@ -2411,7 +2372,7 @@ TK.map = (function(){
         for (const g of layers.markers.querySelectorAll('.mk-chip, .mk-cap')){
           const r = g.getBoundingClientRect(); if (!r.width) continue;
           const a = toMap(r.left, r.top), b = toMap(r.right, r.bottom);
-          avoid.push({ x:a.x, y:a.y, w:b.x - a.x, h:b.y - a.y });
+          avoid.push({ x:a.x-3*mu, y:a.y-3*mu, w:b.x-a.x+6*mu, h:b.y-a.y+6*mu });
         }
         /* ★★ แผงลอย HTML ที่ทับแผนที่อยู่ ก็ต้องเป็นสิ่งกีดขวางด้วย (เพิ่ม 2026-09-08)
            เดิมนับแค่ป้ายของฉาก (`.mk-chip/.mk-cap`) เพราะแผงพวกนี้อยู่มุมล่างซ้าย
@@ -2419,7 +2380,7 @@ TK.map = (function(){
            ที่ที่ **ชื่อมณฑล** อยู่พอดี แล้วชื่อก็มุดหายไปใต้แผงโดยไม่มีอะไรฟ้อง
            ⚠ ต้องเช็ค `hidden`/`display` ด้วย — `#placecard` ซ่อนอยู่เกือบตลอดเวลา
              ถ้าไม่เช็คจะได้กล่องขนาดศูนย์มาจองที่มุมซ้ายบนตลอดกาล */
-        for (const sel of ['#where', '#hud', '#placecard', '#legend']){
+        for (const sel of ['#where', '#hud', '#placecard', '#legend', '#map-person-card']){
           const el = document.querySelector(sel);
           if (!el || el.hidden) continue;
           /* ⚠ **ห้ามข้ามเพราะ `opacity:0`** — `#where` เฟดเข้า/ออกตามการเคลื่อนกล้อง
@@ -2501,7 +2462,7 @@ TK.map = (function(){
        และเหตุผลที่ shot.ps1 ตรวจไม่เจอ: มันเรียก .click() ตรง ๆ ซึ่งข้ามชุด pointer
        ทั้งหมด — เครื่องมือจึงทดสอบเส้นทางที่ผู้อ่านไม่เคยเดิน (บทเรียนซ้ำรอบที่สามในวันเดียว)
        ⚠ ห้ามแก้ด้วยการเพิ่ม z-index — ปัญหาไม่ใช่ลำดับการวาด แต่เป็นการจับ pointer */
-    const onChrome = e => e.target.closest('#maptools, #hud, #spine, #where, #seasonnote');
+    const onChrome = e => e.target.closest('#maptools, #hud, #spine, #where, #seasonnote, #map-person-card');
 
     /* ══ ★★★ ทำไมการลากเคยพัง — และมันไม่ใช่ความผิดของโค้ดลากเลย (2026-09-08) ══
        เจ้าของทัก: *"พอเราลากแล้วมันไปติดคลุมดำ เท่านั้นยังไม่พอมันเลื่อนไม่ได้อีกเลย

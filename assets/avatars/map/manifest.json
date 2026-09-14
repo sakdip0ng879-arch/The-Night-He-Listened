@@ -1,0 +1,3048 @@
+{
+  "status": "production-approved-2026-09-13",
+  "count": 80,
+  "remaining": 0,
+  "method": "Deterministic crop from original 1254px sources, except Cao Zhen uses the already cleaned 192px portrait. Manual eye and head landmarks; no generated or repainted pixels.",
+  "people": [
+    {
+      "id": "liubei",
+      "label": "หลิวเป้ย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/liubei.png",
+      "sourceSha256": "de79888fdae8a1403e649d3e06fe34722f77bb83f6aa5669cc8bdeccc8b2554e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        489.9166666666667,
+        75.455,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        26,
+        6.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08558823529411765,
+      "reason": "Include the entire gold crown; centre on face, not robe.",
+      "files": {
+        "128": {
+          "path": "128/liubei.png",
+          "sha256": "2629d19efc225487251d28056ea0ae4be10f8b51174b9a9e3a104f2eac91dcbc"
+        },
+        "256": {
+          "path": "256/liubei.png",
+          "sha256": "8e6fc43728ff0abb77925eb2f2b36a721a2fefa4b0b2da4dc499fed049096f81"
+        }
+      }
+    },
+    {
+      "id": "guanyu",
+      "label": "กวนอวี่",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/guanyu.png",
+      "sourceSha256": "228383d5b6ddc05f36fd02c2ffc22731330633aa0a510ffad2d4f0264c1aa487",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        505.125,
+        166.615,
+        211.5,
+        211.5
+      ],
+      "referenceCrop": [
+        21,
+        37.08,
+        108,
+        108
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.11962962962962964,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/guanyu.png",
+          "sha256": "d9611b5923811715472b6b6546b8d98fb84631646c72a00b1fed097374f5131b"
+        },
+        "256": {
+          "path": "256/guanyu.png",
+          "sha256": "62ffcae84e6f0a011faa0495841cd649448d4dbf2310d36b605c45e00380cc10"
+        }
+      }
+    },
+    {
+      "id": "zhangfei",
+      "label": "จางเฟย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhangfei.png",
+      "sourceSha256": "c6bedcea03c77528df8dac48a37d1645fa50fa1387f486e9441fdc9fea23d5eb",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        497.75,
+        176.54833333333335,
+        250.66666666666666,
+        250.66666666666666
+      ],
+      "referenceCrop": [
+        30,
+        48.28,
+        128,
+        128
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.1384375,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhangfei.png",
+          "sha256": "5de1a43f27564944d4fc13781cd8deb6fb76bb9a5b23473c2d81e8359c98b495"
+        },
+        "256": {
+          "path": "256/zhangfei.png",
+          "sha256": "114dae4d1f18f1ba3a41330b5d9c9f899b5f37b774c905c2f3e56b84bf10e8b1"
+        }
+      }
+    },
+    {
+      "id": "zhaoyun",
+      "label": "จ้าวหยุน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhaoyun.png",
+      "sourceSha256": "88e9234a0c47aa3b502549141e55a35772bf2295e4921424ebeff42c404f6d80",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        503.625,
+        141.99916666666667,
+        262.41666666666663,
+        262.41666666666663
+      ],
+      "referenceCrop": [
+        33,
+        40.34,
+        134,
+        134
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09447761194029848,
+      "reason": "Remove empty headroom; retain topknot.",
+      "files": {
+        "128": {
+          "path": "128/zhaoyun.png",
+          "sha256": "3d9b79e0946f15d876dcd4a513d5b286568113fc4a7222f4df0aabaf02f2b2ae"
+        },
+        "256": {
+          "path": "256/zhaoyun.png",
+          "sha256": "ee059272d247b9f0ac3ec92489c0ee075973a2a6c038777dc76cc4a226dcc638"
+        }
+      }
+    },
+    {
+      "id": "kongming",
+      "label": "จูเก๋อเลี่ยง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/kongming.png",
+      "sourceSha256": "f9de569d259ec5a57fe41d3feda22ab02a238ea5c90cf234172b846a357054db",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        497.75,
+        79.25416666666668,
+        254.58333333333331,
+        254.58333333333331
+      ],
+      "referenceCrop": [
+        30,
+        8.300000000000004,
+        130,
+        130
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999997,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/kongming.png",
+          "sha256": "ba832451b4c2e6183c5f2d24d049c17dafaef45636038ee46831c4c28868c038"
+        },
+        "256": {
+          "path": "256/kongming.png",
+          "sha256": "df9f5260bb0fba488d74ca31b066e2065d09a0b36856b338f7d5dab78302e93f"
+        }
+      }
+    },
+    {
+      "id": "machao",
+      "label": "หม่าเชา",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/machao.png",
+      "sourceSha256": "baae282d0613d1ffe33154b526113887d45f590b8f5aa26676fc0fb5e79fb501",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        478.1666666666667,
+        71.62083333333334,
+        332.91666666666663,
+        332.91666666666663
+      ],
+      "referenceCrop": [
+        20,
+        -5.299999999999997,
+        170,
+        170
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08411764705882352,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/machao.png",
+          "sha256": "93d1f11b196535d65aa9c5dccffdfe826f0faa56fef5c26e1054f05930b2669a"
+        },
+        "256": {
+          "path": "256/machao.png",
+          "sha256": "d44d48f3d9b5b68fbbefaa8debd6280fd46e1db4ef3a325bfe68b1db1192d757"
+        }
+      }
+    },
+    {
+      "id": "madai",
+      "label": "หม่าไต้",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/madai.png",
+      "sourceSha256": "1c4e8fcf7ce49964577bd3a414c37fa47ae039713b6b208f4fe8bfc326682451",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        491.875,
+        128.565,
+        289.8333333333333,
+        289.8333333333333
+      ],
+      "referenceCrop": [
+        27,
+        33.480000000000004,
+        148,
+        148
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08459459459459456,
+      "reason": "Centre face; the spear at the left is outside the map portrait.",
+      "files": {
+        "128": {
+          "path": "128/madai.png",
+          "sha256": "1e16e424b5a24d3b145614eca23673a7f798d90207ee1e8aff952d365a51fea3"
+        },
+        "256": {
+          "path": "256/madai.png",
+          "sha256": "763acef4f46575be753009889e50eec80d1e831787401025a477b3ce8e2a6e6e"
+        }
+      }
+    },
+    {
+      "id": "masu",
+      "label": "หม่าซู่",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/masu.png",
+      "sourceSha256": "f0ab3c024ab2fb135c449aae32eede1ef3712c74845b1515a91e88079c3d067d",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        505.5833333333333,
+        79.13666666666667,
+        242.83333333333331,
+        242.83333333333331
+      ],
+      "referenceCrop": [
+        34,
+        8.240000000000002,
+        124,
+        124
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09483870967741934,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/masu.png",
+          "sha256": "214f010ff78a9674e77692ae90e491f7149f2a1dba3eab99b74ed26ec4b41e78"
+        },
+        "256": {
+          "path": "256/masu.png",
+          "sha256": "b68ea0d0c4b19248c71a4da50dc89ffb6780b590bf5aa429b2f62ed09ada23c6"
+        }
+      }
+    },
+    {
+      "id": "huangquan",
+      "label": "หวงเฉวียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/huangquan.png",
+      "sourceSha256": "f646e32e5328a655669dee0d7783e224eb993d59d185efcc1453fbf6023996eb",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        495.7916666666667,
+        79.25416666666668,
+        254.58333333333331,
+        254.58333333333331
+      ],
+      "referenceCrop": [
+        29,
+        8.300000000000004,
+        130,
+        130
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999997,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/huangquan.png",
+          "sha256": "8c59cd4a2f811ca61e47058c7fbb99436563c57be4ae35b0813dd2e04604db7e"
+        },
+        "256": {
+          "path": "256/huangquan.png",
+          "sha256": "770f4f380fc3400c536a4cca2467e114cf295c63d31f2071568e2a1c8c900af0"
+        }
+      }
+    },
+    {
+      "id": "qinmi",
+      "label": "ฉินมี่",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/qinmi.png",
+      "sourceSha256": "caca7162ab9ab0506f21fc05d1a8037a1243c601f272303990ef604b27abaf5c",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/qinmi.png",
+          "sha256": "bb6aa894c5a6d3a017894a1bb36650a0e31469055e0b25a3f4b222ccd3f5bd49"
+        },
+        "256": {
+          "path": "256/qinmi.png",
+          "sha256": "553fb6bc1a3251046902ff3886561c1210eacbcf01c6895d30e160c3abd3fd24"
+        }
+      }
+    },
+    {
+      "id": "fazheng",
+      "label": "ฝ่าเจิ้ง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/fazheng.png",
+      "sourceSha256": "409a194872433a4bdca0931292740d4b996c5bee0d2f446decc43a56e9281f9f",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        470.3333333333333,
+        73.77083333333333,
+        293.75,
+        293.75
+      ],
+      "referenceCrop": [
+        16,
+        5.5,
+        150,
+        150
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/fazheng.png",
+          "sha256": "bdef4a0066dea89ec7aa807296b25899e611aedf6bc4d4738262201db5f7d175"
+        },
+        "256": {
+          "path": "256/fazheng.png",
+          "sha256": "6e5f08a209bbf8fbf1c9a9c193eaac2b1629fb5d3010728ddffe47a72724e9ad"
+        }
+      }
+    },
+    {
+      "id": "dengzhi",
+      "label": "เติ้งจือ",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/dengzhi.png",
+      "sourceSha256": "6f46a79fbc9683177427c92244ef40986f0b5fa1593a82f45ebf983e4dbd77f1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        501.6666666666667,
+        81.17333333333333,
+        250.66666666666666,
+        250.66666666666666
+      ],
+      "referenceCrop": [
+        32,
+        9.280000000000001,
+        128,
+        128
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09156249999999999,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/dengzhi.png",
+          "sha256": "8e35ff3324cddd210a5093c2d9aa980eebb94460b08e23ca901592bf9c933ec5"
+        },
+        "256": {
+          "path": "256/dengzhi.png",
+          "sha256": "f17c344f78c8e4f217d2520c3731adee0273e21013274aa9d12793647c790d61"
+        }
+      }
+    },
+    {
+      "id": "wulan",
+      "label": "อู๋หลาน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wulan.png",
+      "sourceSha256": "9b7f4212561ba8cb236ab3e6d5e395f8c33a322a2d84c8542136dbc7976072d3",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        534.9583333333334,
+        147.87416666666667,
+        262.41666666666663,
+        262.41666666666663
+      ],
+      "referenceCrop": [
+        49,
+        43.34,
+        134,
+        134
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09447761194029848,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wulan.png",
+          "sha256": "e1f9e87979a7c57a2b55cfa0f92ca341797a11a9c601f077a67b9ad86951efc9"
+        },
+        "256": {
+          "path": "256/wulan.png",
+          "sha256": "cb60efcca35195d648a6154eb7e6b4375757ce7062b8b2c79e15bc7f90bf4b2f"
+        }
+      }
+    },
+    {
+      "id": "liyan",
+      "label": "หลี่เหยียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/liyan.png",
+      "sourceSha256": "bda63e51022b5b2e3a235b928d75559de10680323eaf3376bdacc555fd5842ce",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        501.6666666666667,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        32,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/liyan.png",
+          "sha256": "6a5450ad2934e278b12590131edf06dd7f22a3e3c8addf6b3632d2ba510a8b77"
+        },
+        "256": {
+          "path": "256/liyan.png",
+          "sha256": "ead45829f3b5609e4b217db7d7fed37bbdbf887eb7cb0c4410c58d970038a51f"
+        }
+      }
+    },
+    {
+      "id": "liushan",
+      "label": "หลิวช่าน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/liushan.png",
+      "sourceSha256": "736a8a7b556615b66035cc5d8986dec528578569d2af7e7596b41a353f2ee63c",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        79.33250000000001,
+        262.41666666666663,
+        262.41666666666663
+      ],
+      "referenceCrop": [
+        25,
+        8.340000000000003,
+        134,
+        134
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08701492537313431,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/liushan.png",
+          "sha256": "1ad4091fd72cd5689e546059adf197a91eb1d713687c41c56ab48f1981494d01"
+        },
+        "256": {
+          "path": "256/liushan.png",
+          "sha256": "a0fc02069e23e996062f6a6b980eecffd225dc2a9d778d253a88a51e67bbc7dd"
+        }
+      }
+    },
+    {
+      "id": "liuxuan",
+      "label": "หลิวเสวียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/liuxuan.png",
+      "sourceSha256": "cdd8ded92508bc17217773ba9c3273ad41c05200f557c8d7744e42b811c29e74",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        495.7916666666667,
+        79.37166666666667,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        29,
+        8.36,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/liuxuan.png",
+          "sha256": "23eb7498b27a793f88abfdac3a98c184c93defde961fe60899f21e5d7ba56662"
+        },
+        "256": {
+          "path": "256/liuxuan.png",
+          "sha256": "98417d6e3c267e6b2884131ce60bf87f6c7daca40736c1dd2e3daa1fa750ebb9"
+        }
+      }
+    },
+    {
+      "id": "jiangwan",
+      "label": "เจี่ยงหว่าน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/jiangwan.png",
+      "sourceSha256": "608616a6b79fd824f245d0c34fe9e12ce33ed162737eed0aefaf6fbf85ea84c1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        484.0416666666667,
+        77.49166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        23,
+        7.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/jiangwan.png",
+          "sha256": "c1861db091990e04fc7be745f0b7b3342ac870d2f7451eae145c8f9658583c0e"
+        },
+        "256": {
+          "path": "256/jiangwan.png",
+          "sha256": "f9a8ee767d3fe55dd18e33e5d6a17e0bf2686b02e29a3321ed23224a240cc5b1"
+        }
+      }
+    },
+    {
+      "id": "feiyi",
+      "label": "เฟ่ยอี",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/feiyi.png",
+      "sourceSha256": "f2d88030575e8fbe108f433279f49abfd70a8bd94720c5fe2c891778d50c5ef4",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        79.37166666666667,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        28,
+        8.36,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/feiyi.png",
+          "sha256": "0cd6ca7d5231e2241318cf82fdcf08d6679ca663f194bea1a62c898e23da8394"
+        },
+        "256": {
+          "path": "256/feiyi.png",
+          "sha256": "b0c1610ceb286647514e64209ff501a16cfec9a85d6087c74e5e068f491cd48e"
+        }
+      }
+    },
+    {
+      "id": "dongyun",
+      "label": "ต่งหยุ่น",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/dongyun.png",
+      "sourceSha256": "d1c9edfcd8297c5358653c3ca7b70d7f893fd99204a87123526420b597be9785",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        480.125,
+        75.65083333333335,
+        285.91666666666663,
+        285.91666666666663
+      ],
+      "referenceCrop": [
+        21,
+        6.460000000000008,
+        146,
+        146
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.0927397260273972,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/dongyun.png",
+          "sha256": "8830ce90471442b036d74b888ce6cb1555f7ff9231f28d40d7897ae7d7e9fe7e"
+        },
+        "256": {
+          "path": "256/dongyun.png",
+          "sha256": "bb9bd0f6c003dbfabf302c65984c24f303f3fd1268c8d2c1940b2fe070226e81"
+        }
+      }
+    },
+    {
+      "id": "wangping",
+      "label": "หวังผิง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wangping.png",
+      "sourceSha256": "5ea361e7cc3507241a88487981676141ae883cc6917a472aa68caf11f1926479",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        497.75,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        30,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wangping.png",
+          "sha256": "cab3ccc6539f7fa9789ffe8da11e8594e4fa3da9f46d57b514d60eafbaaca92a"
+        },
+        "256": {
+          "path": "256/wangping.png",
+          "sha256": "8cea9fc0b80d28ea2339548845389909e4bca5248da3abdabf0340b4bf0d02c5"
+        }
+      }
+    },
+    {
+      "id": "weiyan",
+      "label": "เว่ยเหยียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/weiyan.png",
+      "sourceSha256": "4073c47a5028e372cdf7f823531804491d07ef2fef2e584e967bd28352236d3e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        470.3333333333333,
+        99.42499999999998,
+        313.3333333333333,
+        313.3333333333333
+      ],
+      "referenceCrop": [
+        16,
+        18.599999999999994,
+        160,
+        160
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09000000000000004,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/weiyan.png",
+          "sha256": "051f366ab83a803064b4a5d894c1dfd120c177215851652192fbaacbe7d1c67e"
+        },
+        "256": {
+          "path": "256/weiyan.png",
+          "sha256": "3e99b523753a77fb0e21967ba6825e462786217c31e92efa87f74691c1c84c7d"
+        }
+      }
+    },
+    {
+      "id": "yangyi",
+      "label": "หยางอี๋",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/yangyi.png",
+      "sourceSha256": "78e609c14815411e675d98525925555b76c7820889e1122efc6edb7aa1415f29",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        28,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/yangyi.png",
+          "sha256": "bd526f1229b561d4bd5546daace4185e9d178362281452e7edc355f0bb652926"
+        },
+        "256": {
+          "path": "256/yangyi.png",
+          "sha256": "babf0caf91e5588d7759e29de91594960a2b8581e91e90bb748503cff95a9b17"
+        }
+      }
+    },
+    {
+      "id": "jiangwei",
+      "label": "เจียงเหวย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/jiangwei.png",
+      "sourceSha256": "9bd79d792126c5eac575de04918f666548fed7d5c7815dfccd4f5385f75d52a1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        503.625,
+        108.86416666666668,
+        278.0833333333333,
+        278.0833333333333
+      ],
+      "referenceCrop": [
+        33,
+        23.42,
+        142,
+        142
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08859154929577463,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/jiangwei.png",
+          "sha256": "1beae7ebfc395a7f55d62df2f3da2a2ba475c4296eeed5db44a2e0418a3b8100"
+        },
+        "256": {
+          "path": "256/jiangwei.png",
+          "sha256": "89502a35da28d8e3f2e655337c8bf51bd86f78e211d7b4e530d5446c8fc84c85"
+        }
+      }
+    },
+    {
+      "id": "luoxian",
+      "label": "หลัวเซี่ยน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/luoxian.png",
+      "sourceSha256": "5082c8b366c14d741c51e0927a99ca88cda963f185bbaa2f3e9379cce093cb3d",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        497.75,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        30,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/luoxian.png",
+          "sha256": "6e72a444f26c86bd9449c41172a8150461e039401403f872d36307570b0104b8"
+        },
+        "256": {
+          "path": "256/luoxian.png",
+          "sha256": "4d946fb82353b6c122ec1695fe98e5eb816ea4453422401323bd0aca61bc4833"
+        }
+      }
+    },
+    {
+      "id": "huanghao",
+      "label": "หวงเฮ่า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/huanghao.png",
+      "sourceSha256": "8e763d37e3720d8e2f1ac3a08ae4c114dee23f43b9f1c9ee4c460703795e6f85",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        497.75,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        30,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/huanghao.png",
+          "sha256": "32c7b5d949bddcd6fd01a3b6ab4530cba5d5a24d1f9eaa869a160448695463c3"
+        },
+        "256": {
+          "path": "256/huanghao.png",
+          "sha256": "7408c8e677698cacac37b6cc8e506dbaaeeaaa2a298865f5203e8254be1cb8be"
+        }
+      }
+    },
+    {
+      "id": "huangzhong",
+      "label": "หวงจง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/huangzhong.png",
+      "sourceSha256": "ca89216c15cab00bf20e03bedee9f04de552283c692662d1831294da1ad7c9bd",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        462.5,
+        79.25416666666668,
+        254.58333333333331,
+        254.58333333333331
+      ],
+      "referenceCrop": [
+        12,
+        8.300000000000004,
+        130,
+        130
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999997,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/huangzhong.png",
+          "sha256": "3771c7536f749c136b6820019fce4cac6cf1b8eb45148fda76a0d5ea4474db26"
+        },
+        "256": {
+          "path": "256/huangzhong.png",
+          "sha256": "f64869036ecfe5ff7679a400791b3539a83f071ce7ae1b616937b78b5642a351"
+        }
+      }
+    },
+    {
+      "id": "zhangda",
+      "label": "จางต๋า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhangda.png",
+      "sourceSha256": "0917fc2b003f76bf8ab0e033c083af91ed04627bc395086621dc71f5da45966d",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhangda.png",
+          "sha256": "d9c4b730da2032b4a0dd8850b7cf7a01dd1d79ac6bf43c6d144805c0ea1ebb06"
+        },
+        "256": {
+          "path": "256/zhangda.png",
+          "sha256": "087f912d1dc648f6d855fff8665f462c828669d73fbd3aa16dd98c15f386ebe3"
+        }
+      }
+    },
+    {
+      "id": "fanqiang",
+      "label": "ฟ่านเฉียง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/fanqiang.png",
+      "sourceSha256": "a8df18a233890f30625b447ed4745ca6e826dd7d346aa8c3708265125274f286",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        112.78083333333333,
+        278.0833333333333,
+        278.0833333333333
+      ],
+      "referenceCrop": [
+        28,
+        25.42,
+        142,
+        142
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08859154929577463,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/fanqiang.png",
+          "sha256": "094191dd9c95179035922ec809d2240c004140c04d3cd44cd7067a8e3aab7c67"
+        },
+        "256": {
+          "path": "256/fanqiang.png",
+          "sha256": "29036d3e2fa1ab7f65e93560fa805055a64bafe3a87528c9866d5fb69c756f32"
+        }
+      }
+    },
+    {
+      "id": "caocao",
+      "label": "เฉาเชา",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caocao.png",
+      "sourceSha256": "21f1370ab17e36a667b3f536defff724c19452ea501369acbd734790e7ae8b22",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        478.1666666666667,
+        75.65083333333335,
+        285.91666666666663,
+        285.91666666666663
+      ],
+      "referenceCrop": [
+        20,
+        6.460000000000008,
+        146,
+        146
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.0927397260273972,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caocao.png",
+          "sha256": "d2b1f8cee6b462139c028a9c32f562b706b74a9591a4f414ae37eb4e211b1e7a"
+        },
+        "256": {
+          "path": "256/caocao.png",
+          "sha256": "1a27d51f3d9366a8463409e5cc29f6c2f473e42deb8b901199f2fcf1139b3c27"
+        }
+      }
+    },
+    {
+      "id": "caopi",
+      "label": "เฉาพี",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caopi.png",
+      "sourceSha256": "fceed37c49943a7872d7eda026e487d050496664622d2642f2a6524e8fd79f29",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        489.9166666666667,
+        75.65083333333335,
+        285.91666666666663,
+        285.91666666666663
+      ],
+      "referenceCrop": [
+        26,
+        6.460000000000008,
+        146,
+        146
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.0927397260273972,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caopi.png",
+          "sha256": "ad4bbc27f8c22bd5111d3edce862e967eea1e6f6f18c9c4512df8a77462c5ba8"
+        },
+        "256": {
+          "path": "256/caopi.png",
+          "sha256": "111a85a7f02a174146494b2aa28e405217bbbce1230b6361950948db33db389d"
+        }
+      }
+    },
+    {
+      "id": "caorui",
+      "label": "เฉารุ่ย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caorui.png",
+      "sourceSha256": "247826720da00709a8cf60e25bba3f9a16c46b92609769c35a72db49eda77450",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        476.2083333333333,
+        75.72916666666667,
+        293.75,
+        293.75
+      ],
+      "referenceCrop": [
+        19,
+        6.5,
+        150,
+        150
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caorui.png",
+          "sha256": "da322d1f1bda48a16a3a5a7f700bf3af2aca0ff8d8be31e3350e3451519a4866"
+        },
+        "256": {
+          "path": "256/caorui.png",
+          "sha256": "64ddaf3c6d969779e22d9945cfde7cf80e898cf79e11bc3cefbc568e5517e897"
+        }
+      }
+    },
+    {
+      "id": "caofang",
+      "label": "เฉาฟาง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caofang.png",
+      "sourceSha256": "a33e6873a6661b30c4b07b25d23680cd5ef6cd3e7a1ed3bf157fadb1984852e8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        446.8333333333333,
+        70.48083333333335,
+        356.41666666666663,
+        356.41666666666663
+      ],
+      "referenceCrop": [
+        4,
+        3.8200000000000074,
+        182,
+        182
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08890109890109886,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caofang.png",
+          "sha256": "b76962179be7f78565398193a84996ba180d63ea68e0869184fd4ccf4203cec5"
+        },
+        "256": {
+          "path": "256/caofang.png",
+          "sha256": "8bdfee6a2f23c50d9a5daa51ba9eb080955ef13c20f9ef7f97743f500a785a9e"
+        }
+      }
+    },
+    {
+      "id": "caomao",
+      "label": "เฉาเหมา",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caomao.png",
+      "sourceSha256": "0395a87c9d561e90303f1a5e68ddeb7ef82d01ee5e0a5257f71d52d302339647",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        509.5,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        36,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caomao.png",
+          "sha256": "3802727a0ee58224e91a2b5ab0ddb79c46f830365cc880b93e156e37b9e75edd"
+        },
+        "256": {
+          "path": "256/caomao.png",
+          "sha256": "8beaaaf2cb9e278d6b0770a66d94309923224f6f3751403007903e19139dd084"
+        }
+      }
+    },
+    {
+      "id": "caozhen",
+      "label": "เฉาเจิน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/portraits/192/caozhen.png",
+      "sourceSha256": "83a00630697a770c455f9dd3589f6ed394b181f044adb2d9098571eaef3eae85",
+      "sourceSize": [
+        192,
+        192
+      ],
+      "sourceCrop": [
+        0,
+        9.700000000000003,
+        170,
+        170
+      ],
+      "referenceCrop": [
+        0,
+        9.700000000000003,
+        170,
+        170
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.07823529411764704,
+      "reason": "Retain the tall plume; use the existing cleaned portrait to avoid reintroducing the detached spear fragment.",
+      "files": {
+        "128": {
+          "path": "128/caozhen.png",
+          "sha256": "726451833bbffc187770ce01e888aca54a5cf14c28332ec0f9fa39fc98de4a3e"
+        },
+        "256": {
+          "path": "256/caozhen.png",
+          "sha256": "1f0ddf916769daffc9544762f1eda30b30d96d7e27900e99ced13a0f80f2300a"
+        }
+      }
+    },
+    {
+      "id": "caoshuang",
+      "label": "เฉาส่วง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caoshuang.png",
+      "sourceSha256": "ce186fb4c38d11fdbedbdcc31f5a14f33d95eeb49dfebce92618489c6990f089",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        77.49166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        24,
+        7.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caoshuang.png",
+          "sha256": "27015d6572e10ed84943a098968c07cc0b660319a864f7eec7f48d772ae38366"
+        },
+        "256": {
+          "path": "256/caoshuang.png",
+          "sha256": "af8ff8b0fe8503002e0dd1d1473247b6f7f1977354d82dd03068c27728eb9b14"
+        }
+      }
+    },
+    {
+      "id": "caoren",
+      "label": "เฉาเหริน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caoren.png",
+      "sourceSha256": "c940f53476b4ef42502465c50b1dfb292d51869d301f81442224d9312aed9a11",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        444.875,
+        73.38333333333333,
+        313.3333333333333,
+        313.3333333333333
+      ],
+      "referenceCrop": [
+        3,
+        -4.400000000000006,
+        160,
+        160
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09000000000000004,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caoren.png",
+          "sha256": "663ac35132f30ca031181689d2935422738cf9befa7824ba6f23c911e46ac5e8"
+        },
+        "256": {
+          "path": "256/caoren.png",
+          "sha256": "8ccd6e67793bebbf593c24205e8d42bff06403c3c194e0b90db34d18c7754a24"
+        }
+      }
+    },
+    {
+      "id": "simayi",
+      "label": "ซือหม่าอี้",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/simayi.png",
+      "sourceSha256": "1aea4946ccba70515a1b1d95b01d5b3ceefd324ad8666f5da5882071f674a209",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        489.9166666666667,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        26,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/simayi.png",
+          "sha256": "fad08fb7648f415e022b6b0f07e1a6edc05fedc049b9285e0fa947f25b3bb635"
+        },
+        "256": {
+          "path": "256/simayi.png",
+          "sha256": "a83eb514b95fec28e65037ef05167b700f022fbd0495894acba4276708f8f761"
+        }
+      }
+    },
+    {
+      "id": "simashi",
+      "label": "ซือหม่าซือ",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/simashi.png",
+      "sourceSha256": "5ec0ba4ed15030c7b1cb5b3a856ccf219bfdf0642dd3e2e8301fceccbb407d3a",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        501.6666666666667,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        32,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/simashi.png",
+          "sha256": "b96f3efd47964a10c12fb4300469055c3367a9968fb80313d92ec6cb33015004"
+        },
+        "256": {
+          "path": "256/simashi.png",
+          "sha256": "3537d03b9ce4979ba9b976b6d41d5d23d888a7c485cb1a41cec265f19eb3c826"
+        }
+      }
+    },
+    {
+      "id": "simazhao",
+      "label": "ซือหม่าเจา",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/simazhao.png",
+      "sourceSha256": "a32efb62de40b3cce9020b11770b734edcee29d253cd849595d399a1c3195264",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        484.0416666666667,
+        77.49166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        23,
+        7.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/simazhao.png",
+          "sha256": "e0ea7c6e5fc674911c2b917b55563421d111365b6e3c246d907aba333203ae91"
+        },
+        "256": {
+          "path": "256/simazhao.png",
+          "sha256": "6cc06e31c0bfa036181150a66b33b49fbf66d07ffe4d02035c41f0ae1e9d025a"
+        }
+      }
+    },
+    {
+      "id": "zhanghe",
+      "label": "จางเหอ",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhanghe.png",
+      "sourceSha256": "5b127724d395960366b11b4805ece69c937757827a524d5f64a18810e11bfdae",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        462.5,
+        94.53333333333335,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        12,
+        6.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhanghe.png",
+          "sha256": "2c4dbe4c440aad745100471aa4c631ee11d32c9a3909e50f17a67ecaa859470f"
+        },
+        "256": {
+          "path": "256/zhanghe.png",
+          "sha256": "02ce2a593e91c444a3e151b6ab5913e7bb9b7cb3a3ab28b86c1991bc57821b0e"
+        }
+      }
+    },
+    {
+      "id": "caohong",
+      "label": "เฉาหง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/caohong.png",
+      "sourceSha256": "8f7074bd6ad7d63ca0e23b2d262fa19399ace02c1ead2db82484cdb5d1262a83",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        472.2916666666667,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        17,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/caohong.png",
+          "sha256": "4a98502e1995cf75ed64130ab542e00990fb1f78940db73daab52d8f3de1cdc8"
+        },
+        "256": {
+          "path": "256/caohong.png",
+          "sha256": "2a0b316a2c22f2066f4f05c0fa7bc37ce09137fa21893ea519cbcd1105aa1fdd"
+        }
+      }
+    },
+    {
+      "id": "guohuai",
+      "label": "กัวหวย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/guohuai.png",
+      "sourceSha256": "f002fb273172bf114948f03afa4841ca72ce89fa8682c745f5458acb9b71fae0",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        484.0416666666667,
+        73.61416666666668,
+        278.0833333333333,
+        278.0833333333333
+      ],
+      "referenceCrop": [
+        23,
+        5.420000000000002,
+        142,
+        142
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08859154929577463,
+      "reason": "Centre on eyes rather than the broad armour silhouette.",
+      "files": {
+        "128": {
+          "path": "128/guohuai.png",
+          "sha256": "e8e48650c42df1ce1c140203fb98bdf9ac3ebd55e3aa37220e79e0619dac2995"
+        },
+        "256": {
+          "path": "256/guohuai.png",
+          "sha256": "bb07c5c66ade5d9adee02d8f57c1fcfe99247e53f8225b945ab4653f45741942"
+        }
+      }
+    },
+    {
+      "id": "haozhao",
+      "label": "ห่าวเจา",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/haozhao.png",
+      "sourceSha256": "ac25a0980ce041c1627b9db62c8e1c1334af3e3ec577ec1685d22176a6595d09",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        458.5833333333333,
+        79.25416666666668,
+        254.58333333333331,
+        254.58333333333331
+      ],
+      "referenceCrop": [
+        10,
+        8.300000000000004,
+        130,
+        130
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999997,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/haozhao.png",
+          "sha256": "71b1a155f6c1861e0728325192c4f45e8bd114934081aa0fa219bc0cccd5a40e"
+        },
+        "256": {
+          "path": "256/haozhao.png",
+          "sha256": "c104590c64c6a37631894997280ce25fa19aae60741f9493a2c0748a7880e200"
+        }
+      }
+    },
+    {
+      "id": "feiyao",
+      "label": "เฟ่ยเย่า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/feiyao.png",
+      "sourceSha256": "439718fa7898d941e0f0ce3161e5534f649e406bacc6585c3ccf4241830369a3",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        87.3225,
+        278.0833333333333,
+        278.0833333333333
+      ],
+      "referenceCrop": [
+        25,
+        12.420000000000002,
+        142,
+        142
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08859154929577463,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/feiyao.png",
+          "sha256": "05a4ccff60ef7ebfba58c684bbde893c2470d5bfe016da662057c315fa79a955"
+        },
+        "256": {
+          "path": "256/feiyao.png",
+          "sha256": "ff2faca57a3cff2d652a14708ffcfec5146166e4d15fb299931262b1a48498a8"
+        }
+      }
+    },
+    {
+      "id": "qinlang",
+      "label": "ฉินหลาง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/qinlang.png",
+      "sourceSha256": "fdfd01fad70f1f72425fa94b26848dcc54d7e79771b06cb2fac79b31dda76e3c",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        476.2083333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        19,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/qinlang.png",
+          "sha256": "708dceec1594c75bf8fe90d068d2dd8c2691436c6837192342e941c436ba8878"
+        },
+        "256": {
+          "path": "256/qinlang.png",
+          "sha256": "3c06e69a5a7b8598036243c28cab13d3496423a25606a80e1e16022f8e340ada"
+        }
+      }
+    },
+    {
+      "id": "dengai",
+      "label": "เติ้งอ้าย",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/dengai.png",
+      "sourceSha256": "a825a2db6b7706996b24949e6adfeca7f644ae1029cae7d14a6aea412a9bb829",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        511.4583333333333,
+        79.13666666666667,
+        242.83333333333331,
+        242.83333333333331
+      ],
+      "referenceCrop": [
+        37,
+        8.240000000000002,
+        124,
+        124
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09483870967741934,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/dengai.png",
+          "sha256": "85a7edbcfd6d0aec55fa64b577a17c19f578356d4f7de08662701db6c05bd1a5"
+        },
+        "256": {
+          "path": "256/dengai.png",
+          "sha256": "e28dcec137681cc405c926193eed57b6f612b36ba2891653b01fb264828ac2f1"
+        }
+      }
+    },
+    {
+      "id": "chenqun",
+      "label": "เฉินฉวิน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/chenqun.png",
+      "sourceSha256": "6b6948da09e6590ce62d10825f56309292cd32d2f7892f7d7484f0e6be736632",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        77.49166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        24,
+        7.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/chenqun.png",
+          "sha256": "215e7910d92367b97557359401e8b288d4fcb0c44fc4267aba80218d0925deee"
+        },
+        "256": {
+          "path": "256/chenqun.png",
+          "sha256": "803fa0892854da7adbeea4b7442837176b2b28ec9359022605ed929bbd521706"
+        }
+      }
+    },
+    {
+      "id": "mengda",
+      "label": "เมิ่งต๋า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/mengda.png",
+      "sourceSha256": "bee93701f0de789507fb0c7218a8d719dc00bd33d4c88f25ca26108011428c8b",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        507.54166666666663,
+        79.29333333333335,
+        258.5,
+        258.5
+      ],
+      "referenceCrop": [
+        35,
+        8.320000000000007,
+        132,
+        132
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08848484848484843,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/mengda.png",
+          "sha256": "e3f1b35e04c5e692f805cbf4c80aef6029f952f61e3a01c4de689bef8098dd98"
+        },
+        "256": {
+          "path": "256/mengda.png",
+          "sha256": "2673e4f4bc07ff78fd93eadd7da483b92358fe3fbb37e52d54999eb32dc86b1a"
+        }
+      }
+    },
+    {
+      "id": "jiachong",
+      "label": "เจี่ยฉง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/jiachong.png",
+      "sourceSha256": "1a15fec3ae6545d524a335ddfe7fa85a3ff017799f41d3e9f79197597b3de0dc",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        476.2083333333333,
+        75.76833333333333,
+        297.66666666666663,
+        297.66666666666663
+      ],
+      "referenceCrop": [
+        19,
+        6.519999999999996,
+        152,
+        152
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08868421052631581,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/jiachong.png",
+          "sha256": "5b31dbb1092cb695f2e502b5e37ac7ba9709d0989a2d96225f0ec38b6ea1c01b"
+        },
+        "256": {
+          "path": "256/jiachong.png",
+          "sha256": "0e445db923a2f48dcbc08876f962a713683ce4ee913aaa1062df19e0abc35b42"
+        }
+      }
+    },
+    {
+      "id": "chengji",
+      "label": "เฉิงจี้",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/chengji.png",
+      "sourceSha256": "e49d45c624d1dd62579d9ad441e1cd7231713ff4041584bbe1bad01e4fc2e03a",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        472.2916666666667,
+        81.6825,
+        301.5833333333333,
+        301.5833333333333
+      ],
+      "referenceCrop": [
+        17,
+        9.540000000000006,
+        154,
+        154
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08740259740259736,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/chengji.png",
+          "sha256": "f59bb44e05c34b4b82879d0df1112d5021686b6e66df92c0312fa994c21f9f40"
+        },
+        "256": {
+          "path": "256/chengji.png",
+          "sha256": "b747bafc6cab71f192a3c1e70f8719e6f93c93dacf6e3b92cfc839769efcf9b8"
+        }
+      }
+    },
+    {
+      "id": "wangling",
+      "label": "หวังหลิง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wangling.png",
+      "sourceSha256": "d371f8b009c596c9611137f1ada665a66b82381ec088f160182b545911d980bc",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        484.0416666666667,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        23,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wangling.png",
+          "sha256": "e8601eea3942ee2d53b356ce9b7a6afef39903dd0bc180f7838ac8c10ea88614"
+        },
+        "256": {
+          "path": "256/wangling.png",
+          "sha256": "3c6d33bd598b906487d75d7bec6da75affbc4e5ba2a2bc5083cd0f871d30703b"
+        }
+      }
+    },
+    {
+      "id": "guanqiujian",
+      "label": "กว้านชิวเจี่ยน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/guanqiujian.png",
+      "sourceSha256": "e76e330eff35752775dd1d3dc009469b65bdb7a58dc6d26767dfd47dd3740189",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        450.75,
+        89.24166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        6,
+        13.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/guanqiujian.png",
+          "sha256": "980d564b37b448d20a647d922d2531ce43f624f336108e44cdffd6843af6cdf7"
+        },
+        "256": {
+          "path": "256/guanqiujian.png",
+          "sha256": "e7d25968f9b5c7cb4b9566737bf18fbb8ad4ba25347585d2d868669798c0073b"
+        }
+      }
+    },
+    {
+      "id": "wenqin",
+      "label": "เหวินชิน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wenqin.png",
+      "sourceSha256": "abe7c84829dbffafecfa01c8f3999a253e59307d26055c5a8541633cf52672e5",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        476.2083333333333,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        19,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wenqin.png",
+          "sha256": "83f5c7cadf90de139339b4c37dd235777a769c2140023c0bcd1156626e97b5e5"
+        },
+        "256": {
+          "path": "256/wenqin.png",
+          "sha256": "453b824248cc8783c6f549cc00928af725593338e8de45d5ddd6630614bb4c0a"
+        }
+      }
+    },
+    {
+      "id": "zhugedan",
+      "label": "จูเก๋อต้าน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhugedan.png",
+      "sourceSha256": "1290c03745fa6d3056ed88a04f88f905b8e4bfd42f2f751b70c0c3dd3d1f4f79",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        505.5833333333333,
+        80.97749999999999,
+        231.08333333333331,
+        231.08333333333331
+      ],
+      "referenceCrop": [
+        34,
+        9.18,
+        118,
+        118
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09169491525423729,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhugedan.png",
+          "sha256": "c252452db93ba4b0c013b6718a3acfc8caf7770aacb4c0c57b3a8e2b0f0873ab"
+        },
+        "256": {
+          "path": "256/zhugedan.png",
+          "sha256": "6613617da65054e9092352a40e02ff5c0b9e26d8c57410d253401b9b47107925"
+        }
+      }
+    },
+    {
+      "id": "wangxiong",
+      "label": "หวังสยง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wangxiong.png",
+      "sourceSha256": "2e18dbbdcf121621c75ec8aa80623173c5b6d161d3a12523de399e30474919fc",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wangxiong.png",
+          "sha256": "aa884c6ccefaf52f36b6b9b8a68db47ffed1a20426f211bf039d9d03d531b3a3"
+        },
+        "256": {
+          "path": "256/wangxiong.png",
+          "sha256": "fc7d91f95f249acf7b44042dbbefe6b7c197c260047e5256a70917a6b138bd4d"
+        }
+      }
+    },
+    {
+      "id": "suze",
+      "label": "ซูเจ๋อ",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/suze.png",
+      "sourceSha256": "34d65b8c30b3bfb9f827af578b5e232a5ee399d0212db68b82421862ac522a38",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/suze.png",
+          "sha256": "5d4054f1bd5cdb5191963437ff7fc39a210c6167ecce10bbccceda24a8da4ff9"
+        },
+        "256": {
+          "path": "256/suze.png",
+          "sha256": "71bcdc3cf9321a2fd2e6c5132fc353479590cb65f0d424fbbf537b134405d309"
+        }
+      }
+    },
+    {
+      "id": "zhangji",
+      "label": "จางจี้",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhangji.png",
+      "sourceSha256": "b35826c2487955078acf9a249e9c44f4caae02818cf880b50a17888c1c54c806",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhangji.png",
+          "sha256": "b30c4455b7a5ba5279fa8e7a582f1134abb0f693efd981517f80c9947dc61176"
+        },
+        "256": {
+          "path": "256/zhangji.png",
+          "sha256": "ccd3714fab609b914fbd90dd4d2bcbb9c597de4c03acfdcfaf7ecde7d7344623"
+        }
+      }
+    },
+    {
+      "id": "xiahouyuan",
+      "label": "เซี่ยโหวเยวียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/xiahouyuan.png",
+      "sourceSha256": "ca0e365240e3f487b3ca95d675014f38fea1a3903f5d1bd34dd214a87d1c8156",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        509.5,
+        79.0625,
+        293.75,
+        293.75
+      ],
+      "referenceCrop": [
+        36,
+        -1.5,
+        150,
+        150
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/xiahouyuan.png",
+          "sha256": "92277cc68e5cac9676cff304bd5ce726fb56ac8a90c75db9c8656caa4535e68e"
+        },
+        "256": {
+          "path": "256/xiahouyuan.png",
+          "sha256": "6acb36c5fc849061013e2abab28b14c9c7872bbcbc44a2765219055079652250"
+        }
+      }
+    },
+    {
+      "id": "guoxun",
+      "label": "กัวซวิน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/guoxun.png",
+      "sourceSha256": "33a7fd92c7ae12dfee4f76d1872b0fd6e3676ae52e0f59325e0712a386fe99bb",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        507.54166666666663,
+        79.25416666666668,
+        254.58333333333331,
+        254.58333333333331
+      ],
+      "referenceCrop": [
+        35,
+        8.300000000000004,
+        130,
+        130
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999997,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/guoxun.png",
+          "sha256": "28f0a806bd0eee16f2173211f37360b5de9588ea41944d9838932f01de50e210"
+        },
+        "256": {
+          "path": "256/guoxun.png",
+          "sha256": "914ed09a9aa00e44c7c228708890186da569df6eac0616b3d2bf22e6151c5d88"
+        }
+      }
+    },
+    {
+      "id": "xiahouba",
+      "label": "เซี่ยโหวป้า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/xiahouba.png",
+      "sourceSha256": "4ddf3a28922704f953c3bd89e2c70e634da4b6a3e232682a7ca7171cedb4aca1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        517.3333333333334,
+        122.22,
+        242.83333333333331,
+        242.83333333333331
+      ],
+      "referenceCrop": [
+        40,
+        30.240000000000002,
+        124,
+        124
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09483870967741934,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/xiahouba.png",
+          "sha256": "e7e7012021a268f6a2f2a02c9f1b650e0ac31bb8644dca0eb5fee40e2a12e0cb"
+        },
+        "256": {
+          "path": "256/xiahouba.png",
+          "sha256": "b2d9834f7b1b72904ecc4e54fafa1defb496799fe29086650c1e17af079a7973"
+        }
+      }
+    },
+    {
+      "id": "sunquan",
+      "label": "ซุนเฉวียน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/sunquan.png",
+      "sourceSha256": "abaf0add80e192f02d49741d46fa2045a84a42c6333b09d33c0bb701fae548f8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        25,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/sunquan.png",
+          "sha256": "943c046e1b03cc39ceee2a75b334be62a8fc70ab29dcb3db6be0dc16491ea97f"
+        },
+        "256": {
+          "path": "256/sunquan.png",
+          "sha256": "c3dd0e0c2f0f00c8d458005edc0932e48eb90841a61e88bd0a387b9961efe0ec"
+        }
+      }
+    },
+    {
+      "id": "sundeng",
+      "label": "ซุนเติง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/sundeng.png",
+      "sourceSha256": "29154d693c6d813595fc370a99f5766765d253976f27b37fc2fc10ec110341f6",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        491.875,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        27,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/sundeng.png",
+          "sha256": "651af10e05b0cab17acde76ce0949afd0fc419e780e6e731dfc8dff8b0bae0de"
+        },
+        "256": {
+          "path": "256/sundeng.png",
+          "sha256": "97e8ed98956a94adef0a3f189d0429a71f0d36089abe4ad0f3c6ea47a7dcd33e"
+        }
+      }
+    },
+    {
+      "id": "sunjun",
+      "label": "ซุนจวิ้น",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/sunjun.png",
+      "sourceSha256": "c92bf5c749c2a1c62d39304213571729fc1acafa94db9e42d5f3cb22ae9f5c29",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        499.7083333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        31,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/sunjun.png",
+          "sha256": "0e963bb03590a0aa9a0ce663924633d612191e158e150ad5907a4144bc016da8"
+        },
+        "256": {
+          "path": "256/sunjun.png",
+          "sha256": "e072bfb8380c89ab8275905a219d3f0aed6444adfd6791bd1dc1de6cd797ae81"
+        }
+      }
+    },
+    {
+      "id": "sunchen",
+      "label": "ซุนเฉิน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/sunchen.png",
+      "sourceSha256": "e659ba06c001a3456cf13fbdbf69935cfaf5e706e5aa4d7accdf7021d499b6c0",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        472.2916666666667,
+        75.76833333333333,
+        297.66666666666663,
+        297.66666666666663
+      ],
+      "referenceCrop": [
+        17,
+        6.519999999999996,
+        152,
+        152
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08868421052631581,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/sunchen.png",
+          "sha256": "ef4c332e1d06fef30798bc69171227a94020d4224eca2902088aaf56c20b5d9e"
+        },
+        "256": {
+          "path": "256/sunchen.png",
+          "sha256": "c34f7e25c7bfb3defa96c34f7ed490fb4f5a44d2a5fa35680719974b3ade3438"
+        }
+      }
+    },
+    {
+      "id": "sunhao",
+      "label": "ซุนเฮ่า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/sunhao.png",
+      "sourceSha256": "1638876903a12a94b221ebcdc5e6e64e4a6e40d65964f2a4497d0146bef021f5",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        77.49166666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        24,
+        7.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/sunhao.png",
+          "sha256": "c2fe149369dfe413a30d418caca3d03e879277fdb4f54a71a20a325f7a71ab99"
+        },
+        "256": {
+          "path": "256/sunhao.png",
+          "sha256": "5f686a35da33c5a26819786357c51064e017b9dbc03fb9e0ee153c0e21b5dbb1"
+        }
+      }
+    },
+    {
+      "id": "luxun",
+      "label": "ลู่ซวิ่น",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/luxun.png",
+      "sourceSha256": "2ae87e1c6c26ebf3848bfe7fafe1a30c2eef16bf74bb360a2661ffd3cb31afc9",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        24,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/luxun.png",
+          "sha256": "66ed3d454c418e491b46fbe6db497519dcac45f02a432071d803367b0794a63b"
+        },
+        "256": {
+          "path": "256/luxun.png",
+          "sha256": "4a878595cc55130e162aac59ecc8d793645d6b05099a4afb461c62d911909cc3"
+        }
+      }
+    },
+    {
+      "id": "lukang",
+      "label": "ลู่ค่าง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/lukang.png",
+      "sourceSha256": "9a98e897455eaae12d62042eb7b5a65d81e5c1c4fd84d673bb0124d68b7177a8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        83.36666666666667,
+        274.16666666666663,
+        274.16666666666663
+      ],
+      "referenceCrop": [
+        24,
+        10.400000000000006,
+        140,
+        140
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999996,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/lukang.png",
+          "sha256": "b82e34bcf6a7eef2132fa35663be9816eb9e1c853591fee411fd6d661aa77229"
+        },
+        "256": {
+          "path": "256/lukang.png",
+          "sha256": "b0af5cc17b5f52815d368d1362d0c8e303ea9c0e969263b670f7bfabb34df9fb"
+        }
+      }
+    },
+    {
+      "id": "lumeng",
+      "label": "หลวี่เหมิง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/lumeng.png",
+      "sourceSha256": "d5c569cf2d782da21f2c571fa356d21b07f20a09114098fa1b6ac294b08b814d",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        81.01666666666668,
+        235,
+        235
+      ],
+      "referenceCrop": [
+        28,
+        9.200000000000003,
+        120,
+        120
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999998,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/lumeng.png",
+          "sha256": "2d373cc8145417e9ad12ea32fb866148ccbd1580706c00d1732222b858861806"
+        },
+        "256": {
+          "path": "256/lumeng.png",
+          "sha256": "1e13256d411d4e440c85aa92df234f713e657b5f31ea64111358bb2fe2f92b72"
+        }
+      }
+    },
+    {
+      "id": "zhuran",
+      "label": "จูหรัน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhuran.png",
+      "sourceSha256": "bbf28ee886ecc267bd9d764500df305dc7c75c0f9669d0ca5787e98b1a179530",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        489.9166666666667,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        26,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhuran.png",
+          "sha256": "42c08efb7f5f6e04ff9c1df00878664aba31c00247ed2b0481e204b3ab60026f"
+        },
+        "256": {
+          "path": "256/zhuran.png",
+          "sha256": "d474375dd7b47caa2aaa60d13abfe41c1fca93f25821a66f0179eca011d36a55"
+        }
+      }
+    },
+    {
+      "id": "zhuhuan",
+      "label": "จูหวน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhuhuan.png",
+      "sourceSha256": "52b25f2e3c7dc6636bbc1649688401a74f3aa0fadaf9d65c36cf7e1ef51fc135",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        470.3333333333333,
+        79.13666666666667,
+        242.83333333333331,
+        242.83333333333331
+      ],
+      "referenceCrop": [
+        16,
+        8.240000000000002,
+        124,
+        124
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09483870967741934,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhuhuan.png",
+          "sha256": "6f50f807891788151a90ef1601aaa96023ce7fb478e800760a64713ad082ebaf"
+        },
+        "256": {
+          "path": "256/zhuhuan.png",
+          "sha256": "9cf2af7aa5d1f31e8f1129545c62ad9949afa10b44e99be014bb7c6489039005"
+        }
+      }
+    },
+    {
+      "id": "zhugeke",
+      "label": "จูเก๋อเค่อ",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhugeke.png",
+      "sourceSha256": "527271fc876b4f3043388f7cce9078b4d0a5f65ceb8a32d68c3e2f8a808418b8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        28,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhugeke.png",
+          "sha256": "cc7188ff88a76083ee0a3eb248d35348c3a6436133b71535d69233d1f8a66cd0"
+        },
+        "256": {
+          "path": "256/zhugeke.png",
+          "sha256": "091882fd5b635b95646e70fee15c9d591b85faaa4c80608687c0784ec41f904a"
+        }
+      }
+    },
+    {
+      "id": "kebineng",
+      "label": "เคอปี่เหนิง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/kebineng.png",
+      "sourceSha256": "be3d33e35d3c832df63f22b8cd7a9aac77b61f6ba5f5304058eaff9965d434f3",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        513.4166666666666,
+        69.345,
+        250.66666666666666,
+        250.66666666666666
+      ],
+      "referenceCrop": [
+        38,
+        3.240000000000002,
+        128,
+        128
+      ],
+      "eyePosition": [
+        0.5,
+        0.42
+      ],
+      "headroom": 0.13093749999999998,
+      "reason": "Short headband and long beard: allow eyes slightly higher to retain chin and characteristic beard.",
+      "files": {
+        "128": {
+          "path": "128/kebineng.png",
+          "sha256": "f4a9c48833db1f0800491a863946285d221d2be31db57120c29732f18bef254d"
+        },
+        "256": {
+          "path": "256/kebineng.png",
+          "sha256": "b03112df1459dec21d5c508296ea5a8f9798524fa871fda0695686b9676e14ed"
+        }
+      }
+    },
+    {
+      "id": "zhangjin",
+      "label": "จางจิ้น",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhangjin.png",
+      "sourceSha256": "e8caa53b73fe6b05acd4da5e98fa4ef52353ff33ae5029afb45482c4aeb982e0",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        517.3333333333334,
+        116.07083333333333,
+        215.41666666666666,
+        215.41666666666666
+      ],
+      "referenceCrop": [
+        40,
+        27.1,
+        110,
+        110
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999998,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhangjin.png",
+          "sha256": "b491fd14233f37319f0a2a7e226f05dab55607af9dfeaa684a4fede013920545"
+        },
+        "256": {
+          "path": "256/zhangjin.png",
+          "sha256": "86674412e58b6d8df9f0574b39270c416d0b0282cb00dddb82a82bf2b880dd16"
+        }
+      }
+    },
+    {
+      "id": "huanghua",
+      "label": "หวงหัว",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/huanghua.png",
+      "sourceSha256": "40a2ae65441990ffeff6d10637751996713d61af76a97943f929d932f1b489c9",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        81.01666666666668,
+        235,
+        235
+      ],
+      "referenceCrop": [
+        25,
+        9.200000000000003,
+        120,
+        120
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08999999999999998,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/huanghua.png",
+          "sha256": "82ac9b427fd6cf8fb0e02cbda89d80220ecf67344326a6b3b7843211023f52be"
+        },
+        "256": {
+          "path": "256/huanghua.png",
+          "sha256": "8022447f7e4f1d53dd26cb908a4ac0a7fa5547ce7887e2a102a5691d024269a8"
+        }
+      }
+    },
+    {
+      "id": "quyan",
+      "label": "ชวีเหยี่ยน",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/quyan.png",
+      "sourceSha256": "a7a9a31b0024d2aa40d88fcf94a315a5f48f6b6cfb8323221d4758658572a731",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        499.7083333333333,
+        90.92583333333333,
+        246.75,
+        246.75
+      ],
+      "referenceCrop": [
+        31,
+        14.259999999999998,
+        126,
+        126
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09317460317460319,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/quyan.png",
+          "sha256": "531290e711b1ff300d39b9405901b32d3af744c357850f5a7ccbf9079f3fe510"
+        },
+        "256": {
+          "path": "256/quyan.png",
+          "sha256": "f0eea1dccf41b571e66472fb04c8a403f23c9852badbd59f7b4e8b260299cc31"
+        }
+      }
+    },
+    {
+      "id": "yangfu",
+      "label": "หยางฟู่",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/yangfu.png",
+      "sourceSha256": "cdf70eb4d3b1f0403bb8b3dd22be864ea28da534adc6c42948a4bddea1766eae",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        487.9583333333333,
+        77.41333333333333,
+        266.3333333333333,
+        266.3333333333333
+      ],
+      "referenceCrop": [
+        25,
+        7.359999999999999,
+        136,
+        136
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09294117647058824,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/yangfu.png",
+          "sha256": "30ab93241954c249553164aa3260fcdc78cb250ed839bb6ae2d7ac6a1b7111b6"
+        },
+        "256": {
+          "path": "256/yangfu.png",
+          "sha256": "ceb0215a197eddd092294c6a7b101280d7d69e0614a6e64598b4e867c083474e"
+        }
+      }
+    },
+    {
+      "id": "jiangxu",
+      "label": "เจียงซวี่",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/jiangxu.png",
+      "sourceSha256": "cf3612ba3fc431c9bcc23c82a8326920251b315fc5044add74d95c90a778c23e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        489.9166666666667,
+        102.63666666666667,
+        242.83333333333331,
+        242.83333333333331
+      ],
+      "referenceCrop": [
+        26,
+        20.240000000000002,
+        124,
+        124
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09483870967741934,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/jiangxu.png",
+          "sha256": "f59375aad80d7294ef16ad69fac17167c568d8c14b975e13527fb85e65153ac9"
+        },
+        "256": {
+          "path": "256/jiangxu.png",
+          "sha256": "ec34825d0cbd9a0fbf03c24a76a6e6d5e28b0d3b4307a96017193d3d1f603c25"
+        }
+      }
+    },
+    {
+      "id": "zhaoang",
+      "label": "จ้าวอ๋าง",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/zhaoang.png",
+      "sourceSha256": "7294c8877aeed5d4d99be0a0205744ea2b117168356ebcc850fe1dfb474337ef",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        493.8333333333333,
+        77.45249999999999,
+        270.25,
+        270.25
+      ],
+      "referenceCrop": [
+        28,
+        7.3799999999999955,
+        138,
+        138
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.09144927536231888,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/zhaoang.png",
+          "sha256": "cf77b7b1af04b9c7380ce20cd88b00d03957a8cdf2bf76a7d3f6c1772add10e8"
+        },
+        "256": {
+          "path": "256/zhaoang.png",
+          "sha256": "50352cc2ff90fb5fc23f8b6ac7cdb71ebde3389d611a3a6961f04bd3b4974685"
+        }
+      }
+    },
+    {
+      "id": "wangyi",
+      "label": "หวังอี้",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/wangyi.png",
+      "sourceSha256": "8e5767727c604039542c3c41d8adf3981ce7d669b721e7c163433cf99d55e932",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        486,
+        77.53083333333333,
+        278.0833333333333,
+        278.0833333333333
+      ],
+      "referenceCrop": [
+        24,
+        7.420000000000002,
+        142,
+        142
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.08859154929577463,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/wangyi.png",
+          "sha256": "94b00988cd7e24a4ecc5b03898c9c384ea0fb313aadff6825023990aa8028fbf"
+        },
+        "256": {
+          "path": "256/wangyi.png",
+          "sha256": "81350f9084ec3316821699e3dadeba0ea325128c4173ac280d049e6fb1eb4a1a"
+        }
+      }
+    },
+    {
+      "id": "yuanshao",
+      "label": "หยวนเส้า",
+      "sourceFile": "prototypes/codex-2026-09-06/avatars/ready/fullbody/yuanshao.png",
+      "sourceSha256": "c5566ee1dfd86b1b20e02f278c4f9293317a3c77cd25a2999c842c88271646d2",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceCrop": [
+        480.125,
+        75.65083333333335,
+        285.91666666666663,
+        285.91666666666663
+      ],
+      "referenceCrop": [
+        21,
+        6.460000000000008,
+        146,
+        146
+      ],
+      "eyePosition": [
+        0.5,
+        0.49
+      ],
+      "headroom": 0.0927397260273972,
+      "reason": "Individually inspected eye centre and head top from source review. Retain headgear; shoulders/weapons do not define the centre.",
+      "files": {
+        "128": {
+          "path": "128/yuanshao.png",
+          "sha256": "8813cd82b052ce1836e5f9dae459dedc77d7e041e8e6930bcde2150a4c126301"
+        },
+        "256": {
+          "path": "256/yuanshao.png",
+          "sha256": "27ac7c3b33c0450cb048d6cbe9bbdb902bd420361006b09c80dc5a858d276bf6"
+        }
+      }
+    }
+  ]
+}

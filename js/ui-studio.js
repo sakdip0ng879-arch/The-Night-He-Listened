@@ -49,6 +49,12 @@
  title.onclick=()=>{const off=document.body.classList.toggle('gallery-no-title');title.textContent=off?'แสดงชื่อปก':'ซ่อนชื่อปก';};
  document.addEventListener('keydown',e=>{if(!document.body.classList.contains('studio-gallery'))return;if(['ArrowLeft','ArrowRight',' ','Escape'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();if(e.key==='Escape')leaveGallery(false);}},true);
  const galleryButton=make('button','','ชมแผนที่ / ปก');galleryButton.id='studio-gallery';galleryButton.onclick=showGallery;$('#maptools').prepend(galleryButton);
+ /* เครื่องมือรองพับรวมกัน คืนพื้นที่อ่านและไม่เพิ่มแถวปุ่มบนมือถือ */
+ const toolsMenu=make('details','art-tools-menu'),toolsTitle=make('summary','','เครื่องมือ'),toolsPanel=make('div','art-tools-panel');toolsMenu.id='art-tools-menu';toolsMenu.append(toolsTitle,toolsPanel);
+ for(const id of ['studio-context-toggle','btnSpine','btnSeason','btnRoads','btnLegend','btnBase','btnIntro']){const b=$('#'+id);if(b)toolsPanel.append(b);}
+ toolsPanel.addEventListener('click',e=>{if(e.target.closest('button')){toolsMenu.open=false;window.dispatchEvent(new Event('resize'));}});
+ toolsMenu.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();toolsMenu.open=false;toolsTitle.focus();}});
+ document.addEventListener('pointerdown',e=>{if(!toolsMenu.contains(e.target))toolsMenu.open=false;});$('#maptools').append(toolsMenu);
  window.dispatchEvent(new Event('resize'));
  requestAnimationFrame(()=>{
    const n=initialScene>=0?initialScene:TK.engine.index;

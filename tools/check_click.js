@@ -149,6 +149,30 @@ async function main(){
     console.error('  (ดู console ของหน้าเว็บ อาจมี SyntaxError ในไฟล์ js ไฟล์ใดไฟล์หนึ่ง)');
   }
 
+  /* ★ ปุ่มที่อยู่ในเมนูพับ (`<details>` — เมนู "เครื่องมือ" ของผิว studio · LOG §5.37)
+     ต้องเปิดเมนูด้วยเมาส์จริงก่อน เหมือนผู้อ่านจริงที่ต้องกดเมนูก่อนถึงจะเห็นปุ่ม
+     ⚠ ถ้าไม่เปิด `getBoundingClientRect()` ของปุ่มยังคืนกล่องจริง (details ซ่อนเนื้อหาด้วย
+       content-visibility ซึ่งยังคำนวณเลย์เอาต์ให้) แต่เมาส์จะกดโดนของที่อยู่ข้างใต้
+       → ตัวตรวจฟ้อง DEAD ทั้งที่ปุ่มทำงาน (เจอ 2026-09-14 หลังพับ Spine/Season/Legend เข้าเมนู
+         · ยืนยันด้วยเมาส์จริงแล้วว่าเปิดเมนูก่อน ทั้งสี่ปุ่มในเมนูทำงานครบ) */
+  const pressAt = async p => {
+    const common = { x:p.x, y:p.y, button:'left', clickCount:1 };
+    await send('Input.dispatchMouseEvent', { type:'mousePressed',  buttons:1, ...common });
+    await wait(40);
+    await send('Input.dispatchMouseEvent', { type:'mouseReleased', buttons:0, ...common });
+  };
+  const reach = async ctl => {
+    const menu = await evalJs(
+      `(()=>{const d=document.getElementById('${ctl}')?.closest('details');if(!d||d.open)return null;
+             const r=d.querySelector('summary').getBoundingClientRect();
+             return {x:Math.round(r.left+r.width/2), y:Math.round(r.top+r.height/2)};})()`);
+    if (menu){ await pressAt(menu); await wait(250); }
+    return evalJs(
+      `(()=>{const e=document.getElementById('${ctl}');if(!e)return null;
+             const r=e.getBoundingClientRect();
+             return {x:Math.round(r.left+r.width/2), y:Math.round(r.top+r.height/2)};})()`);
+  };
+
   for (const [ctl, probe] of CONTROLS){
     const box = await evalJs(
       `(()=>{const e=document.getElementById('${ctl}');if(!e)return null;
@@ -164,10 +188,7 @@ async function main(){
 
     const before = await evalJs(probe);
     /* ★ input จริง — ผ่าน pointer capture ของ #stage เหมือนเมาส์คนจริงทุกประการ */
-    const common = { x:box.x, y:box.y, button:'left', clickCount:1 };
-    await send('Input.dispatchMouseEvent', { type:'mousePressed',  buttons:1, ...common });
-    await wait(40);
-    await send('Input.dispatchMouseEvent', { type:'mouseReleased', buttons:0, ...common });
+    await pressAt(await reach(ctl));
     await wait(400);
     const after = await evalJs(probe);
 
@@ -176,9 +197,7 @@ async function main(){
 
     /* คืนสภาพเดิมเท่าที่ทำได้ ปุ่มถัดไปจะได้ทดสอบบนหน้าที่ไม่รกไปเรื่อย ๆ */
     if (changed && ['btnSpine','btnSeason','btnPlay'].includes(ctl)){
-      await send('Input.dispatchMouseEvent', { type:'mousePressed',  buttons:1, ...common });
-      await wait(40);
-      await send('Input.dispatchMouseEvent', { type:'mouseReleased', buttons:0, ...common });
+      await pressAt(await reach(ctl));
       await wait(300);
     }
   }
@@ -200,13 +219,7 @@ async function main(){
          อันตรายกว่าตัวตรวจที่ไม่มี เพราะคนจะเรียนรู้ที่จะไม่เชื่อมัน */
     await evalJs(`TK.spine.toggle(false); TK.engine.goTo(13,'jump')`);
     await wait(450);
-    const box = await evalJs(
-      `(()=>{const e=document.getElementById('${ctl}');const r=e.getBoundingClientRect();
-             return {x:Math.round(r.left+r.width/2), y:Math.round(r.top+r.height/2)};})()`);
-    const common = { x:box.x, y:box.y, button:'left', clickCount:1 };
-    await send('Input.dispatchMouseEvent', { type:'mousePressed',  buttons:1, ...common });
-    await wait(30);
-    await send('Input.dispatchMouseEvent', { type:'mouseReleased', buttons:0, ...common });
+    await pressAt(await reach(ctl));   /* ปุ่มในเมนูพับต้องเปิดเมนูก่อน — ดู reach() */
     await wait(350);
     const probe = ctl === 'btnPlay'
       ? `document.getElementById('${ctl}').textContent`

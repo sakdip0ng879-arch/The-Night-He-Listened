@@ -1,14 +1,14 @@
 {
-  "source": "data/names.js",
+  "source": "prototypes/codex-2026-09-06/shared/names.js",
   "sourceSha256": "4461e9b4f6b4416bf463957803e61507a1a7415a3e83982a3b1038b95ae98abc",
   "count": 80,
-  "completedCount": 47,
+  "completedCount": 80,
   "approvedStyle": true,
-  "nextId": "mengda",
+  "nextId": null,
   "assetPatterns": {
-    "fullBody": "approved/{id}-alpha.png",
-    "portrait96": "portraits/96/{id}.png",
-    "portrait192": "portraits/192/{id}.png"
+    "fullBody": "ready/fullbody/{id}.png",
+    "portrait96": "ready/portraits/96/{id}.png",
+    "portrait192": "ready/portraits/192/{id}.png"
   },
   "people": [
     {
@@ -18,7 +18,15 @@
       "py": "Liu Bei",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/liubei-alpha-v2.png"
+      "file": "ready/fullbody/liubei.png",
+      "portrait96": "ready/portraits/96/liubei.png",
+      "portrait192": "ready/portraits/192/liubei.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/liubei-alpha-v2.png"
     },
     {
       "order": 2,
@@ -27,7 +35,15 @@
       "py": "Guan Yu",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/guanyu-alpha.png"
+      "file": "ready/fullbody/guanyu.png",
+      "portrait96": "ready/portraits/96/guanyu.png",
+      "portrait192": "ready/portraits/192/guanyu.png",
+      "portraitCrop": {
+        "centerX": 0.52,
+        "centerY": 0.225,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/guanyu-alpha.png"
     },
     {
       "order": 3,
@@ -36,7 +52,15 @@
       "py": "Zhang Fei",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/zhangfei-alpha.png"
+      "file": "ready/fullbody/zhangfei.png",
+      "portrait96": "ready/portraits/96/zhangfei.png",
+      "portrait192": "ready/portraits/192/zhangfei.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhangfei-alpha.png"
     },
     {
       "order": 4,
@@ -45,7 +69,15 @@
       "py": "Zhao Yun",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/zhaoyun-alpha.png"
+      "file": "ready/fullbody/zhaoyun.png",
+      "portrait96": "ready/portraits/96/zhaoyun.png",
+      "portrait192": "ready/portraits/192/zhaoyun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhaoyun-alpha.png"
     },
     {
       "order": 5,
@@ -54,7 +86,15 @@
       "py": "Zhuge Liang",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/kongming-alpha.png"
+      "file": "ready/fullbody/kongming.png",
+      "portrait96": "ready/portraits/96/kongming.png",
+      "portrait192": "ready/portraits/192/kongming.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/kongming-alpha.png"
     },
     {
       "order": 6,
@@ -63,7 +103,15 @@
       "py": "Ma Chao",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/machao-alpha.png"
+      "file": "ready/fullbody/machao.png",
+      "portrait96": "ready/portraits/96/machao.png",
+      "portrait192": "ready/portraits/192/machao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/machao-alpha.png"
     },
     {
       "order": 7,
@@ -72,7 +120,15 @@
       "py": "Ma Dai",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/madai-alpha.png"
+      "file": "ready/fullbody/madai.png",
+      "portrait96": "ready/portraits/96/madai.png",
+      "portrait192": "ready/portraits/192/madai.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/madai-alpha.png"
     },
     {
       "order": 8,
@@ -81,7 +137,15 @@
       "py": "Ma Su",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/masu-alpha.png"
+      "file": "ready/fullbody/masu.png",
+      "portrait96": "ready/portraits/96/masu.png",
+      "portrait192": "ready/portraits/192/masu.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/masu-alpha.png"
     },
     {
       "order": 9,
@@ -90,7 +154,15 @@
       "py": "Huang Quan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/huangquan-alpha.png"
+      "file": "ready/fullbody/huangquan.png",
+      "portrait96": "ready/portraits/96/huangquan.png",
+      "portrait192": "ready/portraits/192/huangquan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/huangquan-alpha.png"
     },
     {
       "order": 10,
@@ -99,7 +171,15 @@
       "py": "Qin Mi",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/qinmi-alpha.png"
+      "file": "ready/fullbody/qinmi.png",
+      "portrait96": "ready/portraits/96/qinmi.png",
+      "portrait192": "ready/portraits/192/qinmi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/qinmi-alpha.png"
     },
     {
       "order": 11,
@@ -108,7 +188,15 @@
       "py": "Fa Zheng",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/fazheng-alpha.png"
+      "file": "ready/fullbody/fazheng.png",
+      "portrait96": "ready/portraits/96/fazheng.png",
+      "portrait192": "ready/portraits/192/fazheng.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/fazheng-alpha.png"
     },
     {
       "order": 12,
@@ -117,7 +205,15 @@
       "py": "Deng Zhi",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/dengzhi-alpha.png"
+      "file": "ready/fullbody/dengzhi.png",
+      "portrait96": "ready/portraits/96/dengzhi.png",
+      "portrait192": "ready/portraits/192/dengzhi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/dengzhi-alpha.png"
     },
     {
       "order": 13,
@@ -126,7 +222,15 @@
       "py": "Wu Lan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/wulan-alpha.png"
+      "file": "ready/fullbody/wulan.png",
+      "portrait96": "ready/portraits/96/wulan.png",
+      "portrait192": "ready/portraits/192/wulan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wulan-alpha.png"
     },
     {
       "order": 14,
@@ -135,7 +239,15 @@
       "py": "Li Yan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/liyan-alpha.png"
+      "file": "ready/fullbody/liyan.png",
+      "portrait96": "ready/portraits/96/liyan.png",
+      "portrait192": "ready/portraits/192/liyan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/liyan-alpha.png"
     },
     {
       "order": 15,
@@ -144,7 +256,15 @@
       "py": "Liu Shan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/liushan-alpha.png"
+      "file": "ready/fullbody/liushan.png",
+      "portrait96": "ready/portraits/96/liushan.png",
+      "portrait192": "ready/portraits/192/liushan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/liushan-alpha.png"
     },
     {
       "order": 16,
@@ -153,7 +273,15 @@
       "py": "Liu Xuan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/liuxuan-alpha.png"
+      "file": "ready/fullbody/liuxuan.png",
+      "portrait96": "ready/portraits/96/liuxuan.png",
+      "portrait192": "ready/portraits/192/liuxuan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/liuxuan-alpha.png"
     },
     {
       "order": 17,
@@ -162,7 +290,15 @@
       "py": "Jiang Wan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/jiangwan-alpha.png"
+      "file": "ready/fullbody/jiangwan.png",
+      "portrait96": "ready/portraits/96/jiangwan.png",
+      "portrait192": "ready/portraits/192/jiangwan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/jiangwan-alpha.png"
     },
     {
       "order": 18,
@@ -171,7 +307,15 @@
       "py": "Fei Yi",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/feiyi-alpha.png"
+      "file": "ready/fullbody/feiyi.png",
+      "portrait96": "ready/portraits/96/feiyi.png",
+      "portrait192": "ready/portraits/192/feiyi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/feiyi-alpha.png"
     },
     {
       "order": 19,
@@ -180,7 +324,15 @@
       "py": "Dong Yun",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/dongyun-alpha.png"
+      "file": "ready/fullbody/dongyun.png",
+      "portrait96": "ready/portraits/96/dongyun.png",
+      "portrait192": "ready/portraits/192/dongyun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/dongyun-alpha.png"
     },
     {
       "order": 20,
@@ -189,7 +341,15 @@
       "py": "Wang Ping",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/wangping-alpha.png"
+      "file": "ready/fullbody/wangping.png",
+      "portrait96": "ready/portraits/96/wangping.png",
+      "portrait192": "ready/portraits/192/wangping.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wangping-alpha.png"
     },
     {
       "order": 21,
@@ -198,7 +358,15 @@
       "py": "Wei Yan",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/weiyan-alpha.png"
+      "file": "ready/fullbody/weiyan.png",
+      "portrait96": "ready/portraits/96/weiyan.png",
+      "portrait192": "ready/portraits/192/weiyan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/weiyan-alpha.png"
     },
     {
       "order": 22,
@@ -207,7 +375,15 @@
       "py": "Yang Yi",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/yangyi-alpha.png"
+      "file": "ready/fullbody/yangyi.png",
+      "portrait96": "ready/portraits/96/yangyi.png",
+      "portrait192": "ready/portraits/192/yangyi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/yangyi-alpha.png"
     },
     {
       "order": 23,
@@ -216,7 +392,15 @@
       "py": "Jiang Wei",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/jiangwei-alpha.png"
+      "file": "ready/fullbody/jiangwei.png",
+      "portrait96": "ready/portraits/96/jiangwei.png",
+      "portrait192": "ready/portraits/192/jiangwei.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/jiangwei-alpha.png"
     },
     {
       "order": 24,
@@ -225,7 +409,15 @@
       "py": "Luo Xian",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/luoxian-alpha.png"
+      "file": "ready/fullbody/luoxian.png",
+      "portrait96": "ready/portraits/96/luoxian.png",
+      "portrait192": "ready/portraits/192/luoxian.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/luoxian-alpha.png"
     },
     {
       "order": 25,
@@ -234,7 +426,15 @@
       "py": "Huang Hao",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/huanghao-alpha.png"
+      "file": "ready/fullbody/huanghao.png",
+      "portrait96": "ready/portraits/96/huanghao.png",
+      "portrait192": "ready/portraits/192/huanghao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/huanghao-alpha.png"
     },
     {
       "order": 26,
@@ -243,7 +443,15 @@
       "py": "Huang Zhong",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/huangzhong-alpha.png"
+      "file": "ready/fullbody/huangzhong.png",
+      "portrait96": "ready/portraits/96/huangzhong.png",
+      "portrait192": "ready/portraits/192/huangzhong.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/huangzhong-alpha.png"
     },
     {
       "order": 27,
@@ -252,7 +460,15 @@
       "py": "Zhang Da",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/zhangda-alpha.png"
+      "file": "ready/fullbody/zhangda.png",
+      "portrait96": "ready/portraits/96/zhangda.png",
+      "portrait192": "ready/portraits/192/zhangda.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhangda-alpha.png"
     },
     {
       "order": 28,
@@ -261,7 +477,15 @@
       "py": "Fan Qiang",
       "side": "han",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/fanqiang-alpha.png"
+      "file": "ready/fullbody/fanqiang.png",
+      "portrait96": "ready/portraits/96/fanqiang.png",
+      "portrait192": "ready/portraits/192/fanqiang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/fanqiang-alpha.png"
     },
     {
       "order": 29,
@@ -270,7 +494,15 @@
       "py": "Cao Cao",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caocao-alpha.png"
+      "file": "ready/fullbody/caocao.png",
+      "portrait96": "ready/portraits/96/caocao.png",
+      "portrait192": "ready/portraits/192/caocao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caocao-alpha.png"
     },
     {
       "order": 30,
@@ -279,7 +511,15 @@
       "py": "Cao Pi",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caopi-alpha.png"
+      "file": "ready/fullbody/caopi.png",
+      "portrait96": "ready/portraits/96/caopi.png",
+      "portrait192": "ready/portraits/192/caopi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caopi-alpha.png"
     },
     {
       "order": 31,
@@ -288,7 +528,15 @@
       "py": "Cao Rui",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caorui-alpha.png"
+      "file": "ready/fullbody/caorui.png",
+      "portrait96": "ready/portraits/96/caorui.png",
+      "portrait192": "ready/portraits/192/caorui.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caorui-alpha.png"
     },
     {
       "order": 32,
@@ -297,7 +545,15 @@
       "py": "Cao Fang",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caofang-alpha.png"
+      "file": "ready/fullbody/caofang.png",
+      "portrait96": "ready/portraits/96/caofang.png",
+      "portrait192": "ready/portraits/192/caofang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caofang-alpha.png"
     },
     {
       "order": 33,
@@ -306,7 +562,15 @@
       "py": "Cao Mao",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caomao-alpha.png"
+      "file": "ready/fullbody/caomao.png",
+      "portrait96": "ready/portraits/96/caomao.png",
+      "portrait192": "ready/portraits/192/caomao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caomao-alpha.png"
     },
     {
       "order": 34,
@@ -315,7 +579,15 @@
       "py": "Cao Zhen",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caozhen-alpha.png"
+      "file": "ready/fullbody/caozhen.png",
+      "portrait96": "ready/portraits/96/caozhen.png",
+      "portrait192": "ready/portraits/192/caozhen.png",
+      "portraitCrop": {
+        "centerX": 0.52,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caozhen-alpha.png"
     },
     {
       "order": 35,
@@ -324,7 +596,15 @@
       "py": "Cao Shuang",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caoshuang-alpha.png"
+      "file": "ready/fullbody/caoshuang.png",
+      "portrait96": "ready/portraits/96/caoshuang.png",
+      "portrait192": "ready/portraits/192/caoshuang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caoshuang-alpha.png"
     },
     {
       "order": 36,
@@ -333,7 +613,15 @@
       "py": "Cao Ren",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caoren-alpha.png"
+      "file": "ready/fullbody/caoren.png",
+      "portrait96": "ready/portraits/96/caoren.png",
+      "portrait192": "ready/portraits/192/caoren.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caoren-alpha.png"
     },
     {
       "order": 37,
@@ -342,7 +630,15 @@
       "py": "Sima Yi",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/simayi-alpha.png"
+      "file": "ready/fullbody/simayi.png",
+      "portrait96": "ready/portraits/96/simayi.png",
+      "portrait192": "ready/portraits/192/simayi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/simayi-alpha.png"
     },
     {
       "order": 38,
@@ -351,7 +647,15 @@
       "py": "Sima Shi",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/simashi-alpha.png"
+      "file": "ready/fullbody/simashi.png",
+      "portrait96": "ready/portraits/96/simashi.png",
+      "portrait192": "ready/portraits/192/simashi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/simashi-alpha.png"
     },
     {
       "order": 39,
@@ -360,7 +664,15 @@
       "py": "Sima Zhao",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/simazhao-alpha.png"
+      "file": "ready/fullbody/simazhao.png",
+      "portrait96": "ready/portraits/96/simazhao.png",
+      "portrait192": "ready/portraits/192/simazhao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/simazhao-alpha.png"
     },
     {
       "order": 40,
@@ -369,7 +681,15 @@
       "py": "Zhang He",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/zhanghe-alpha.png"
+      "file": "ready/fullbody/zhanghe.png",
+      "portrait96": "ready/portraits/96/zhanghe.png",
+      "portrait192": "ready/portraits/192/zhanghe.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhanghe-alpha.png"
     },
     {
       "order": 41,
@@ -378,7 +698,15 @@
       "py": "Cao Hong",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/caohong-alpha.png"
+      "file": "ready/fullbody/caohong.png",
+      "portrait96": "ready/portraits/96/caohong.png",
+      "portrait192": "ready/portraits/192/caohong.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/caohong-alpha.png"
     },
     {
       "order": 42,
@@ -387,7 +715,15 @@
       "py": "Guo Huai",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/guohuai-alpha.png"
+      "file": "ready/fullbody/guohuai.png",
+      "portrait96": "ready/portraits/96/guohuai.png",
+      "portrait192": "ready/portraits/192/guohuai.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/guohuai-alpha.png"
     },
     {
       "order": 43,
@@ -396,7 +732,15 @@
       "py": "Hao Zhao",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/haozhao-alpha.png"
+      "file": "ready/fullbody/haozhao.png",
+      "portrait96": "ready/portraits/96/haozhao.png",
+      "portrait192": "ready/portraits/192/haozhao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/haozhao-alpha.png"
     },
     {
       "order": 44,
@@ -405,7 +749,15 @@
       "py": "Fei Yao",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/feiyao-alpha.png"
+      "file": "ready/fullbody/feiyao.png",
+      "portrait96": "ready/portraits/96/feiyao.png",
+      "portrait192": "ready/portraits/192/feiyao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/feiyao-alpha.png"
     },
     {
       "order": 45,
@@ -414,7 +766,15 @@
       "py": "Qin Lang",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/qinlang-alpha.png"
+      "file": "ready/fullbody/qinlang.png",
+      "portrait96": "ready/portraits/96/qinlang.png",
+      "portrait192": "ready/portraits/192/qinlang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/qinlang-alpha.png"
     },
     {
       "order": 46,
@@ -423,7 +783,15 @@
       "py": "Deng Ai",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/dengai-alpha.png"
+      "file": "ready/fullbody/dengai.png",
+      "portrait96": "ready/portraits/96/dengai.png",
+      "portrait192": "ready/portraits/192/dengai.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/dengai-alpha.png"
     },
     {
       "order": 47,
@@ -432,7 +800,15 @@
       "py": "Chen Qun",
       "side": "wei",
       "status": "approved_alpha_icons_ready",
-      "file": "approved/chenqun-alpha.png"
+      "file": "ready/fullbody/chenqun.png",
+      "portrait96": "ready/portraits/96/chenqun.png",
+      "portrait192": "ready/portraits/192/chenqun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/chenqun-alpha.png"
     },
     {
       "order": 48,
@@ -440,8 +816,16 @@
       "label": "เมิ่งต๋า",
       "py": "Meng Da",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/mengda.png",
+      "portrait96": "ready/portraits/96/mengda.png",
+      "portrait192": "ready/portraits/192/mengda.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/mengda-alpha.png"
     },
     {
       "order": 49,
@@ -449,8 +833,16 @@
       "label": "เจี่ยฉง",
       "py": "Jia Chong",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/jiachong.png",
+      "portrait96": "ready/portraits/96/jiachong.png",
+      "portrait192": "ready/portraits/192/jiachong.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/jiachong-alpha.png"
     },
     {
       "order": 50,
@@ -458,8 +850,16 @@
       "label": "เฉิงจี้",
       "py": "Cheng Ji",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/chengji.png",
+      "portrait96": "ready/portraits/96/chengji.png",
+      "portrait192": "ready/portraits/192/chengji.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/chengji-alpha.png"
     },
     {
       "order": 51,
@@ -467,8 +867,16 @@
       "label": "หวังหลิง",
       "py": "Wang Ling",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/wangling.png",
+      "portrait96": "ready/portraits/96/wangling.png",
+      "portrait192": "ready/portraits/192/wangling.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wangling-alpha.png"
     },
     {
       "order": 52,
@@ -476,8 +884,16 @@
       "label": "กว้านชิวเจี่ยน",
       "py": "Guanqiu Jian",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/guanqiujian.png",
+      "portrait96": "ready/portraits/96/guanqiujian.png",
+      "portrait192": "ready/portraits/192/guanqiujian.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/guanqiujian-alpha.png"
     },
     {
       "order": 53,
@@ -485,8 +901,16 @@
       "label": "เหวินชิน",
       "py": "Wen Qin",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/wenqin.png",
+      "portrait96": "ready/portraits/96/wenqin.png",
+      "portrait192": "ready/portraits/192/wenqin.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wenqin-alpha.png"
     },
     {
       "order": 54,
@@ -494,8 +918,16 @@
       "label": "จูเก๋อต้าน",
       "py": "Zhuge Dan",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhugedan.png",
+      "portrait96": "ready/portraits/96/zhugedan.png",
+      "portrait192": "ready/portraits/192/zhugedan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhugedan-alpha.png"
     },
     {
       "order": 55,
@@ -503,8 +935,16 @@
       "label": "หวังสยง",
       "py": "Wang Xiong",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/wangxiong.png",
+      "portrait96": "ready/portraits/96/wangxiong.png",
+      "portrait192": "ready/portraits/192/wangxiong.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wangxiong-alpha.png"
     },
     {
       "order": 56,
@@ -512,8 +952,16 @@
       "label": "ซูเจ๋อ",
       "py": "Su Ze",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/suze.png",
+      "portrait96": "ready/portraits/96/suze.png",
+      "portrait192": "ready/portraits/192/suze.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/suze-alpha.png"
     },
     {
       "order": 57,
@@ -521,8 +969,16 @@
       "label": "จางจี้",
       "py": "Zhang Ji",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhangji.png",
+      "portrait96": "ready/portraits/96/zhangji.png",
+      "portrait192": "ready/portraits/192/zhangji.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhangji-alpha.png"
     },
     {
       "order": 58,
@@ -530,8 +986,16 @@
       "label": "เซี่ยโหวเยวียน",
       "py": "Xiahou Yuan",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/xiahouyuan.png",
+      "portrait96": "ready/portraits/96/xiahouyuan.png",
+      "portrait192": "ready/portraits/192/xiahouyuan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.215,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/xiahouyuan-alpha.png"
     },
     {
       "order": 59,
@@ -539,8 +1003,16 @@
       "label": "กัวซวิน",
       "py": "Guo Xun",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/guoxun.png",
+      "portrait96": "ready/portraits/96/guoxun.png",
+      "portrait192": "ready/portraits/192/guoxun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/guoxun-alpha.png"
     },
     {
       "order": 60,
@@ -548,8 +1020,16 @@
       "label": "เซี่ยโหวป้า",
       "py": "Xiahou Ba",
       "side": "han",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/xiahouba.png",
+      "portrait96": "ready/portraits/96/xiahouba.png",
+      "portrait192": "ready/portraits/192/xiahouba.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/xiahouba-alpha.png"
     },
     {
       "order": 61,
@@ -557,8 +1037,16 @@
       "label": "ซุนเฉวียน",
       "py": "Sun Quan",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/sunquan.png",
+      "portrait96": "ready/portraits/96/sunquan.png",
+      "portrait192": "ready/portraits/192/sunquan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/sunquan-alpha.png"
     },
     {
       "order": 62,
@@ -566,8 +1054,16 @@
       "label": "ซุนเติง",
       "py": "Sun Deng",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/sundeng.png",
+      "portrait96": "ready/portraits/96/sundeng.png",
+      "portrait192": "ready/portraits/192/sundeng.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/sundeng-alpha.png"
     },
     {
       "order": 63,
@@ -575,8 +1071,16 @@
       "label": "ซุนจวิ้น",
       "py": "Sun Jun",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/sunjun.png",
+      "portrait96": "ready/portraits/96/sunjun.png",
+      "portrait192": "ready/portraits/192/sunjun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/sunjun-alpha.png"
     },
     {
       "order": 64,
@@ -584,8 +1088,16 @@
       "label": "ซุนเฉิน",
       "py": "Sun Chen",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/sunchen.png",
+      "portrait96": "ready/portraits/96/sunchen.png",
+      "portrait192": "ready/portraits/192/sunchen.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/sunchen-alpha.png"
     },
     {
       "order": 65,
@@ -593,8 +1105,16 @@
       "label": "ซุนเฮ่า",
       "py": "Sun Hao",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/sunhao.png",
+      "portrait96": "ready/portraits/96/sunhao.png",
+      "portrait192": "ready/portraits/192/sunhao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/sunhao-alpha.png"
     },
     {
       "order": 66,
@@ -602,8 +1122,16 @@
       "label": "ลู่ซวิ่น",
       "py": "Lu Xun",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/luxun.png",
+      "portrait96": "ready/portraits/96/luxun.png",
+      "portrait192": "ready/portraits/192/luxun.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/luxun-alpha.png"
     },
     {
       "order": 67,
@@ -611,8 +1139,16 @@
       "label": "ลู่ค่าง",
       "py": "Lu Kang",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/lukang.png",
+      "portrait96": "ready/portraits/96/lukang.png",
+      "portrait192": "ready/portraits/192/lukang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/lukang-alpha.png"
     },
     {
       "order": 68,
@@ -620,8 +1156,16 @@
       "label": "หลวี่เหมิง",
       "py": "Lü Meng",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/lumeng.png",
+      "portrait96": "ready/portraits/96/lumeng.png",
+      "portrait192": "ready/portraits/192/lumeng.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/lumeng-alpha.png"
     },
     {
       "order": 69,
@@ -629,8 +1173,16 @@
       "label": "จูหรัน",
       "py": "Zhu Ran",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhuran.png",
+      "portrait96": "ready/portraits/96/zhuran.png",
+      "portrait192": "ready/portraits/192/zhuran.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhuran-alpha.png"
     },
     {
       "order": 70,
@@ -638,8 +1190,16 @@
       "label": "จูหวน",
       "py": "Zhu Huan",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhuhuan.png",
+      "portrait96": "ready/portraits/96/zhuhuan.png",
+      "portrait192": "ready/portraits/192/zhuhuan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhuhuan-alpha.png"
     },
     {
       "order": 71,
@@ -647,8 +1207,16 @@
       "label": "จูเก๋อเค่อ",
       "py": "Zhuge Ke",
       "side": "wu",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhugeke.png",
+      "portrait96": "ready/portraits/96/zhugeke.png",
+      "portrait192": "ready/portraits/192/zhugeke.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhugeke-alpha.png"
     },
     {
       "order": 72,
@@ -656,8 +1224,16 @@
       "label": "เคอปี่เหนิง",
       "py": "Kebineng",
       "side": "none",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/kebineng.png",
+      "portrait96": "ready/portraits/96/kebineng.png",
+      "portrait192": "ready/portraits/192/kebineng.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/kebineng-alpha-v2.png"
     },
     {
       "order": 73,
@@ -665,8 +1241,16 @@
       "label": "จางจิ้น",
       "py": "Zhang Jin",
       "side": "none",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhangjin.png",
+      "portrait96": "ready/portraits/96/zhangjin.png",
+      "portrait192": "ready/portraits/192/zhangjin.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhangjin-alpha.png"
     },
     {
       "order": 74,
@@ -674,8 +1258,16 @@
       "label": "หวงหัว",
       "py": "Huang Hua",
       "side": "none",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/huanghua.png",
+      "portrait96": "ready/portraits/96/huanghua.png",
+      "portrait192": "ready/portraits/192/huanghua.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/huanghua-alpha.png"
     },
     {
       "order": 75,
@@ -683,8 +1275,16 @@
       "label": "ชวีเหยี่ยน",
       "py": "Qu Yan",
       "side": "none",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/quyan.png",
+      "portrait96": "ready/portraits/96/quyan.png",
+      "portrait192": "ready/portraits/192/quyan.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/quyan-alpha.png"
     },
     {
       "order": 76,
@@ -692,8 +1292,16 @@
       "label": "หยางฟู่",
       "py": "Yang Fu",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/yangfu.png",
+      "portrait96": "ready/portraits/96/yangfu.png",
+      "portrait192": "ready/portraits/192/yangfu.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/yangfu-alpha.png"
     },
     {
       "order": 77,
@@ -701,8 +1309,16 @@
       "label": "เจียงซวี่",
       "py": "Jiang Xu",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/jiangxu.png",
+      "portrait96": "ready/portraits/96/jiangxu.png",
+      "portrait192": "ready/portraits/192/jiangxu.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/jiangxu-alpha.png"
     },
     {
       "order": 78,
@@ -710,8 +1326,16 @@
       "label": "จ้าวอ๋าง",
       "py": "Zhao Ang",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/zhaoang.png",
+      "portrait96": "ready/portraits/96/zhaoang.png",
+      "portrait192": "ready/portraits/192/zhaoang.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/zhaoang-alpha.png"
     },
     {
       "order": 79,
@@ -719,8 +1343,16 @@
       "label": "หวังอี้",
       "py": "Wang Yi",
       "side": "wei",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/wangyi.png",
+      "portrait96": "ready/portraits/96/wangyi.png",
+      "portrait192": "ready/portraits/192/wangyi.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/wangyi-alpha.png"
     },
     {
       "order": 80,
@@ -728,21 +1360,45 @@
       "label": "หยวนเส้า",
       "py": "Yuan Shao",
       "side": "none",
-      "status": "not_started",
-      "file": null
+      "status": "approved_alpha_icons_ready",
+      "file": "ready/fullbody/yuanshao.png",
+      "portrait96": "ready/portraits/96/yuanshao.png",
+      "portrait192": "ready/portraits/192/yuanshao.png",
+      "portraitCrop": {
+        "centerX": 0.5,
+        "centerY": 0.2,
+        "ratio": 0.3
+      },
+      "sourceFile": "approved/yuanshao-alpha.png"
     }
   ],
-  "lastReviewed": "2026-09-09",
-  "nextAction": "Continue Wei faction with mengda, jiachong and chengji. Produce full-body alpha plus 96px and 192px portraits for each.",
+  "lastReviewed": "2026-09-12",
+  "nextAction": "All 80 avatars are ready for icon integration.",
   "generationMode": "built_in_imagegen",
   "sampleRevision": 3,
   "promptFile": "prompts.md",
   "qualityNotes": [
-    "Characters 1-47 have 1254x1254 RGBA full-body masters normalized to 84% canvas height.",
-    "Characters 1-47 also have transparent portrait icons at 96x96 and 192x192 under portraits/{size}/{id}.png.",
-    "Background extraction is performed locally from the generated white master to avoid baked checkerboard output."
+    "80 unique full-body RGBA PNGs at 1254x1254 with approximately 84% silhouette height.",
+    "160 transparent portrait PNGs: 80 at 96x96 and 80 at 192x192.",
+    "78 visually inspected enclosed white background regions removed; pale edge matte reduced.",
+    "Detached weapon fragments excluded from portrait crops.",
+    "Kebineng regenerated with a frontal pose. Original artwork retained outside this delivery folder."
   ],
   "style": "painted_semi_realistic_adult",
   "approvedSample": "approved/liubei-alpha-v2.png",
-  "handoffPrompt": "HANDOFF_PROMPT_TH.md"
+  "handoffPrompt": "HANDOFF_PROMPT_TH.md",
+  "status": "complete",
+  "sourceCurrent": "data/names.js",
+  "sourceCurrentSha256": "81f501ce204caf73ad9dc24b014bc1cffb2507b8a58e0670d8b8a5fcc7825542",
+  "rosterVerified": {
+    "date": "2026-09-12",
+    "count": 80,
+    "orderedIdsAndNamesAndFactionsMatch": true
+  },
+  "previewPortraits": "ready/contact-sheet-portraits-80.png",
+  "previewFullBody": "ready/contact-sheet-fullbody-80.png",
+  "readme": "ready/README_TH.md",
+  "qaReport": "ready/qa-report.json",
+  "deliveryManifest": "ready/manifest.json",
+  "deliveryArchive": "avatars-80-ready.zip"
 }

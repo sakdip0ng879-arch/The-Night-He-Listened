@@ -34,11 +34,17 @@
   filter:drop-shadow(0 0 1.6px rgba(255,247,226,.9))}
 .ui-studio .plabel.hot{fill:var(--ev,#7A5A34);stroke:#fff2d5;stroke-width:.24em;paint-order:stroke;font-weight:700}
 .ui-studio .mk-cap text{fill:#715039;stroke:#f5ead1;stroke-width:3px;paint-order:stroke}
-.ui-studio .zlabel{fill:#766d57;stroke:#eee4cd;opacity:.8}
-.ui-studio .zline{stroke:#5d5140;stroke-opacity:.9;stroke-width:1.7px;stroke-dasharray:8 5}
-.ui-studio .zline-case{stroke:#fff2d7;stroke-opacity:.8;stroke-width:4px}
-.ui-studio .zline.coarse{stroke-opacity:.57;stroke-dasharray:4 7}
-.ui-studio .zline-case.coarse{stroke-opacity:.45}
+/* ★ ชื่อมณฑลจางลง .8 → .65 (2026-09-11 · ทางเลือก B ของ LOG §5.28 ②) — คลิก 2–4 เหลือชื่ออย่างเดียว
+   ไม่มีเส้นคั่น ชื่อจึงเป็นตัวบอกว่าอยู่มณฑลไหน · จางลงให้เป็นป้ายพื้นหลัง ไม่แย่งชื่อเมือง */
+.ui-studio .zlabel{fill:#766d57;stroke:#eee4cd;opacity:.65}
+/* ★ เส้นมณฑล **จางลงหนึ่งขั้น** 2026-09-11 (LOG §5.28 ②) — เจ้าของ: *"เส้นแบ่งมณฑลเอาให้จางกว่านี้
+   มันยังรกอยู่"* · แกน .9/1.7px/ประ 8 5 → .5/1.2px/ประ 6 6 · ปลอก .8/4px → .4/2.6px
+   · coarse .57/.45 → .35/.25
+   ⚠⚠ ลดสองชั้นตามสัดส่วน **ห้ามถอดปลอก** — เส้นเดียวสีจางหายไปกับพื้นแผ่นที่สว่าง (ดู buildZhouLines) */
+.ui-studio .zline{stroke:#5d5140;stroke-opacity:.5;stroke-width:1.2px;stroke-dasharray:6 6}
+.ui-studio .zline-case{stroke:#fff2d7;stroke-opacity:.4;stroke-width:2.6px}
+.ui-studio .zline.coarse{stroke-opacity:.35;stroke-dasharray:4 7}
+.ui-studio .zline-case.coarse{stroke-opacity:.25}
 .ui-studio #stage.art-on #L-wall .pl-wall{stroke:#675c48;stroke-width:2.6px;vector-effect:non-scaling-stroke}
 .ui-studio #stage.art-on #L-wall .pl-tooth{stroke:#675c48;stroke-width:1.5px;vector-effect:non-scaling-stroke}
 .ui-studio .mk-route{filter:none;opacity:.88}

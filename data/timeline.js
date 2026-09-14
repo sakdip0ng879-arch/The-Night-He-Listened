@@ -295,7 +295,7 @@ window.TK.timeline = [
         "type": "arrow",
         "route": "liubei_chengdu_hanzhong_221",
         "side": "han",
-        "who": "liubei",
+        "who": "zhaoyun",
         "strength": 45000
       },
       {
@@ -362,7 +362,8 @@ window.TK.timeline = [
       {
         "type": "arrow",
         "route": "zhangfei_langzhong_chengdu_221",
-        "side": "han"
+        "side": "han",
+        "who": "zhangfei"
       },
       {
         "type": "pin",
@@ -3988,7 +3989,7 @@ window.TK.timeline = [
         "route": "wei_central_244",
         "side": "wei",
         "strength": 60000,
-        "name": "ทัพกลางของเฉาส่วง"
+        "who": "caoshuang"
       },
       {
         "type": "pin",
@@ -4355,7 +4356,7 @@ window.TK.timeline = [
         "type": "arrow",
         "route": "xiahouba_defect_249",
         "side": "wei",
-        "name": "เซี่ยโหวป้า"
+        "who": "xiahouba"
       },
       {
         "type": "pin",

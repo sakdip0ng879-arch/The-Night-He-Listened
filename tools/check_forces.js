@@ -114,6 +114,12 @@ const track = {};                                   /* who → [{beat, year, fro
     for (const m of (b.markers || [])){
       if (m.type !== 'arrow' || !m.who || !m.route) continue;
       const mr = TK.marches[m.route]; if (!mr || !mr.path) continue;
+      /* who ใช้กับ Avatar ของบุคคลด้วย การควบม้าเข้าท้องพระโรงไม่ใช่การย้ายกองทัพ
+         แยกจากสายตรวจที่ตั้งทัพ โดยข้ามเฉพาะ rider ที่ไม่มีกำลังทั้งสองแหล่ง */
+      if ((m.rider || mr.rider) && !m.strength && !mr.troops){
+        note.push(`${b.id}: ${NAME(m.who)} เดินทางส่วนบุคคล — ไม่เปลี่ยนที่ตั้งกองทัพ`);
+        continue;
+      }
       const from = mr.path[0], to = mr.path[mr.path.length - 1];
       (track[m.who] = track[m.who] || []).push({ beat:b.id, year:b.year, from, to });
       const prev = last[m.who];

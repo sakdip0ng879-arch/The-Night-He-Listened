@@ -371,7 +371,7 @@ window.TK._part9 = [
   camera:  [660,440,600,353],
   markers: [
     { type:"arrow", route:"wei_central_244", side:"wei", strength:60000,
-      name:"ทัพกลางของเฉาส่วง" },
+      who:"caoshuang" },
     { type:"pin", place:"luoyang", side:"wei",
       label:"ชายวัยหกสิบห้าที่ไม่คัดค้านสักคำ — และขอไม่ไปด้วย" },
     /* ★ ไม่ใส่ strength — 160k คือ *ทั้งแนวรบ* ไม่ใช่กองเดียว และหลอดแนวตะวันตก

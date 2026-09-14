@@ -144,7 +144,7 @@ window.TK._part10 = [
            "และชายที่ถามไม่เคยลืมอะไรเลยสักครั้งเดียวในชีวิตของเขา",
   camera:  [620,470,640,376],
   markers: [
-    { type:"arrow", route:"xiahouba_defect_249", side:"wei", name:"เซี่ยโหวป้า" },
+    { type:"arrow", route:"xiahouba_defect_249", side:"wei", who:"xiahouba" },
     { type:"pin", place:"tongguan", side:"han",
       label:"เจียงเหวยออกมารับด้วยตัวเอง — แล้วถามคำถามเดียว" },
     { type:"pin", place:"luoyang", side:"wei",

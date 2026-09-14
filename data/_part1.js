@@ -233,7 +233,7 @@ window.TK._part1 = [
   camera:  [140,740,560,333],
   markers: [
     { type:"arrow", route:"liubei_chengdu_hanzhong_221", side:"han",
-      who:"liubei", strength:45000 },
+      who:"zhaoyun", strength:45000 },
     { type:"pin", place:"hanzhong", side:"han", label:"ทัพหลวงขึ้นเหนือ ไม่ใช่ตะวันออก" }
   ],
   fact:     "fiction",
@@ -286,7 +286,7 @@ window.TK._part1 = [
     { type:"pin", place:"langzhong", side:"han", label:"ควบมาสามวัน" },
     /* ★ ลูกศรม้าเร็ว (`rider`) — เจ้าของสั่ง 2026-09-10 · **ไม่มีเลขกำลังพลโดยตั้งใจ**
        มันบอกว่า "มีคนควบมา" ไม่ใช่ "มีกำลังมาถึง" (เหตุผลเต็มที่ roads.js) */
-    { type:"arrow", route:"zhangfei_langzhong_chengdu_221", side:"han" },
+    { type:"arrow", route:"zhangfei_langzhong_chengdu_221", side:"han", who:"zhangfei" },
     { type:"pin", place:"chengdu",   label:"ราชโองการฉบับที่สี่" }
   ],
   fact:     "mixed",

@@ -1,6 +1,6 @@
 /* georef.js — assets/map.jpg มี projection ที่สม่ำเสมอพอจะวาร์ปภูมิประเทศจริงลงไปไหม
  *
- *   node toolsgeoref.js
+ *   node tools/georef.js
  *
  * ★ นี่คือการทดลองที่ปิดคำถามเรื่อง "แผนที่ 3 มิติ / relief จริง" เมื่อ 2026-08-22
  *   คำถามคือ: ถ้าเอา DEM จริง (SRTM) มาวาร์ปลงบนแผ่นนี้ ภูเขาจะไปตกตรงที่แผ่นวาดไว้ไหม
@@ -13,6 +13,8 @@
  *   รันซ้ำได้ถ้าวันหนึ่งเปลี่ยนแผนที่ฐาน — ตัวเลขจะบอกเองว่าแผ่นใหม่ใช้ได้หรือไม่
  */
 
+/* พาธในรีโปนี้ — เดิมเป็นพาธเต็มบนเครื่องเจ้าของ (ชี้ places.js ของโปรเจกต์ 1)
+   ⚠ repo เป็น public + GitHub Pages เสิร์ฟทุกไฟล์ ห้ามใส่พาธเครื่องลงไฟล์ที่ track (LOG §5.39) */
 const path=require('path').join(__dirname,'..','data','places.js');
 global.window=global; require(path);
 const P=window.TK.places;

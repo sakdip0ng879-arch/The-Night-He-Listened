@@ -5472,3 +5472,16 @@ repo เป็น public และ GitHub Pages เสิร์ฟ **ทุก�
   ⛔ **ห้าม push จาก clone เก่า** — มันจะดันประวัติเดิมกลับขึ้นไปทั้งชุด
 - สำรองประวัติเดิมอยู่ในเครื่องที่ scratchpad ของเซสชันนี้ (`tk3-before-history-rewrite.bundle` 25 MB · มีอีเมลเดิม)
   ไม่ได้เผยแพร่ ลบได้เมื่อยืนยันว่าเว็บปกติ
+
+## 5.40 · 2026-09-14 — ลบ bundle สำรอง · แจ้งเตือน OneDrive "These items are in use"
+
+> เจ้าของ: *"ลบไฟล์ bundle สำรองได้เลย · แจ้งเตือนขึ้นตลอด (server.log / server-error.log ใน prototypes/codex-2026-09-12/review) แก้ยังไงดี"*
+
+- **bundle สำรองประวัติเดิม** (§5.39) → ย้ายลงถังขยะ (Recycle Bin) แล้ว ไม่ใช่ลบถาวร · ให้หายจริงเจ้าของล้างถังขยะเอง
+- **ต้นเหตุแจ้งเตือน:** `node tools/serve.js 8778` ถูกเปิดทิ้งไว้ตั้งแต่ 08:40 วันเดียวกัน (process แม่หายไปแล้ว · น่าจะเป็นฝั่ง Codex)
+  โดย redirect stdout/stderr ลง `review/server.log` กับ `server-error.log` — process ถือไฟล์ค้าง OneDrive จึงซิงก์ไม่ได้และเตือนซ้ำ
+  · ไม่มีสคริปต์ในรีโปไหนสร้างสองไฟล์นี้ = เป็นคำสั่งเฉพาะกิจ
+- **แก้:** ปิด process นั้น (ตรวจ PID กับ command line ก่อนปิด) → ไฟล์ปลดล็อกทั้งสอง · port 8778 ปิด · OneDrive ซิงก์ต่อได้เอง
+- **กันซ้ำ:** โน้ตใน `README_FOR_CODEX.md` (ต่อจากวิธีเปิด server) และ HANDOFF — ห้าม redirect log ของ server ลงโฟลเดอร์โปรเจกต์
+  ถ้าต้องเก็บ log ให้ใช้ `$env:TEMP` · ใช้เสร็จปิด server
+- ⚠ ตัวตรวจ Chrome สองตัว (`check_map_people.cjs` · `check_story_art.cjs`) ต้องการ server 8778 — ตอนนี้ปิดแล้ว ต้องเปิดใหม่ก่อนรัน

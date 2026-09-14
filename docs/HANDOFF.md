@@ -5,7 +5,7 @@
 >    กลับมาเมื่อไหร่ **ตรวจทานงานของเขาก่อนทำอย่างอื่น** ด้วยวิธีใน §5.38: รันตัวตรวจทุกตัว **เทียบกับ HEAD เดิม**
 >    (`git archive HEAD` ลง scratchpad) และ **รวมตัวที่ใช้ Chrome** — รอบนี้ `check_click` แดงอยู่โดยไม่มีใครรายงาน
 > 2. **เกณฑ์ที่ต้องรักษา (ใหม่):** `tools/check_*.js` เขียวครบ **17 ตัว** (รวม `check_click` · `check_avatar_assets` · `check_names` · `check_private`)
->    + `zhou_evidence` + `check_map_people.cjs` + `check_story_art.cjs` (สองตัวหลังต้องเปิด `node tools/serve.js 8778` ก่อน)
+>    + `zhou_evidence` + `check_map_people.cjs` + `check_story_art.cjs` (สองตัวหลังต้องเปิด `node tools/serve.js 8778` ก่อน · ⚠ ห้าม redirect log ของ server ลงโฟลเดอร์โปรเจกต์ — OneDrive ซิงก์ไฟล์ที่เปิดค้างไม่ได้และเตือนตลอด · ใช้เสร็จปิด server · LOG §5.40)
 >    · selfcheck @1904×980 = 0/0 ทั้งสองผิว
 > 3. **ยังค้าง:** §5.28 ③ ถนนข้ามเขา · ทะเบียน §5.22 · เจ้าของทำเอง: ขอ GitHub Support ลบแคช commit เก่า + ตั้งค่าซ่อนอีเมลในบัญชี (§5.39 ข้อ 4)
 >    — ปิดแล้ว: ตัวสะกดต่งหยุ่น · ปกที่เส้นมณฑลไม่มีชื่อ (เจ้าของบอกไม่ต้องแก้) · ล้างพาธ/อีเมลออกจากประวัติ git

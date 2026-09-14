@@ -31,6 +31,11 @@ node tools/serve.js 8778
 ```
 แล้วเปิด `http://localhost:8778` · **ห้ามตรวจงานผ่าน `file://`** (DECISIONS §13 — preview แคชจนอ่านผลผิด) แต่ **ต้องทำให้ `file://` ใช้งานได้เสมอ** เพราะผู้อ่านจริงดับเบิลคลิกไฟล์ (ดู §4)
 
+> ⚠ **ห้าม redirect log ของ server ลงในโฟลเดอร์โปรเจกต์** (เช่น `Start-Process … -RedirectStandardOutput server.log`)
+> โปรเจกต์อยู่ใน OneDrive — ไฟล์ที่ process เปิดค้างไว้ซิงก์ไม่ได้ Windows จะเตือน "These items are in use" ซ้ำไปเรื่อย ๆ
+> จนกว่า server จะปิด (เกิดจริง 2026-09-14 ที่ `prototypes/codex-2026-09-12/review/server.log` · LOG §5.40)
+> ถ้าต้องเก็บ log ให้เขียนไว้ที่ `$env:TEMP` · ใช้เสร็จแล้วปิด server ด้วย
+
 ---
 
 ## 1 · ⚠ เจ็ดข้อที่โปรเจกต์จ่ายราคาไปแล้ว — อย่าลองซ้ำ
